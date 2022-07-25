@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="Sedaro Satellite Logo" src="https://api.sedaro.com/static/multimedia/logo_secondary_02242022.png" width="400px" />
+  <img alt="Sedaro Satellite Logo" src="https://api.sedaro.com/static/multimedia/logo_secondary_02242022.png" width="300px" />
 
 # Sedaro Satellite OpenAPI Specification
 
