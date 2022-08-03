@@ -3178,7 +3178,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "title": "Object",
+                "title": "Data",
                 "anyOf": [
                   { "$ref": "#/components/schemas/PassivePointingModeCreate" },
                   { "$ref": "#/components/schemas/LockPointingModeCreate" },
@@ -3263,7 +3263,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "title": "Object",
+                "title": "Data",
                 "anyOf": [
                   { "$ref": "#/components/schemas/PassivePointingModeUpdate" },
                   { "$ref": "#/components/schemas/LockPointingModeUpdate" },
@@ -4106,8 +4106,8 @@
     "/branches/{branchId}/gnc/sensors/angular-rate-sensors/": {
       "post": {
         "tags": ["Sensor"],
-        "summary": "Create AngularRateSensor",
-        "operationId": "create_angularratesensor",
+        "summary": "Create AngularVelocitySensor",
+        "operationId": "create_angularvelocitysensor",
         "parameters": [
           {
             "required": true,
@@ -4119,7 +4119,7 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/AngularRateSensorCreate" }
+              "schema": { "$ref": "#/components/schemas/AngularVelocitySensorCreate" }
             }
           },
           "required": true
@@ -4128,7 +4128,9 @@
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/AngularRateSensor" } }
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AngularVelocitySensor" }
+              }
             }
           },
           "422": {
@@ -4145,8 +4147,8 @@
     "/branches/{branchId}/gnc/sensors/angular-rate-sensors/{blockId}": {
       "delete": {
         "tags": ["Sensor"],
-        "summary": "Delete AngularRateSensor",
-        "operationId": "delete_angularratesensor",
+        "summary": "Delete AngularVelocitySensor",
+        "operationId": "delete_angularvelocitysensor",
         "parameters": [
           {
             "required": true,
@@ -4178,8 +4180,8 @@
       },
       "patch": {
         "tags": ["Sensor"],
-        "summary": "Update AngularRateSensor",
-        "operationId": "update_angularratesensor",
+        "summary": "Update AngularVelocitySensor",
+        "operationId": "update_angularvelocitysensor",
         "parameters": [
           {
             "required": true,
@@ -4197,7 +4199,7 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/AngularRateSensorUpdate" }
+              "schema": { "$ref": "#/components/schemas/AngularVelocitySensorUpdate" }
             }
           },
           "required": true
@@ -4206,7 +4208,9 @@
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/AngularRateSensor" } }
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AngularVelocitySensor" }
+              }
             }
           },
           "422": {
@@ -5383,11 +5387,50 @@
         }
       }
     },
-    "/mission-design/missions/versions/{branchId}": {
+    "/mission-design/missions/versions/{branchId}/": {
+      "get": {
+        "tags": ["Branches"],
+        "summary": "Get a branch",
+        "description": "Retrieves the branch with the provided `id`.",
+        "operationId": "get_branch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": { "title": "Branchid", "type": "integer" },
+            "name": "branchId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Branch",
+                  "anyOf": [
+                    { "$ref": "#/components/schemas/BranchVehicleTemplateRes" },
+                    { "$ref": "#/components/schemas/BranchScenarioTemplateRes" }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": ["Branches"],
         "summary": "Branch off existing branch",
-        "operationId": "new_branch",
+        "description": "Creates a new branch based on and in the same repository as the branch associated with the provided `id`.",
+        "operationId": "create_branch",
         "parameters": [
           {
             "required": true,
@@ -5398,7 +5441,7 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/Branch" } }
+            "application/json": { "schema": { "$ref": "#/components/schemas/BranchCreate" } }
           },
           "required": true
         },
@@ -5406,7 +5449,129 @@
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/Branch" } }
+              "application/json": {
+                "schema": {
+                  "title": "Response Create Branch",
+                  "anyOf": [
+                    { "$ref": "#/components/schemas/BranchVehicleTemplateRes" },
+                    { "$ref": "#/components/schemas/BranchScenarioTemplateRes" }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Branches"],
+        "summary": "Delete a branch",
+        "description": "Deletes the branch with the provided `id`.",
+        "operationId": "delete_branch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": { "title": "Branchid", "type": "integer" },
+            "name": "branchId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BranchDeleteRes" } }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Branches"],
+        "summary": "Update a branch",
+        "description": "Updates updateable fields on the branch with the provided `id`. Note:\n- `shareable` indicates whether shareable links are valid for this branch.\n- `password` indicates whether the shareable link requires a password.",
+        "operationId": "update_branch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": { "title": "Branchid", "type": "integer" },
+            "name": "branchId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/BranchUpdate" } }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Update Branch",
+                  "anyOf": [
+                    { "$ref": "#/components/schemas/BranchVehicleTemplateRes" },
+                    { "$ref": "#/components/schemas/BranchScenarioTemplateRes" }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mission-design/missions/versions/{branchId}/share-auth/": {
+      "post": {
+        "tags": ["Branches"],
+        "summary": "Verify branch bassword",
+        "description": "Route to verify password when a user tries to access a branch with the provided `id` via a password protected shareable link.\nIf successful, returns a success message with a set-cookie. The cookie stores a `jwt` that allows for non-owner collaborators to send `GET` requests to the corresponding branch.",
+        "operationId": "verify_branch_password",
+        "parameters": [
+          {
+            "required": true,
+            "schema": { "title": "Branchid", "type": "integer" },
+            "name": "branchId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/BranchVerifyPassword" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/MessageRes" } }
             }
           },
           "422": {
@@ -5424,6 +5589,7 @@
       "post": {
         "tags": ["Branches"],
         "summary": "Commit changes to a branch",
+        "description": "Takes all changes to the blocks on the branch with the provided `id` and commits them to the corresponding version-controlled branch.",
         "operationId": "commit_to_branch",
         "parameters": [
           {
@@ -5443,9 +5609,7 @@
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/BranchCommitMessage" }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/MessageRes" } }
             }
           },
           "422": {
@@ -5462,7 +5626,8 @@
     "/mission-design/missions/versions/{currentBranchId}/merge/{incomingBranchId}": {
       "post": {
         "tags": ["Branches"],
-        "summary": "Merge",
+        "summary": "Merge branch into another branch",
+        "description": "Merges branch with `incomingBranchId` into branch with `currentBranchId`. This route has two functions:\n- To initiate the merge, send the request with no body. If there are no conflicts, it will successfully complete the merge and send back the resulting branch.\n- If there are conflicts, the response body will have a key of `conflicts` with a list of conflict objects outlining the \"current\" and \"incoming\" changes. Review the list, and send a second request to the same route including a list of resulutions (see optional `resultions` param in the request body schema below) indicating where you would like to keep the \"current\" or \"incoming\" changes. The indices in the `resultions` list should correspond with the indices of the `conflicts` list.",
         "operationId": "merge_branches",
         "parameters": [
           {
@@ -5480,9 +5645,7 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
-              "schema": { "title": "Resolutions", "type": "array", "items": { "type": "string" } }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/BranchMerge" } }
           },
           "required": true
         },
@@ -5491,7 +5654,94 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/BranchMergeMessage" }
+                "schema": {
+                  "title": "Response Merge Branches",
+                  "anyOf": [
+                    { "$ref": "#/components/schemas/BranchVehicleTemplateRes" },
+                    { "$ref": "#/components/schemas/BranchScenarioTemplateRes" },
+                    { "$ref": "#/components/schemas/BranchMergeConflictsRes" }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mission-design/missions/versions/{branchId}/committed/": {
+      "get": {
+        "tags": ["Branches"],
+        "summary": "Get saved branch data",
+        "description": "Retrieves all **committed** branch `data` (object with all the blocks) from the branch with the given `id`.",
+        "operationId": "get_committed_branch_data",
+        "parameters": [
+          {
+            "required": true,
+            "schema": { "title": "Branchid", "type": "integer" },
+            "name": "branchId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Committed Branch Data",
+                  "anyOf": [
+                    { "$ref": "#/components/schemas/VehicleTemplate" },
+                    { "$ref": "#/components/schemas/ScenarioTemplate" }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mission-design/missions/versions/{branchId}/saved/": {
+      "get": {
+        "tags": ["Branches"],
+        "summary": "Get committed branch data",
+        "description": "Retrieves all **saved** branch `data` (object with all the blocks) from the branch with the given `id`.",
+        "operationId": "get_saved_branch_data",
+        "parameters": [
+          {
+            "required": true,
+            "schema": { "title": "Branchid", "type": "integer" },
+            "name": "branchId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Saved Branch Data",
+                  "anyOf": [
+                    { "$ref": "#/components/schemas/VehicleTemplate" },
+                    { "$ref": "#/components/schemas/ScenarioTemplate" }
+                  ]
+                }
               }
             }
           },
@@ -5591,17 +5841,71 @@
           }
         }
       },
-      "AngularRateSensor": {
-        "title": "AngularRateSensor",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "subsystem",
-          "componentType",
-          "oneSigmaPerAxisError"
-        ],
+      "Agent": {
+        "title": "Agent",
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "templateRef": {
+            "title": "ID of Associated TemplateRef Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `TemplateRef` blocks. Reverse key: `TemplateRef.agents`."
+          },
+          "differentiatingState": {
+            "title": "Differentiatingstate",
+            "type": "object",
+            "default": {}
+          },
+          "peripheral": { "title": "Peripheral", "type": "boolean", "default": false },
+          "targetMapping": {
+            "title": "Targetmapping",
+            "type": "object",
+            "additionalProperties": { "type": "integer" },
+            "default": {}
+          }
+        }
+      },
+      "AgentBG": {
+        "title": "AgentBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/Agent" },
+            "default": {}
+          }
+        }
+      },
+      "AlgorithmBG": {
+        "title": "AlgorithmBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/TriadAlgorithm" },
+                { "$ref": "#/components/schemas/MEKFAlgorithm" },
+                { "$ref": "#/components/schemas/EKFAlgorithm" },
+                { "$ref": "#/components/schemas/GPSAlgorithm" },
+                { "$ref": "#/components/schemas/SlidingModeAlgorithm" }
+              ]
+            },
+            "default": {}
+          }
+        }
+      },
+      "AngularVelocitySensor": {
+        "title": "AngularVelocitySensor",
+        "required": ["name", "subsystem", "componentType", "oneSigmaPerAxisError"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -5618,9 +5922,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -5628,7 +5937,7 @@
           },
           "componentType": {
             "title": "Componenttype",
-            "enum": ["ANGULAR_RATE_SENSOR"],
+            "enum": ["ANGULAR_VELOCITY_SENSOR"],
             "type": "string"
           },
           "cotsTemplate": {
@@ -5681,15 +5990,9 @@
           "measurement": { "title": "Measurement", "type": "array", "items": { "type": "number" } }
         }
       },
-      "AngularRateSensorCreate": {
-        "title": "AngularRateSensorCreate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "oneSigmaPerAxisError"
-        ],
+      "AngularVelocitySensorCreate": {
+        "title": "AngularVelocitySensorCreate",
+        "required": ["name", "oneSigmaPerAxisError"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -5706,9 +6009,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "fieldOfView": {
             "title": "ID of Associated FieldOfView Block",
             "type": "integer",
@@ -5717,15 +6025,9 @@
           "oneSigmaPerAxisError": { "title": "Onesigmaperaxiserror", "type": "number" }
         }
       },
-      "AngularRateSensorUpdate": {
-        "title": "AngularRateSensorUpdate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "oneSigmaPerAxisError"
-        ],
+      "AngularVelocitySensorUpdate": {
+        "title": "AngularVelocitySensorUpdate",
+        "required": ["name", "oneSigmaPerAxisError"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -5742,15 +6044,81 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "fieldOfView": {
             "title": "ID of Associated FieldOfView Block",
             "type": "integer",
             "description": "Relationship to zero or one `FieldOfView` blocks. Reverse key: `FieldOfView.sensor`."
           },
           "oneSigmaPerAxisError": { "title": "Onesigmaperaxiserror", "type": "number" }
+        }
+      },
+      "AsyncConOps": {
+        "title": "AsyncConOps",
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "conditions": {
+            "title": "IDs of Associated Condition Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Condition` blocks. Reverse key: `Condition.conOps`.",
+            "default": []
+          },
+          "targets": {
+            "title": "IDs of Associated Target Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Target` blocks. Reverse key: `Target.conOps`.",
+            "default": []
+          },
+          "operationalModes": {
+            "title": "IDs of Associated OperationalMode Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `OperationalMode` blocks. Reverse key: `OperationalMode.conOps`.",
+            "default": []
+          },
+          "activeOpMode": {
+            "title": "ID of Associated OperationalMode Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `OperationalMode` blocks. "
+          },
+          "attitude": { "title": "Attitude", "type": "array", "items": { "type": "number" } }
+        }
+      },
+      "AsyncOrbit": {
+        "title": "AsyncOrbit",
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "initialStateDefType": {
+            "title": "Initial State Definition Type",
+            "allOf": [{ "$ref": "#/components/schemas/InitialStateDefType" }],
+            "default": ""
+          },
+          "initialStateDefParams": {
+            "title": "Initial State Definition Parameters",
+            "anyOf": [
+              { "$ref": "#/components/schemas/ISDPOrbitalElements" },
+              { "$ref": "#/components/schemas/ISDPTle" },
+              { "$ref": "#/components/schemas/ISDPEci" },
+              { "$ref": "#/components/schemas/IROIss" },
+              { "$ref": "#/components/schemas/IROGeostat" },
+              { "$ref": "#/components/schemas/IROGeostatTransfer" },
+              { "$ref": "#/components/schemas/IROPolarCirc" },
+              { "$ref": "#/components/schemas/IROEquatorialCirc" },
+              { "$ref": "#/components/schemas/IROSunSyncCirc" }
+            ],
+            "description": "May only be null initially."
+          }
         }
       },
       "Battery": {
@@ -5813,6 +6181,20 @@
           }
         }
       },
+      "BatteryBG": {
+        "title": "BatteryBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/Battery" },
+            "default": {}
+          }
+        }
+      },
       "BatteryCell": {
         "title": "BatteryCell",
         "required": [
@@ -5872,6 +6254,20 @@
             "items": {},
             "description": "Relationship to one or more `BatteryPack` blocks. Reverse key: `BatteryPack.cell`.",
             "default": []
+          }
+        }
+      },
+      "BatteryCellBG": {
+        "title": "BatteryCellBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/BatteryCell" },
+            "default": {}
           }
         }
       },
@@ -5981,17 +6377,7 @@
       },
       "BatteryPack": {
         "title": "BatteryPack",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "subsystem",
-          "numSeries",
-          "numParallel",
-          "cell",
-          "battery"
-        ],
+        "required": ["name", "subsystem", "numSeries", "numParallel", "cell", "battery"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -6008,9 +6394,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -6079,17 +6470,7 @@
       },
       "BatteryPackCreate": {
         "title": "BatteryPackCreate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "subsystem",
-          "numSeries",
-          "numParallel",
-          "cell",
-          "battery"
-        ],
+        "required": ["name", "subsystem", "numSeries", "numParallel", "cell", "battery"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -6106,9 +6487,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -6130,15 +6516,7 @@
       },
       "BatteryPackUpdate": {
         "title": "BatteryPackUpdate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "numSeries",
-          "numParallel",
-          "cell"
-        ],
+        "required": ["name", "numSeries", "numParallel", "cell"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -6155,9 +6533,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "numSeries": { "title": "# of Series Cells", "minimum": 1.0, "type": "integer" },
           "numParallel": { "title": "# of Parallel Cells", "minimum": 1.0, "type": "integer" },
           "cell": {
@@ -6260,6 +6643,20 @@
           "ramAngle": { "title": "Ramangle", "maximum": 360.0, "minimum": 0.0, "type": "number" }
         }
       },
+      "BodyFrameVectorBG": {
+        "title": "BodyFrameVectorBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/BodyFrameVector" },
+            "default": {}
+          }
+        }
+      },
       "BodyFrameVectorCreate": {
         "title": "BodyFrameVectorCreate",
         "required": ["name", "definitionType", "definitionParams", "satellite"],
@@ -6310,8 +6707,8 @@
           }
         }
       },
-      "Branch": {
-        "title": "Branch",
+      "BranchCreate": {
+        "title": "BranchCreate",
         "required": ["name"],
         "type": "object",
         "properties": {
@@ -6319,20 +6716,127 @@
           "description": { "title": "Description", "maxLength": 300, "type": "string" }
         }
       },
-      "BranchCommitMessage": {
-        "title": "BranchCommitMessage",
-        "required": ["message"],
-        "type": "object",
-        "properties": { "message": { "title": "Message", "type": "string" } }
-      },
-      "BranchMergeMessage": {
-        "title": "BranchMergeMessage",
-        "required": ["message"],
+      "BranchDeleteRes": {
+        "title": "BranchDeleteRes",
+        "required": ["message", "deletedEntities"],
         "type": "object",
         "properties": {
           "message": { "title": "Message", "type": "string" },
-          "conflicts": { "title": "Conflicts", "type": "array", "items": { "type": "string" } }
+          "deletedEntities": {
+            "title": "Deletedentities",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DeletedEntity" }
+          }
         }
+      },
+      "BranchMerge": {
+        "title": "BranchMerge",
+        "type": "object",
+        "properties": {
+          "resolutions": {
+            "title": "Resolutions",
+            "type": "array",
+            "items": { "enum": ["current", "incoming"], "type": "string" }
+          }
+        }
+      },
+      "BranchMergeConflictsRes": {
+        "title": "BranchMergeConflictsRes",
+        "required": ["conflicts"],
+        "type": "object",
+        "properties": {
+          "conflicts": {
+            "title": "Conflicts",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ConflictsObj" }
+          }
+        }
+      },
+      "BranchScenarioTemplateRes": {
+        "title": "BranchScenarioTemplateRes",
+        "required": [
+          "name",
+          "id",
+          "dateCreated",
+          "dateModified",
+          "simulationRequired",
+          "repository",
+          "user",
+          "uuid",
+          "shareable",
+          "sharePwRqd",
+          "numSimulations",
+          "dataSchema",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "description": { "title": "Description", "maxLength": 300, "type": "string" },
+          "id": { "title": "Id", "type": "integer" },
+          "dateCreated": { "title": "Datecreated", "type": "string", "format": "date-time" },
+          "dateModified": { "title": "Datemodified", "type": "string", "format": "date-time" },
+          "simulationRequired": { "title": "Simulationrequired", "type": "boolean" },
+          "repository": { "title": "Repository", "type": "integer" },
+          "user": { "title": "User", "type": "integer" },
+          "uuid": { "title": "Uuid", "type": "string", "format": "uuid" },
+          "shareable": { "title": "Shareable", "type": "boolean" },
+          "sharePwRqd": { "title": "Sharepwrqd", "type": "boolean" },
+          "numSimulations": { "title": "Numsimulations", "type": "integer" },
+          "dataSchema": { "title": "Dataschema", "type": "object" },
+          "data": { "$ref": "#/components/schemas/ScenarioTemplate" }
+        }
+      },
+      "BranchUpdate": {
+        "title": "BranchUpdate",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "description": { "title": "Description", "maxLength": 300, "type": "string" },
+          "shareable": { "title": "Shareable", "type": "boolean" },
+          "password": { "title": "Password", "maxLength": 128, "minLength": 8, "type": "string" }
+        }
+      },
+      "BranchVehicleTemplateRes": {
+        "title": "BranchVehicleTemplateRes",
+        "required": [
+          "name",
+          "id",
+          "dateCreated",
+          "dateModified",
+          "simulationRequired",
+          "repository",
+          "user",
+          "uuid",
+          "shareable",
+          "sharePwRqd",
+          "numSimulations",
+          "dataSchema",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "description": { "title": "Description", "maxLength": 300, "type": "string" },
+          "id": { "title": "Id", "type": "integer" },
+          "dateCreated": { "title": "Datecreated", "type": "string", "format": "date-time" },
+          "dateModified": { "title": "Datemodified", "type": "string", "format": "date-time" },
+          "simulationRequired": { "title": "Simulationrequired", "type": "boolean" },
+          "repository": { "title": "Repository", "type": "integer" },
+          "user": { "title": "User", "type": "integer" },
+          "uuid": { "title": "Uuid", "type": "string", "format": "uuid" },
+          "shareable": { "title": "Shareable", "type": "boolean" },
+          "sharePwRqd": { "title": "Sharepwrqd", "type": "boolean" },
+          "numSimulations": { "title": "Numsimulations", "type": "integer" },
+          "dataSchema": { "title": "Dataschema", "type": "object" },
+          "data": { "$ref": "#/components/schemas/VehicleTemplate" }
+        }
+      },
+      "BranchVerifyPassword": {
+        "title": "BranchVerifyPassword",
+        "required": ["password"],
+        "type": "object",
+        "properties": { "password": { "title": "Password", "type": "string" } }
       },
       "BusRegulator": {
         "title": "BusRegulator",
@@ -6372,6 +6876,20 @@
             "items": {},
             "description": "Relationship to one or more `Load` blocks. Reverse key: `Load.busRegulator`.",
             "default": []
+          }
+        }
+      },
+      "BusRegulatorBG": {
+        "title": "BusRegulatorBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/BusRegulator" },
+            "default": {}
           }
         }
       },
@@ -6610,6 +7128,20 @@
           }
         }
       },
+      "CelestialVectorBG": {
+        "title": "CelestialVectorBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/CelestialVector" },
+            "default": {}
+          }
+        }
+      },
       "CelestialVectorCreate": {
         "title": "CelestialVectorCreate",
         "required": ["name", "celestialPointingDirection"],
@@ -6632,9 +7164,80 @@
           }
         }
       },
+      "CircularFieldOfView": {
+        "title": "CircularFieldOfView",
+        "required": ["name", "fieldOfViewType", "boresightBodyFrameVector", "sensor", "halfAngle"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "fieldOfViewType": {
+            "title": "Fieldofviewtype",
+            "enum": ["CIRC_FIELD_OF_VIEW"],
+            "type": "string"
+          },
+          "boresightBodyFrameVector": {
+            "title": "ID of Associated BodyFrameVector Block",
+            "type": "integer",
+            "description": "Relationship to a `BodyFrameVector` block. Reverse key: `BodyFrameVector.fieldsOfView`."
+          },
+          "sensor": {
+            "title": "ID of Associated Sensor Block",
+            "type": "integer",
+            "description": "Relationship to a `Sensor` block. Reverse key: `Sensor.fieldOfView`."
+          },
+          "constraints": {
+            "title": "IDs of Associated FOVConstraint Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `FOVConstraint` blocks. Reverse key: `FOVConstraint.fieldOfView`.",
+            "default": []
+          },
+          "halfAngle": { "title": "Halfangle", "maximum": 180.0, "minimum": 0.0, "type": "number" }
+        }
+      },
+      "ClockConfig": {
+        "title": "ClockConfig",
+        "required": ["startTime", "stopTime"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "startTime": { "title": "Starttime", "type": "number" },
+          "stopTime": { "title": "Stoptime", "type": "number" },
+          "realTime": { "title": "Realtime", "type": "boolean", "default": false }
+        }
+      },
+      "ClockConfigBG": {
+        "title": "ClockConfigBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/ClockConfig" },
+            "default": {}
+          }
+        }
+      },
+      "Collection": {
+        "title": "Collection",
+        "required": ["latestPrimeId"],
+        "type": "object",
+        "properties": {
+          "latestPrimeId": { "title": "Latestprimeid", "type": "integer" },
+          "blockToBlockGroupMap": {
+            "title": "Blocktoblockgroupmap",
+            "type": "object",
+            "additionalProperties": { "type": "string" },
+            "default": {}
+          }
+        }
+      },
       "Component": {
         "title": "Component",
-        "required": ["name", "hotTempRating", "coldTempRating", "thermalCapacitance", "subsystem"],
+        "required": ["name", "subsystem"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -6651,9 +7254,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -6708,9 +7316,44 @@
           "coldMargin": { "title": "Coldmargin", "type": "number" }
         }
       },
+      "ComponentBG": {
+        "title": "ComponentBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/Component" },
+                { "$ref": "#/components/schemas/BatteryPack" },
+                { "$ref": "#/components/schemas/SolarPanel" },
+                { "$ref": "#/components/schemas/QuasiRegDetTopology" },
+                { "$ref": "#/components/schemas/FullyRegDetTopology" },
+                { "$ref": "#/components/schemas/SingleConvHybridTopology" },
+                { "$ref": "#/components/schemas/TwoConvMpptTopology" },
+                { "$ref": "#/components/schemas/SingleConvMpptTopology" },
+                { "$ref": "#/components/schemas/Topology" },
+                { "$ref": "#/components/schemas/ReactionWheel" },
+                { "$ref": "#/components/schemas/Magnetorquer" },
+                { "$ref": "#/components/schemas/DirectionSensor" },
+                { "$ref": "#/components/schemas/OpticalAttitudeSensor" },
+                { "$ref": "#/components/schemas/VectorSensor" },
+                { "$ref": "#/components/schemas/PositionSensor" },
+                { "$ref": "#/components/schemas/AngularVelocitySensor" },
+                { "$ref": "#/components/schemas/Cooler" },
+                { "$ref": "#/components/schemas/Heater" }
+              ]
+            },
+            "default": {}
+          }
+        }
+      },
       "ComponentCreate": {
         "title": "ComponentCreate",
-        "required": ["name", "hotTempRating", "coldTempRating", "thermalCapacitance", "subsystem"],
+        "required": ["name", "subsystem"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -6727,9 +7370,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -6739,7 +7387,7 @@
       },
       "ComponentUpdate": {
         "title": "ComponentUpdate",
-        "required": ["name", "hotTempRating", "coldTempRating", "thermalCapacitance"],
+        "required": ["name"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -6756,9 +7404,67 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" }
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          }
+        }
+      },
+      "ConOps": {
+        "title": "ConOps",
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "conditions": {
+            "title": "IDs of Associated Condition Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Condition` blocks. Reverse key: `Condition.conOps`.",
+            "default": []
+          },
+          "targets": {
+            "title": "IDs of Associated Target Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Target` blocks. Reverse key: `Target.conOps`.",
+            "default": []
+          },
+          "operationalModes": {
+            "title": "IDs of Associated OperationalMode Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `OperationalMode` blocks. Reverse key: `OperationalMode.conOps`.",
+            "default": []
+          },
+          "activeOpMode": {
+            "title": "ID of Associated OperationalMode Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `OperationalMode` blocks. "
+          },
+          "attitude": { "title": "Attitude", "type": "array", "items": { "type": "number" } }
+        }
+      },
+      "ConOpsBG": {
+        "title": "ConOpsBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/ConOps" },
+                { "$ref": "#/components/schemas/AsyncConOps" }
+              ]
+            },
+            "default": {}
+          }
         }
       },
       "Condition": {
@@ -6827,6 +7533,25 @@
             "items": {},
             "description": "Relationship to one or more `OperationalMode` blocks. Reverse key: `OperationalMode.conditions`.",
             "default": []
+          }
+        }
+      },
+      "ConditionBG": {
+        "title": "ConditionBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/GroupCondition" },
+                { "$ref": "#/components/schemas/Condition" }
+              ]
+            },
+            "default": {}
           }
         }
       },
@@ -6951,6 +7676,16 @@
         "title": "ConfigurationTypes",
         "enum": ["SERIES", "PARALLEL"],
         "description": "An enumeration."
+      },
+      "ConflictsObj": {
+        "title": "ConflictsObj",
+        "required": ["current", "incoming", "block"],
+        "type": "object",
+        "properties": {
+          "current": { "title": "Current", "type": "object" },
+          "incoming": { "title": "Incoming", "type": "object" },
+          "block": { "title": "Block", "type": "string" }
+        }
       },
       "ConstantLoad": {
         "title": "ConstantLoad",
@@ -7123,9 +7858,6 @@
         "title": "Cooler",
         "required": [
           "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
           "subsystem",
           "componentType",
           "onRegHeatFlowRate",
@@ -7149,9 +7881,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -7226,9 +7963,6 @@
         "title": "CoolerCreate",
         "required": [
           "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
           "onRegHeatFlowRate",
           "heatFlowRateRating",
           "controlledComponent",
@@ -7250,9 +7984,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "onRegHeatFlowRate": {
             "title": "Onregheatflowrate",
             "exclusiveMinimum": 0.0,
@@ -7271,9 +8010,6 @@
         "title": "CoolerUpdate",
         "required": [
           "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
           "onRegHeatFlowRate",
           "heatFlowRateRating",
           "controlledComponent",
@@ -7295,9 +8031,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "onRegHeatFlowRate": {
             "title": "Onregheatflowrate",
             "exclusiveMinimum": 0.0,
@@ -7312,18 +8053,18 @@
           "efficiency": { "title": "Efficiency", "maximum": 1.0, "minimum": 0.0, "type": "number" }
         }
       },
+      "DeletedEntity": {
+        "title": "DeletedEntity",
+        "required": ["model", "id"],
+        "type": "object",
+        "properties": {
+          "model": { "title": "Model", "type": "string" },
+          "id": { "title": "Id", "type": "integer" }
+        }
+      },
       "DirectionSensor": {
         "title": "DirectionSensor",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "subsystem",
-          "componentType",
-          "oneSigmaAngleError",
-          "vector"
-        ],
+        "required": ["name", "subsystem", "componentType", "oneSigmaAngleError", "vector"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -7340,9 +8081,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -7411,14 +8157,7 @@
       },
       "DirectionSensorCreate": {
         "title": "DirectionSensorCreate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "oneSigmaAngleError",
-          "vector"
-        ],
+        "required": ["name", "oneSigmaAngleError", "vector"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -7435,9 +8174,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "fieldOfView": {
             "title": "ID of Associated FieldOfView Block",
             "type": "integer",
@@ -7453,14 +8197,7 @@
       },
       "DirectionSensorUpdate": {
         "title": "DirectionSensorUpdate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "oneSigmaAngleError",
-          "vector"
-        ],
+        "required": ["name", "oneSigmaAngleError", "vector"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -7477,9 +8214,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "fieldOfView": {
             "title": "ID of Associated FieldOfView Block",
             "type": "integer",
@@ -7529,6 +8271,20 @@
             "description": "Relationship to a `FieldOfView` block. Reverse key: `FieldOfView.constraints`."
           },
           "compliance": { "title": "Compliance", "type": "boolean" }
+        }
+      },
+      "FOVConstraintBG": {
+        "title": "FOVConstraintBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/FOVConstraint" },
+            "default": {}
+          }
         }
       },
       "FOVConstraintCreate": {
@@ -7600,6 +8356,25 @@
           }
         }
       },
+      "FieldOfViewBG": {
+        "title": "FieldOfViewBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/CircularFieldOfView" },
+                { "$ref": "#/components/schemas/RectangularFieldOfView" }
+              ]
+            },
+            "default": {}
+          }
+        }
+      },
       "FieldOfViewCreate": {
         "title": "FieldOfViewCreate",
         "required": ["name", "fieldOfViewType", "boresightBodyFrameVector"],
@@ -7632,6 +8407,214 @@
             "title": "ID of Associated BodyFrameVector Block",
             "type": "integer",
             "description": "Relationship to a `BodyFrameVector` block. Reverse key: `BodyFrameVector.fieldsOfView`."
+          }
+        }
+      },
+      "FixedSurface": {
+        "title": "FixedSurface",
+        "required": [
+          "name",
+          "motionType",
+          "area",
+          "surfaceCentroid",
+          "bodyFrameVector",
+          "surfaceMaterial",
+          "satellite"
+        ],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "motionType": { "title": "Motiontype", "enum": ["FIXED"], "type": "string" },
+          "area": { "title": "Area [m^2]", "exclusiveMinimum": 0.0, "type": "number" },
+          "surfaceCentroid": {
+            "title": "Centeroid [Vector3[m]]",
+            "type": "array",
+            "items": { "type": "number" }
+          },
+          "bodyFrameVector": {
+            "title": "ID of Associated BodyFrameVector Block",
+            "type": "integer",
+            "description": "Relationship to a `BodyFrameVector` block. Reverse key: `BodyFrameVector.surfaces`."
+          },
+          "surfaceMaterial": {
+            "title": "ID of Associated SurfaceMaterial Block",
+            "type": "integer",
+            "description": "Relationship to a `SurfaceMaterial` block. Reverse key: `SurfaceMaterial.surfaces`."
+          },
+          "satellite": {
+            "title": "ID of Associated Satellite Block",
+            "type": "integer",
+            "description": "Relationship to a `Satellite` block. Reverse key: `Satellite.surfaces`."
+          },
+          "panels": {
+            "title": "IDs of Associated SolarPanel Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `SolarPanel` blocks. Reverse key: `SolarPanel.surface`.",
+            "default": []
+          },
+          "thermal_interface_A": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.surfaceA`.",
+            "default": []
+          },
+          "thermal_interface_B": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.surfaceB`.",
+            "default": []
+          },
+          "heliocenterAngle": { "title": "Heliocenterangle", "type": "number" },
+          "solarViewFactor": {
+            "title": "Solarviewfactor",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "sat2Sun": { "title": "Sat2Sun", "type": "array", "items": { "type": "number" } },
+          "earthIrHeatFlowRate": { "title": "Earthirheatflowrate", "type": "number" },
+          "earthAlbedoHeatFlowRate": { "title": "Earthalbedoheatflowrate", "type": "number" },
+          "solarHeatFlowRate": { "title": "Solarheatflowrate", "type": "number" },
+          "spaceHeatFlowRate": { "title": "Spaceheatflowrate", "type": "number" },
+          "heatFlowRate": { "title": "Heatflowrate", "type": "number" },
+          "temperature": { "title": "Temperature", "type": "number" },
+          "hotMargin": { "title": "Hotmargin", "type": "number" },
+          "coldMargin": { "title": "Coldmargin", "type": "number" }
+        }
+      },
+      "FullyRegDetTopology": {
+        "title": "FullyRegDetTopology",
+        "required": ["name", "subsystem", "componentType", "topologyType", "battery"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "partNumber": {
+            "title": "Part Number",
+            "maxLength": 32,
+            "type": "string",
+            "default": ""
+          },
+          "manufacturer": {
+            "title": "Manufacturer",
+            "maxLength": 32,
+            "type": "string",
+            "default": ""
+          },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
+          "subsystem": {
+            "title": "ID of Associated Subsystem Block",
+            "type": "integer",
+            "description": "Relationship to a `Subsystem` block. Reverse key: `Subsystem.components`."
+          },
+          "componentType": {
+            "title": "Componenttype",
+            "enum": ["POWER_PROCESSOR"],
+            "type": "string"
+          },
+          "cotsTemplate": {
+            "title": "COTS Template Name",
+            "maxLength": 64,
+            "type": "string",
+            "description": "Read-only",
+            "default": ""
+          },
+          "loadStates": {
+            "title": "IDs of Associated LoadState Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `LoadState` blocks. Reverse key: `LoadState.component`.",
+            "default": []
+          },
+          "satellite": {
+            "title": "ID of Associated Satellite Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `Satellite` blocks. Reverse key: `Satellite.components`."
+          },
+          "thermal_interface_A": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.componentA`.",
+            "default": []
+          },
+          "thermal_interface_B": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.componentB`.",
+            "default": []
+          },
+          "dissipations": {
+            "title": "Dissipations",
+            "type": "object",
+            "additionalProperties": { "minimum": 0.0, "type": "number" }
+          },
+          "temperature": { "title": "Temperature", "type": "number" },
+          "hotMargin": { "title": "Hotmargin", "type": "number" },
+          "coldMargin": { "title": "Coldmargin", "type": "number" },
+          "topologyType": { "title": "Topologytype", "enum": ["FULLY_REG_DET"], "type": "string" },
+          "topologyParams": {
+            "title": "Topology Definition Parameters",
+            "anyOf": [
+              { "$ref": "#/components/schemas/TopologyParamFRD" },
+              { "$ref": "#/components/schemas/TopologyParamSCH" },
+              { "$ref": "#/components/schemas/TopologyParamQRD" },
+              { "$ref": "#/components/schemas/TopologyParamTCM" },
+              { "$ref": "#/components/schemas/TopologyParamSCM" }
+            ],
+            "description": "This field may only be undefined initially.  It is required on first update."
+          },
+          "loads": {
+            "title": "IDs of Associated Load Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Load` blocks. Reverse key: `Load.topology`.",
+            "default": []
+          },
+          "battery": {
+            "title": "ID of Associated Battery Block",
+            "type": "integer",
+            "description": "Relationship to a `Battery` block. Reverse key: `Battery.topology`."
+          },
+          "batteryCells": {
+            "title": "IDs of Associated BatteryCell Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `BatteryCell` blocks. Reverse key: `BatteryCell.topology`.",
+            "default": []
+          },
+          "busRegulators": {
+            "title": "IDs of Associated BusRegulator Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `BusRegulator` blocks. Reverse key: `BusRegulator.topology`.",
+            "default": []
+          },
+          "solarArrays": {
+            "title": "IDs of Associated SolarArray Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `SolarArray` blocks. Reverse key: `SolarArray.topology`.",
+            "default": []
+          },
+          "solarCells": {
+            "title": "IDs of Associated SolarCell Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `SolarCell` blocks. Reverse key: `SolarCell.topology`.",
+            "default": []
           }
         }
       },
@@ -7748,6 +8731,76 @@
           }
         }
       },
+      "GroupCondition": {
+        "title": "GroupCondition",
+        "required": [
+          "name",
+          "relationship",
+          "paramACategory",
+          "paramBCategory",
+          "paramA",
+          "conOps"
+        ],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "relationship": {
+            "title": "Relationship",
+            "allOf": [{ "$ref": "#/components/schemas/ConditionRelationship" }]
+          },
+          "paramACategory": {
+            "title": "Paramacategory",
+            "enum": ["TARGET_GROUP"],
+            "type": "string"
+          },
+          "paramBCategory": {
+            "title": "Parameter B Category",
+            "allOf": [{ "$ref": "#/components/schemas/ParameterBCategories" }]
+          },
+          "paramA": {
+            "title": "Parameter A Selection",
+            "allOf": [{ "$ref": "#/components/schemas/Parameters" }]
+          },
+          "paramB": {
+            "title": "Parameter B Selection",
+            "allOf": [{ "$ref": "#/components/schemas/Parameters" }],
+            "default": ""
+          },
+          "scalar": {
+            "title": "Scalar Value",
+            "type": "number",
+            "description": "Set if `paramBCategory` == `SCALAR`."
+          },
+          "targetA": {
+            "title": "ID of Associated Target Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `Target` blocks. Reverse key: `Target.conditions_A`."
+          },
+          "targetB": {
+            "title": "ID of Associated Target Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `Target` blocks. Reverse key: `Target.conditions_B`."
+          },
+          "targetGroupA": {
+            "title": "ID of Associated TargetGroup Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `TargetGroup` blocks. Reverse key: `TargetGroup.groupConditions_A`."
+          },
+          "conOps": {
+            "title": "ID of Associated ConOps Block",
+            "type": "integer",
+            "description": "Relationship to a `ConOps` block. Reverse key: `ConOps.conditions`."
+          },
+          "operationalModes": {
+            "title": "IDs of Associated OperationalMode Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `OperationalMode` blocks. Reverse key: `OperationalMode.conditions`.",
+            "default": []
+          }
+        }
+      },
       "HTTPValidationError": {
         "title": "HTTPValidationError",
         "type": "object",
@@ -7763,9 +8816,6 @@
         "title": "Heater",
         "required": [
           "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
           "subsystem",
           "componentType",
           "onRegHeatFlowRate",
@@ -7788,9 +8838,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -7861,15 +8916,7 @@
       },
       "HeaterCreate": {
         "title": "HeaterCreate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "onRegHeatFlowRate",
-          "heatFlowRateRating",
-          "controlledComponent"
-        ],
+        "required": ["name", "onRegHeatFlowRate", "heatFlowRateRating", "controlledComponent"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -7886,9 +8933,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "onRegHeatFlowRate": {
             "title": "Onregheatflowrate",
             "exclusiveMinimum": 0.0,
@@ -7904,15 +8956,7 @@
       },
       "HeaterUpdate": {
         "title": "HeaterUpdate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "onRegHeatFlowRate",
-          "heatFlowRateRating",
-          "controlledComponent"
-        ],
+        "required": ["name", "onRegHeatFlowRate", "heatFlowRateRating", "controlledComponent"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -7929,9 +8973,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "onRegHeatFlowRate": {
             "title": "Onregheatflowrate",
             "exclusiveMinimum": 0.0,
@@ -8114,6 +9163,26 @@
           "stopTime": { "title": "Stoptime", "type": "number" }
         }
       },
+      "LoadBG": {
+        "title": "LoadBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/ResistanceLoad" },
+                { "$ref": "#/components/schemas/PowerLoad" },
+                { "$ref": "#/components/schemas/ActuatorLoad" }
+              ]
+            },
+            "default": {}
+          }
+        }
+      },
       "LoadState": {
         "title": "LoadState",
         "required": ["name", "efficiency", "component"],
@@ -8140,6 +9209,27 @@
             "items": {},
             "description": "Relationship to one or more `Load` blocks. Reverse key: `Load.loadState`.",
             "default": []
+          },
+          "isActive": { "title": "Isactive", "type": "boolean", "default": false },
+          "timeSinceActive": {
+            "title": "Timesinceactive",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 0
+          }
+        }
+      },
+      "LoadStateBG": {
+        "title": "LoadStateBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/LoadState" },
+            "default": {}
           }
         }
       },
@@ -8243,6 +9333,20 @@
           "localPointingDirection": { "$ref": "#/components/schemas/LocalPointingDirections" }
         }
       },
+      "LocalVectorBG": {
+        "title": "LocalVectorBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/LocalVector" },
+            "default": {}
+          }
+        }
+      },
       "LocalVectorCreate": {
         "title": "LocalVectorCreate",
         "required": ["name", "localPointingDirection"],
@@ -8259,6 +9363,46 @@
         "properties": {
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
           "localPointingDirection": { "$ref": "#/components/schemas/LocalPointingDirections" }
+        }
+      },
+      "LockPointingMode": {
+        "title": "LockPointingMode",
+        "required": [
+          "name",
+          "pointingModeType",
+          "conOps",
+          "lockVector",
+          "lockBodyFrameVector",
+          "spinRate"
+        ],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "pointingModeType": { "title": "Pointing Mode Type", "enum": ["LOCK"], "type": "string" },
+          "conOps": {
+            "title": "ID of Associated ConOps Block",
+            "type": "integer",
+            "description": "Relationship to a `ConOps` block. Reverse key: `ConOps.pointingModes`."
+          },
+          "operationalModes": {
+            "title": "IDs of Associated OperationalMode Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `OperationalMode` blocks. Reverse key: `OperationalMode.pointingMode`.",
+            "default": []
+          },
+          "lockVector": {
+            "title": "ID of Associated Vector Block",
+            "type": "integer",
+            "description": "Relationship to a `Vector` block. "
+          },
+          "lockBodyFrameVector": {
+            "title": "ID of Associated BodyFrameVector Block",
+            "type": "integer",
+            "description": "Relationship to a `BodyFrameVector` block. "
+          },
+          "spinRate": { "title": "Spinrate", "type": "number" }
         }
       },
       "LockPointingModeCreate": {
@@ -8330,9 +9474,6 @@
         "title": "Magnetorquer",
         "required": [
           "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
           "subsystem",
           "componentType",
           "bodyFrameVector",
@@ -8356,9 +9497,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -8434,9 +9580,6 @@
         "title": "MagnetorquerCreate",
         "required": [
           "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
           "bodyFrameVector",
           "ratedMagneticMoment",
           "powerAtRatedMagneticMoment"
@@ -8457,9 +9600,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "bodyFrameVector": {
             "title": "ID of Associated BodyFrameVector Block",
             "type": "integer",
@@ -8477,9 +9625,6 @@
         "title": "MagnetorquerUpdate",
         "required": [
           "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
           "bodyFrameVector",
           "ratedMagneticMoment",
           "powerAtRatedMagneticMoment"
@@ -8500,9 +9645,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "bodyFrameVector": {
             "title": "ID of Associated BodyFrameVector Block",
             "type": "integer",
@@ -8514,6 +9664,60 @@
             "type": "number"
           },
           "powerAtRatedMagneticMoment": { "title": "Poweratratedmagneticmoment", "type": "number" }
+        }
+      },
+      "MaxAlignPointingMode": {
+        "title": "MaxAlignPointingMode",
+        "required": [
+          "name",
+          "pointingModeType",
+          "conOps",
+          "lockVector",
+          "lockBodyFrameVector",
+          "maxAlignVector",
+          "maxAlignBodyFrameVector"
+        ],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "pointingModeType": {
+            "title": "Pointing Mode Type",
+            "enum": ["MAX_SECONDARY_ALIGN"],
+            "type": "string"
+          },
+          "conOps": {
+            "title": "ID of Associated ConOps Block",
+            "type": "integer",
+            "description": "Relationship to a `ConOps` block. Reverse key: `ConOps.pointingModes`."
+          },
+          "operationalModes": {
+            "title": "IDs of Associated OperationalMode Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `OperationalMode` blocks. Reverse key: `OperationalMode.pointingMode`.",
+            "default": []
+          },
+          "lockVector": {
+            "title": "ID of Associated Vector Block",
+            "type": "integer",
+            "description": "Relationship to a `Vector` block. "
+          },
+          "lockBodyFrameVector": {
+            "title": "ID of Associated BodyFrameVector Block",
+            "type": "integer",
+            "description": "Relationship to a `BodyFrameVector` block. "
+          },
+          "maxAlignVector": {
+            "title": "ID of Associated Vector Block",
+            "type": "integer",
+            "description": "Relationship to a `Vector` block. "
+          },
+          "maxAlignBodyFrameVector": {
+            "title": "ID of Associated BodyFrameVector Block",
+            "type": "integer",
+            "description": "Relationship to a `BodyFrameVector` block. "
+          }
         }
       },
       "MaxAlignPointingModeCreate": {
@@ -8603,6 +9807,12 @@
             "description": "Relationship to a `BodyFrameVector` block. "
           }
         }
+      },
+      "MessageRes": {
+        "title": "MessageRes",
+        "required": ["message"],
+        "type": "object",
+        "properties": { "message": { "title": "Message", "type": "string" } }
       },
       "MotionTypes": {
         "title": "MotionTypes",
@@ -8694,6 +9904,20 @@
             "default": 0
           },
           "isActive": { "title": "Isactive", "type": "boolean", "default": false }
+        }
+      },
+      "OperationalModeBG": {
+        "title": "OperationalModeBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/OperationalMode" },
+            "default": {}
+          }
         }
       },
       "OperationalModeCreate": {
@@ -8789,9 +10013,6 @@
         "title": "OpticalAttitudeSensor",
         "required": [
           "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
           "subsystem",
           "componentType",
           "oneSigmaCrossAxisError",
@@ -8813,9 +10034,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -8881,14 +10107,7 @@
       },
       "OpticalAttitudeSensorCreate": {
         "title": "OpticalAttitudeSensorCreate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "oneSigmaCrossAxisError",
-          "oneSigmaBoresightAxisError"
-        ],
+        "required": ["name", "oneSigmaCrossAxisError", "oneSigmaBoresightAxisError"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -8905,9 +10124,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "fieldOfView": {
             "title": "ID of Associated FieldOfView Block",
             "type": "integer",
@@ -8919,14 +10143,7 @@
       },
       "OpticalAttitudeSensorUpdate": {
         "title": "OpticalAttitudeSensorUpdate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "oneSigmaCrossAxisError",
-          "oneSigmaBoresightAxisError"
-        ],
+        "required": ["name", "oneSigmaCrossAxisError", "oneSigmaBoresightAxisError"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -8943,9 +10160,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "fieldOfView": {
             "title": "ID of Associated FieldOfView Block",
             "type": "integer",
@@ -8979,6 +10201,25 @@
               { "$ref": "#/components/schemas/IROSunSyncCirc" }
             ],
             "description": "May only be null initially."
+          }
+        }
+      },
+      "OrbitBG": {
+        "title": "OrbitBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/Orbit" },
+                { "$ref": "#/components/schemas/AsyncOrbit" }
+              ]
+            },
+            "default": {}
           }
         }
       },
@@ -9040,6 +10281,32 @@
         ],
         "description": "An enumeration."
       },
+      "PassivePointingMode": {
+        "title": "PassivePointingMode",
+        "required": ["name", "pointingModeType", "conOps"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "pointingModeType": {
+            "title": "Pointing Mode Type",
+            "enum": ["PASSIVE"],
+            "type": "string"
+          },
+          "conOps": {
+            "title": "ID of Associated ConOps Block",
+            "type": "integer",
+            "description": "Relationship to a `ConOps` block. Reverse key: `ConOps.pointingModes`."
+          },
+          "operationalModes": {
+            "title": "IDs of Associated OperationalMode Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `OperationalMode` blocks. Reverse key: `OperationalMode.pointingMode`.",
+            "default": []
+          }
+        }
+      },
       "PassivePointingModeCreate": {
         "title": "PassivePointingModeCreate",
         "required": ["name", "pointingModeType", "conOps"],
@@ -9098,6 +10365,26 @@
           }
         }
       },
+      "PointingModeBG": {
+        "title": "PointingModeBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/PassivePointingMode" },
+                { "$ref": "#/components/schemas/LockPointingMode" },
+                { "$ref": "#/components/schemas/MaxAlignPointingMode" }
+              ]
+            },
+            "default": {}
+          }
+        }
+      },
       "PointingModeTypes": {
         "title": "PointingModeTypes",
         "enum": ["PASSIVE", "LOCK", "MAX_SECONDARY_ALIGN"],
@@ -9110,15 +10397,7 @@
       },
       "PositionSensor": {
         "title": "PositionSensor",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "subsystem",
-          "componentType",
-          "oneSigmaDistanceError"
-        ],
+        "required": ["name", "subsystem", "componentType", "oneSigmaDistanceError"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -9135,9 +10414,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -9200,13 +10484,7 @@
       },
       "PositionSensorCreate": {
         "title": "PositionSensorCreate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "oneSigmaDistanceError"
-        ],
+        "required": ["name", "oneSigmaDistanceError"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -9223,9 +10501,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "fieldOfView": {
             "title": "ID of Associated FieldOfView Block",
             "type": "integer",
@@ -9236,13 +10519,7 @@
       },
       "PositionSensorUpdate": {
         "title": "PositionSensorUpdate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "oneSigmaDistanceError"
-        ],
+        "required": ["name", "oneSigmaDistanceError"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -9259,9 +10536,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "fieldOfView": {
             "title": "ID of Associated FieldOfView Block",
             "type": "integer",
@@ -9270,13 +10552,184 @@
           "oneSigmaDistanceError": { "title": "Onesigmadistanceerror", "type": "number" }
         }
       },
+      "PowerLoad": {
+        "title": "PowerLoad",
+        "required": ["name", "epsOutputType", "loadState", "loadDefType", "loadDefParams"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "epsOutputType": {
+            "title": "Power Supply Bus",
+            "allOf": [{ "$ref": "#/components/schemas/EpsOutputTypes" }],
+            "description": "`CORE_OUTPUT` if connected to the regulated/unregulated Power Processor bus.  `BUS_REGULATOR` if connected to a constant voltage `BusRegulator` output."
+          },
+          "busRegulator": {
+            "title": "ID of Associated BusRegulator Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `BusRegulator` blocks. Reverse key: `BusRegulator.loads`."
+          },
+          "topology": {
+            "title": "ID of Associated Topology Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `Topology` blocks. Reverse key: `Topology.loads`."
+          },
+          "loadState": {
+            "title": "ID of Associated LoadState Block",
+            "type": "integer",
+            "description": "Relationship to a `LoadState` block. Reverse key: `LoadState.loads`."
+          },
+          "loadDefType": { "title": "Loaddeftype", "enum": ["CONSTANT_POWER"], "type": "string" },
+          "loadDefParams": { "$ref": "#/components/schemas/ConstantPower" },
+          "dutyCyclePeriod": {
+            "title": "Duty Cycle Period [min]",
+            "exclusiveMinimum": 0.0,
+            "type": "number"
+          },
+          "dutyCyclePercentage": {
+            "title": "Duty Cycle Percentage",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number"
+          }
+        }
+      },
+      "QuasiRegDetTopology": {
+        "title": "QuasiRegDetTopology",
+        "required": ["name", "subsystem", "componentType", "topologyType", "battery"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "partNumber": {
+            "title": "Part Number",
+            "maxLength": 32,
+            "type": "string",
+            "default": ""
+          },
+          "manufacturer": {
+            "title": "Manufacturer",
+            "maxLength": 32,
+            "type": "string",
+            "default": ""
+          },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
+          "subsystem": {
+            "title": "ID of Associated Subsystem Block",
+            "type": "integer",
+            "description": "Relationship to a `Subsystem` block. Reverse key: `Subsystem.components`."
+          },
+          "componentType": {
+            "title": "Componenttype",
+            "enum": ["POWER_PROCESSOR"],
+            "type": "string"
+          },
+          "cotsTemplate": {
+            "title": "COTS Template Name",
+            "maxLength": 64,
+            "type": "string",
+            "description": "Read-only",
+            "default": ""
+          },
+          "loadStates": {
+            "title": "IDs of Associated LoadState Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `LoadState` blocks. Reverse key: `LoadState.component`.",
+            "default": []
+          },
+          "satellite": {
+            "title": "ID of Associated Satellite Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `Satellite` blocks. Reverse key: `Satellite.components`."
+          },
+          "thermal_interface_A": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.componentA`.",
+            "default": []
+          },
+          "thermal_interface_B": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.componentB`.",
+            "default": []
+          },
+          "dissipations": {
+            "title": "Dissipations",
+            "type": "object",
+            "additionalProperties": { "minimum": 0.0, "type": "number" }
+          },
+          "temperature": { "title": "Temperature", "type": "number" },
+          "hotMargin": { "title": "Hotmargin", "type": "number" },
+          "coldMargin": { "title": "Coldmargin", "type": "number" },
+          "topologyType": { "title": "Topologytype", "enum": ["QUASI_REG_DET"], "type": "string" },
+          "topologyParams": {
+            "title": "Topology Definition Parameters",
+            "anyOf": [
+              { "$ref": "#/components/schemas/TopologyParamFRD" },
+              { "$ref": "#/components/schemas/TopologyParamSCH" },
+              { "$ref": "#/components/schemas/TopologyParamQRD" },
+              { "$ref": "#/components/schemas/TopologyParamTCM" },
+              { "$ref": "#/components/schemas/TopologyParamSCM" }
+            ],
+            "description": "This field may only be undefined initially.  It is required on first update."
+          },
+          "loads": {
+            "title": "IDs of Associated Load Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Load` blocks. Reverse key: `Load.topology`.",
+            "default": []
+          },
+          "battery": {
+            "title": "ID of Associated Battery Block",
+            "type": "integer",
+            "description": "Relationship to a `Battery` block. Reverse key: `Battery.topology`."
+          },
+          "batteryCells": {
+            "title": "IDs of Associated BatteryCell Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `BatteryCell` blocks. Reverse key: `BatteryCell.topology`.",
+            "default": []
+          },
+          "busRegulators": {
+            "title": "IDs of Associated BusRegulator Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `BusRegulator` blocks. Reverse key: `BusRegulator.topology`.",
+            "default": []
+          },
+          "solarArrays": {
+            "title": "IDs of Associated SolarArray Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `SolarArray` blocks. Reverse key: `SolarArray.topology`.",
+            "default": []
+          },
+          "solarCells": {
+            "title": "IDs of Associated SolarCell Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `SolarCell` blocks. Reverse key: `SolarCell.topology`.",
+            "default": []
+          }
+        }
+      },
       "ReactionWheel": {
         "title": "ReactionWheel",
         "required": [
           "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
           "subsystem",
           "componentType",
           "bodyFrameVector",
@@ -9301,9 +10754,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -9377,9 +10835,6 @@
         "title": "ReactionWheelCreate",
         "required": [
           "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
           "bodyFrameVector",
           "inertia",
           "ratedMomentum",
@@ -9402,9 +10857,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "bodyFrameVector": {
             "title": "ID of Associated BodyFrameVector Block",
             "type": "integer",
@@ -9420,9 +10880,6 @@
         "title": "ReactionWheelUpdate",
         "required": [
           "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
           "bodyFrameVector",
           "inertia",
           "ratedMomentum",
@@ -9445,9 +10902,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "bodyFrameVector": {
             "title": "ID of Associated BodyFrameVector Block",
             "type": "integer",
@@ -9457,6 +10919,108 @@
           "ratedMomentum": { "title": "Ratedmomentum", "minimum": 0.0, "type": "number" },
           "ratedTorque": { "title": "Ratedtorque", "minimum": 0.0, "type": "number" },
           "efficiency": { "title": "Efficiency", "maximum": 1.0, "minimum": 0.0, "type": "number" }
+        }
+      },
+      "RectangularFieldOfView": {
+        "title": "RectangularFieldOfView",
+        "required": [
+          "name",
+          "fieldOfViewType",
+          "boresightBodyFrameVector",
+          "sensor",
+          "heightHalfAngle",
+          "widthHalfAngle",
+          "heightBodyFrameVector"
+        ],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "fieldOfViewType": {
+            "title": "Fieldofviewtype",
+            "enum": ["RECT_FIELD_OF_VIEW"],
+            "type": "string"
+          },
+          "boresightBodyFrameVector": {
+            "title": "ID of Associated BodyFrameVector Block",
+            "type": "integer",
+            "description": "Relationship to a `BodyFrameVector` block. Reverse key: `BodyFrameVector.fieldsOfView`."
+          },
+          "sensor": {
+            "title": "ID of Associated Sensor Block",
+            "type": "integer",
+            "description": "Relationship to a `Sensor` block. Reverse key: `Sensor.fieldOfView`."
+          },
+          "constraints": {
+            "title": "IDs of Associated FOVConstraint Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `FOVConstraint` blocks. Reverse key: `FOVConstraint.fieldOfView`.",
+            "default": []
+          },
+          "heightHalfAngle": {
+            "title": "Heighthalfangle",
+            "maximum": 180.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "widthHalfAngle": {
+            "title": "Widthhalfangle",
+            "maximum": 180.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "heightBodyFrameVector": {
+            "title": "ID of Associated BodyFrameVector Block",
+            "type": "integer",
+            "description": "Relationship to a `BodyFrameVector` block. Reverse key: `BodyFrameVector.rectangularFieldsOfView`."
+          }
+        }
+      },
+      "ResistanceLoad": {
+        "title": "ResistanceLoad",
+        "required": ["name", "epsOutputType", "loadState", "loadDefType", "loadDefParams"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "epsOutputType": {
+            "title": "Power Supply Bus",
+            "allOf": [{ "$ref": "#/components/schemas/EpsOutputTypes" }],
+            "description": "`CORE_OUTPUT` if connected to the regulated/unregulated Power Processor bus.  `BUS_REGULATOR` if connected to a constant voltage `BusRegulator` output."
+          },
+          "busRegulator": {
+            "title": "ID of Associated BusRegulator Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `BusRegulator` blocks. Reverse key: `BusRegulator.loads`."
+          },
+          "topology": {
+            "title": "ID of Associated Topology Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `Topology` blocks. Reverse key: `Topology.loads`."
+          },
+          "loadState": {
+            "title": "ID of Associated LoadState Block",
+            "type": "integer",
+            "description": "Relationship to a `LoadState` block. Reverse key: `LoadState.loads`."
+          },
+          "loadDefType": {
+            "title": "Loaddeftype",
+            "enum": ["CONSTANT_RESISTANCE"],
+            "type": "string"
+          },
+          "loadDefParams": { "$ref": "#/components/schemas/ConstantResistance" },
+          "dutyCyclePeriod": {
+            "title": "Duty Cycle Period [min]",
+            "exclusiveMinimum": 0.0,
+            "type": "number"
+          },
+          "dutyCyclePercentage": {
+            "title": "Duty Cycle Percentage",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number"
+          }
         }
       },
       "Satellite": {
@@ -9630,6 +11194,25 @@
           }
         }
       },
+      "SatelliteBG": {
+        "title": "SatelliteBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/Satellite" },
+                { "$ref": "#/components/schemas/SimulatableSatellite" }
+              ]
+            },
+            "default": {}
+          }
+        }
+      },
       "SatelliteUpdate": {
         "title": "SatelliteUpdate",
         "type": "object",
@@ -9647,10 +11230,525 @@
           }
         }
       },
+      "ScenarioTemplate": {
+        "title": "ScenarioTemplate",
+        "required": ["latestPrimeId", "nextId"],
+        "type": "object",
+        "properties": {
+          "latestPrimeId": { "title": "Latestprimeid", "type": "integer" },
+          "blockToBlockGroupMap": {
+            "title": "Blocktoblockgroupmap",
+            "type": "object",
+            "additionalProperties": { "type": "string" },
+            "default": {}
+          },
+          "TemplateRef": {
+            "title": "Templateref",
+            "allOf": [{ "$ref": "#/components/schemas/TemplateRefBG" }],
+            "default": {}
+          },
+          "Agent": {
+            "title": "Agent",
+            "allOf": [{ "$ref": "#/components/schemas/AgentBG" }],
+            "default": {}
+          },
+          "ClockConfig": {
+            "title": "Clockconfig",
+            "allOf": [{ "$ref": "#/components/schemas/ClockConfigBG" }],
+            "default": {}
+          },
+          "clockConfig": {
+            "title": "ID of Associated ClockConfig Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `ClockConfig` blocks. "
+          },
+          "agents": {
+            "title": "IDs of Associated Agent Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Agent` blocks. ",
+            "default": []
+          },
+          "nextId": {
+            "title": "Nextid",
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array",
+            "items": [{ "type": "integer" }, { "type": "integer" }]
+          }
+        }
+      },
       "SideCategories": {
         "title": "SideCategories",
         "enum": ["COMPONENT", "SURFACE", "COOLER"],
         "description": "An enumeration."
+      },
+      "SimulatableSatellite": {
+        "title": "SimulatableSatellite",
+        "required": ["cadKey", "cadSignedUrl", "cadScaleFactor", "topology"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "mass": { "title": "Mass [kg]", "exclusiveMinimum": 0.0, "type": "number" },
+          "inertia": { "title": "Inertia Matrix [Matrix3[kg-m^2]]" },
+          "earthshineIrradiance": { "title": "Earthshineirradiance", "type": "number" },
+          "albedo": { "title": "Albedo", "maximum": 1.0, "minimum": 0.0, "type": "number" },
+          "dragTorque": { "title": "Dragtorque", "type": "array", "items": { "type": "number" } },
+          "gravityGradientTorque": {
+            "title": "Gravitygradienttorque",
+            "type": "array",
+            "items": { "type": "number" }
+          },
+          "cadFileName": {
+            "title": "Cadfilename",
+            "maxLength": 100,
+            "type": "string",
+            "default": ""
+          },
+          "cadKey": { "title": "Cadkey", "maxLength": 48, "type": "string" },
+          "cadSignedUrl": { "title": "Cadsignedurl", "maxLength": 1024, "type": "string" },
+          "cadScaleFactor": {
+            "title": "Cadscalefactor",
+            "exclusiveMinimum": 0.0,
+            "type": "number"
+          },
+          "bodyFrameVectors": {
+            "title": "IDs of Associated BodyFrameVector Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `BodyFrameVector` blocks. Reverse key: `BodyFrameVector.satellite`.",
+            "default": []
+          },
+          "surfaces": {
+            "title": "IDs of Associated Surface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Surface` blocks. Reverse key: `Surface.satellite`.",
+            "default": []
+          },
+          "solarArrays": {
+            "title": "IDs of Associated SolarArray Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `SolarArray` blocks. ",
+            "default": []
+          },
+          "subsystems": {
+            "title": "IDs of Associated Subsystem Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Subsystem` blocks. Reverse key: `Subsystem.satellite`.",
+            "default": []
+          },
+          "topology": {
+            "title": "ID of Associated Component Block",
+            "type": "integer",
+            "description": "Relationship to a `Component` block. "
+          },
+          "components": {
+            "title": "IDs of Associated Component Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Component` blocks. Reverse key: `Component.satellite`.",
+            "default": []
+          },
+          "interfaces": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.satellite`.",
+            "default": []
+          },
+          "coolers": {
+            "title": "IDs of Associated Cooler Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Cooler` blocks. ",
+            "default": []
+          },
+          "heaters": {
+            "title": "IDs of Associated Heater Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Heater` blocks. ",
+            "default": []
+          },
+          "DEFAULT_CAD_MODELS": {
+            "title": "Default Cad Models",
+            "type": "array",
+            "items": {},
+            "default": [
+              {
+                "cadKey": "default_aqua.glb",
+                "cadSignedUrl": "https://d2me2gysyodohj.cloudfront.net/default_aqua.glb?Expires=32503680000&Signature=I4iKx5pup4jUrXYF5muhkNUy2rE7dXi-XS7QRyPmXNbxd70c09tg-WesyWDfZpTO7Xn-nAZb8Qw-Kb3w1amXNHh8zqYCFagrMVQiTZY2H4V3m5ZfFdxeUuMdqhOh4Gior017OocOiFso5xpHIk0oFWs0co~Ovx4L2Le-HqiHBwyUI2uNDFxrtYaDs7~4bgYT4HV1mkGj3mg05dLoA~NR-UX5IbX1szgElAvHi9MF4sr6ff91yQQdFxfjcXZR41-1Xt1T9GVs4u35UUxbNxFzohhd8BY-AAIGQoE2HmN453izx~QGGCnU8hMYjl-lyuSp29HRw4Uol718VsgWYNmwLg__&Key-Pair-Id=K3MW6686F6VH4R",
+                "cadScaleFactor": 0.00174361872910041,
+                "label": "Aqua",
+                "fileName": "default_aqua.glb",
+                "value": 0
+              },
+              {
+                "cadKey": "default_clementine.glb",
+                "cadSignedUrl": "https://d2me2gysyodohj.cloudfront.net/default_clementine.glb?Expires=32503680000&Signature=s~TB8viMYDaspD4t9XD5fX0qQ7NavVpZe~xKWvmdKa3bGQ2K3a5pHroPySAZ2lmbnn5gAJC9ZalMNIypjF7YuExT2Ux6665YQQEKUxDyl0H7MCKvGPmvSpeg9VRr-s5PgL2oobWbDAnehO9p4~x42Nl7-ijNRz2mQrnAKx4klyA8UW2TXtjJE8~UujplL9AzPswYXiWzzouIOiyO6lHVOyu~wP7~qlGnDmUgUmZCNNhrUqnEGHdN7FTNk3dzH~VYN6Cz2yirfuRyFHI0F3OnhW-ubvoqt~ROc-E5sr16eENVzGi~UVNhdnkEwjQ9jigK~BwfcUyLPFY0amEpD5TbnA__&Key-Pair-Id=K3MW6686F6VH4R",
+                "cadScaleFactor": 0.399988433354028,
+                "label": "Clementine",
+                "fileName": "default_clementine.glb",
+                "value": 1
+              },
+              {
+                "cadKey": "default_cloud_sat.glb",
+                "cadSignedUrl": "https://d2me2gysyodohj.cloudfront.net/default_cloud_sat.glb?Expires=32503680000&Signature=t0rCf7EOYPVaYOtlCbej1j~FFeVNFD6hqOdmXDGSsTJUUnaPcrNzYxV5LwhRntMBRRsG~cieiSH~wKPNS06d-vtCnVFFD1iE4WuTPcsVOrQPoEilxGC4-0GKReWIRHDWZUbhD31WKB8oXSuoY43nMAit1yZ0yeulnjEga6N53tn5Le~xEuwj1OvGAAr6HEARFs9T8YxMzeEIz-qj67P9a0638JwEZiC330vg9pbgGlvsMbRW7WycHkB28Xcc1XE6VbPn6Od-tNo~fZl2dYMpH8janY-UdPQSusQr6fiDc8KnT8p8ETtyIT5pf7~hPodFz~p4xdCdt4mKNAVe4M9jAQ__&Key-Pair-Id=K3MW6686F6VH4R",
+                "cadScaleFactor": 0.000103688898120542,
+                "label": "Cloud",
+                "fileName": "default_cloud_sat.glb",
+                "value": 2
+              },
+              {
+                "cadKey": "default_firefly.glb",
+                "cadSignedUrl": "https://d2me2gysyodohj.cloudfront.net/default_firefly.glb?Expires=32503680000&Signature=IaXBLHVcGcShgBGm7verZGYEr4KCkCZfIDsb4wfHKAHRe1XgJbIM1WqKQlhjpii2Ly3h6F8LEELzHhpVvF5FH30TjBBh2oVr1F2lwy1srQ4PDAZ9OtF4YauzcSYN3NW8zNilnImLbUl7ycChJwb07JhuN0Dx26yfAGUlgFMEomcmRLN0RuYyJ4Wuyrop86YB1jjuJaAri9VLV9UzxGm5oBSBSW2sqj55or8vDemgnXcuPGDEJer~1KDLlbA-xCW1R9NUp-iDiXWStUJ1YjFIT2040fjOjoV5EjSR9StO8IcADN~K095gcawz6Mm-xHkVSlk1EICJnWm9d884CzGp0w__&Key-Pair-Id=K3MW6686F6VH4R",
+                "cadScaleFactor": 9.72478111694871,
+                "label": "Firefly",
+                "fileName": "default_firefly.glb",
+                "value": 3
+              },
+              {
+                "cadKey": "default_generic_cube.glb",
+                "cadSignedUrl": "https://d2me2gysyodohj.cloudfront.net/default_generic_cube.gltf?Expires=32503680000&Signature=a8xOm0jTNTRKsRFQyQFXB9Se7AHfScohZP9ecmmHxCqR3iW-MZqxCMGqRgR~HRqaOITp8HPB~UC9OVgeyhQ5zzf-z~DSNqHvBfB5TMDb9g99w-Tk~K5s33Qktjb6kll-szU38Uf2pj2QukiZU6IkMOyVhpUkNMlrjkzPYtX55YTz8nPz0wWFtsqitZj2ZIcNGkLHd--hUsA6pZ-mlHc4KqxeU~cu8l~1qKMsNu4EN0pEfuDw0IlSPSw8TYYMxGDToiOz-XNjflMvyqNAAgazjY-WgRSG4SIFzl3z0-PIWfU17mTjQrt1lqXu9FvZ65QuPDoG2Rzq-0HezKuf5b068g__&Key-Pair-Id=K3MW6686F6VH4R",
+                "cadScaleFactor": 37.6055945315445,
+                "label": "Generic Cube",
+                "fileName": "default_generic_cube.glb",
+                "value": 4
+              },
+              {
+                "cadKey": "default_gto_sat.glb",
+                "cadSignedUrl": "https://d2me2gysyodohj.cloudfront.net/default_gto_sat.glb?Expires=32503680000&Signature=PTqFB38xXETImQBqdnXISe7~~bI0XQBw7VVrPm8mDWOKJ0STMP~1p5oK~3UG8lykd3p40W3-ADezVVPnbsRqCExZnzoCDCfT6fdl-ayJnKohsCc1dkRJC2c7-xGanC8flKr-pMvOieY4WZZwI~SrloMoa2z0W6CpHAlSfJU5tqeSS5WX20LFDpAXfoLVgiPSJoVLLtR~urjgpepRPorgAL1qdBbQyFDCClO6R2i~NUV~QBNQ13A32f76xgFXPMnmMtKPfenoooaInOQXV1ocx1KNnb5pjRgUyDry-BIV2O1a~vpt5U5SR8hb4qCMP5pgdGLdEu2uuorHGi2oahf5~w__&Key-Pair-Id=K3MW6686F6VH4R",
+                "cadScaleFactor": 0.152970246503651,
+                "label": "GTOSat",
+                "fileName": "default_gto_sat.glb",
+                "value": 5
+              },
+              {
+                "cadKey": "default_ice_sat.glb",
+                "cadSignedUrl": "https://d2me2gysyodohj.cloudfront.net/default_ice_sat.glb?Expires=32503680000&Signature=vmGf8mbnhGhLRrAernw32EnAu64PjdxxHs0-ET-46YSGszv6UD9DciCS0PEnOJVrUMINzPSoUQIGaMNVWHvots~7YO954XrPu~gimXpkXwo8WunoKBegghn8UQC4gqtZNA8uMiLnG9ltTCXZ1YQQ4jD3GgGZYjyHktPG4GYCZiSQhBfsCqjpttVOswd6oULCJ2YsydnTRKSrktHoEu3hx7FXXXbLh08tvQz8n4PKtcYdQlx1VafcT2tradE0JGwMhT2GEFr2~BJmcU59SJx5qFK2YHhb-O1QOTbhe9P4YbItRv3CKltZF8UlecovT7OoazQXMbP4xazQVkYjNY-few__&Key-Pair-Id=K3MW6686F6VH4R",
+                "cadScaleFactor": 0.0098208757195627,
+                "label": "ICESat",
+                "fileName": "default_ice_sat.glb",
+                "value": 6
+              },
+              {
+                "cadKey": "default_iss.glb",
+                "cadSignedUrl": "https://d2me2gysyodohj.cloudfront.net/default_iss.glb?Expires=32503680000&Signature=edOXVgO0iWeVuQGk1CvnFXD3HMCI1HUzhXqwZo1f59NbcCjHF~-mxKbgnowZJyWnnt-TaYlYJKN0eNAHQbIABeP9skYgQPEgnrN41JNv0GykMWJb3wwJ0l3WwEB9wwgzUFay1D5CjVZWrOHmHbeyxuOPnfA3HGyuiiIlKDsHQfUXpCaYPEjnnZ-zkSbrvYJm0fy44BRhqFF00-IKjQ14viD21TWv1DEcWPHjFhh7hT0VoqnbnFjSSQsuy5PGgtzOEZmj3sjhyftJKwko48ASKivwpuO1PQQosma5Qs4BdmHmSczr9QA-mdaVIuwoXDlAwKSgH~WpryXUXXuTVSdVyA__&Key-Pair-Id=K3MW6686F6VH4R",
+                "cadScaleFactor": 0.414046926112043,
+                "label": "International Space Station",
+                "fileName": "default_iss.glb",
+                "value": 7
+              },
+              {
+                "cadKey": "default_surf_sat.glb",
+                "cadSignedUrl": "https://d2me2gysyodohj.cloudfront.net/default_surf_sat.glb?Expires=32503680000&Signature=mLVqiJ1kiuVZytle5tkRLuKx0lUjSxRpXJ3dtSMMIb2zZvvCYAQSiI3M4Aez3X~qv1a~OttbJvdm7ksjfvrSDY9dZBq8TWt6SZI8LjbN1HYhGWifWNA2sFaD8cLDdpil~jBkBptqOg6bRYdDasKHSG0hOi4oLKUutUodkWqZTKiWl~WEKo48uoqZrkGE2dSUl-T38NSrQLvkTkIKS-ZDG66CsEbkAPe1VXtwPMzA90EV8HRccMbAtzbfrW6HPx5E7Yv21qAzssrafnRmZcjGX23abViQYApNlnAx6i7SJCp~Z0kb5MyWVNrL8hJScUXbbFVQnYzmCW4seOnAl2ueeQ__&Key-Pair-Id=K3MW6686F6VH4R",
+                "cadScaleFactor": 0.421152667562793,
+                "label": "SurfSat",
+                "fileName": "default_surf_sat.glb",
+                "value": 8
+              }
+            ]
+          },
+          "reactionWheels": {
+            "title": "IDs of Associated ReactionWheel Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ReactionWheel` blocks. ",
+            "default": []
+          },
+          "magnetorquers": {
+            "title": "IDs of Associated Magnetorquer Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Magnetorquer` blocks. ",
+            "default": []
+          },
+          "commandedAltitude": {
+            "title": "Commandedaltitude",
+            "type": "array",
+            "items": { "type": "number" }
+          },
+          "commandedAngularRates": {
+            "title": "Commandedangularrates",
+            "type": "array",
+            "items": { "type": "number" }
+          }
+        }
+      },
+      "SingleConvHybridTopology": {
+        "title": "SingleConvHybridTopology",
+        "required": ["name", "subsystem", "componentType", "topologyType", "battery"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "partNumber": {
+            "title": "Part Number",
+            "maxLength": 32,
+            "type": "string",
+            "default": ""
+          },
+          "manufacturer": {
+            "title": "Manufacturer",
+            "maxLength": 32,
+            "type": "string",
+            "default": ""
+          },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
+          "subsystem": {
+            "title": "ID of Associated Subsystem Block",
+            "type": "integer",
+            "description": "Relationship to a `Subsystem` block. Reverse key: `Subsystem.components`."
+          },
+          "componentType": {
+            "title": "Componenttype",
+            "enum": ["POWER_PROCESSOR"],
+            "type": "string"
+          },
+          "cotsTemplate": {
+            "title": "COTS Template Name",
+            "maxLength": 64,
+            "type": "string",
+            "description": "Read-only",
+            "default": ""
+          },
+          "loadStates": {
+            "title": "IDs of Associated LoadState Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `LoadState` blocks. Reverse key: `LoadState.component`.",
+            "default": []
+          },
+          "satellite": {
+            "title": "ID of Associated Satellite Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `Satellite` blocks. Reverse key: `Satellite.components`."
+          },
+          "thermal_interface_A": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.componentA`.",
+            "default": []
+          },
+          "thermal_interface_B": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.componentB`.",
+            "default": []
+          },
+          "dissipations": {
+            "title": "Dissipations",
+            "type": "object",
+            "additionalProperties": { "minimum": 0.0, "type": "number" }
+          },
+          "temperature": { "title": "Temperature", "type": "number" },
+          "hotMargin": { "title": "Hotmargin", "type": "number" },
+          "coldMargin": { "title": "Coldmargin", "type": "number" },
+          "topologyType": {
+            "title": "Topologytype",
+            "enum": ["SINGLE_CONV_HYBRID"],
+            "type": "string"
+          },
+          "topologyParams": {
+            "title": "Topology Definition Parameters",
+            "anyOf": [
+              { "$ref": "#/components/schemas/TopologyParamFRD" },
+              { "$ref": "#/components/schemas/TopologyParamSCH" },
+              { "$ref": "#/components/schemas/TopologyParamQRD" },
+              { "$ref": "#/components/schemas/TopologyParamTCM" },
+              { "$ref": "#/components/schemas/TopologyParamSCM" }
+            ],
+            "description": "This field may only be undefined initially.  It is required on first update."
+          },
+          "loads": {
+            "title": "IDs of Associated Load Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Load` blocks. Reverse key: `Load.topology`.",
+            "default": []
+          },
+          "battery": {
+            "title": "ID of Associated Battery Block",
+            "type": "integer",
+            "description": "Relationship to a `Battery` block. Reverse key: `Battery.topology`."
+          },
+          "batteryCells": {
+            "title": "IDs of Associated BatteryCell Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `BatteryCell` blocks. Reverse key: `BatteryCell.topology`.",
+            "default": []
+          },
+          "busRegulators": {
+            "title": "IDs of Associated BusRegulator Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `BusRegulator` blocks. Reverse key: `BusRegulator.topology`.",
+            "default": []
+          },
+          "solarArrays": {
+            "title": "IDs of Associated SolarArray Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `SolarArray` blocks. Reverse key: `SolarArray.topology`.",
+            "default": []
+          },
+          "solarCells": {
+            "title": "IDs of Associated SolarCell Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `SolarCell` blocks. Reverse key: `SolarCell.topology`.",
+            "default": []
+          }
+        }
+      },
+      "SingleConvMpptTopology": {
+        "title": "SingleConvMpptTopology",
+        "required": ["name", "subsystem", "componentType", "topologyType", "battery"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "partNumber": {
+            "title": "Part Number",
+            "maxLength": 32,
+            "type": "string",
+            "default": ""
+          },
+          "manufacturer": {
+            "title": "Manufacturer",
+            "maxLength": 32,
+            "type": "string",
+            "default": ""
+          },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
+          "subsystem": {
+            "title": "ID of Associated Subsystem Block",
+            "type": "integer",
+            "description": "Relationship to a `Subsystem` block. Reverse key: `Subsystem.components`."
+          },
+          "componentType": {
+            "title": "Componenttype",
+            "enum": ["POWER_PROCESSOR"],
+            "type": "string"
+          },
+          "cotsTemplate": {
+            "title": "COTS Template Name",
+            "maxLength": 64,
+            "type": "string",
+            "description": "Read-only",
+            "default": ""
+          },
+          "loadStates": {
+            "title": "IDs of Associated LoadState Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `LoadState` blocks. Reverse key: `LoadState.component`.",
+            "default": []
+          },
+          "satellite": {
+            "title": "ID of Associated Satellite Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `Satellite` blocks. Reverse key: `Satellite.components`."
+          },
+          "thermal_interface_A": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.componentA`.",
+            "default": []
+          },
+          "thermal_interface_B": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.componentB`.",
+            "default": []
+          },
+          "dissipations": {
+            "title": "Dissipations",
+            "type": "object",
+            "additionalProperties": { "minimum": 0.0, "type": "number" }
+          },
+          "temperature": { "title": "Temperature", "type": "number" },
+          "hotMargin": { "title": "Hotmargin", "type": "number" },
+          "coldMargin": { "title": "Coldmargin", "type": "number" },
+          "topologyType": {
+            "title": "Topologytype",
+            "enum": ["SINGLE_CONV_MPPT"],
+            "type": "string"
+          },
+          "topologyParams": {
+            "title": "Topology Definition Parameters",
+            "anyOf": [
+              { "$ref": "#/components/schemas/TopologyParamFRD" },
+              { "$ref": "#/components/schemas/TopologyParamSCH" },
+              { "$ref": "#/components/schemas/TopologyParamQRD" },
+              { "$ref": "#/components/schemas/TopologyParamTCM" },
+              { "$ref": "#/components/schemas/TopologyParamSCM" }
+            ],
+            "description": "This field may only be undefined initially.  It is required on first update."
+          },
+          "loads": {
+            "title": "IDs of Associated Load Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Load` blocks. Reverse key: `Load.topology`.",
+            "default": []
+          },
+          "battery": {
+            "title": "ID of Associated Battery Block",
+            "type": "integer",
+            "description": "Relationship to a `Battery` block. Reverse key: `Battery.topology`."
+          },
+          "batteryCells": {
+            "title": "IDs of Associated BatteryCell Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `BatteryCell` blocks. Reverse key: `BatteryCell.topology`.",
+            "default": []
+          },
+          "busRegulators": {
+            "title": "IDs of Associated BusRegulator Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `BusRegulator` blocks. Reverse key: `BusRegulator.topology`.",
+            "default": []
+          },
+          "solarArrays": {
+            "title": "IDs of Associated SolarArray Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `SolarArray` blocks. Reverse key: `SolarArray.topology`.",
+            "default": []
+          },
+          "solarCells": {
+            "title": "IDs of Associated SolarCell Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `SolarCell` blocks. Reverse key: `SolarCell.topology`.",
+            "default": []
+          }
+        }
       },
       "SlidingModeAlgorithm": {
         "title": "SlidingModeAlgorithm",
@@ -9704,6 +11802,20 @@
             "title": "ID of Associated Topology Block",
             "type": "integer",
             "description": "Relationship to a `Topology` block. Reverse key: `Topology.solarArrays`."
+          }
+        }
+      },
+      "SolarArrayBG": {
+        "title": "SolarArrayBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/SolarArray" },
+            "default": {}
           }
         }
       },
@@ -9786,6 +11898,20 @@
             "items": {},
             "description": "Relationship to one or more `SolarPanel` blocks. Reverse key: `SolarPanel.cell`.",
             "default": []
+          }
+        }
+      },
+      "SolarCellBG": {
+        "title": "SolarCellBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/SolarCell" },
+            "default": {}
           }
         }
       },
@@ -9877,9 +12003,6 @@
         "title": "SolarPanel",
         "required": [
           "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
           "subsystem",
           "numSeries",
           "numParallel",
@@ -9903,9 +12026,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -9987,9 +12115,6 @@
         "title": "SolarPanelCreate",
         "required": [
           "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
           "subsystem",
           "numSeries",
           "numParallel",
@@ -10013,9 +12138,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -10043,17 +12173,7 @@
       },
       "SolarPanelUpdate": {
         "title": "SolarPanelUpdate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "numSeries",
-          "numParallel",
-          "blockingDiodeDrop",
-          "cell",
-          "surface"
-        ],
+        "required": ["name", "numSeries", "numParallel", "blockingDiodeDrop", "cell", "surface"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -10070,9 +12190,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "numSeries": { "title": "# of Series Cells", "minimum": 1.0, "type": "integer" },
           "numParallel": { "title": "# of Parallel Cells", "minimum": 1.0, "type": "integer" },
           "blockingDiodeDrop": {
@@ -10229,6 +12354,20 @@
           }
         }
       },
+      "SubsystemBG": {
+        "title": "SubsystemBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/Subsystem" },
+            "default": {}
+          }
+        }
+      },
       "SubsystemCreate": {
         "title": "SubsystemCreate",
         "required": ["name", "satellite"],
@@ -10250,6 +12389,89 @@
         "properties": {
           "id": { "title": "Id", "type": "integer" },
           "name": { "title": "Name", "maxLength": 32, "type": "string" }
+        }
+      },
+      "SunTrackingSurface": {
+        "title": "SunTrackingSurface",
+        "required": [
+          "name",
+          "motionType",
+          "area",
+          "surfaceCentroid",
+          "bodyFrameVector",
+          "surfaceMaterial",
+          "satellite"
+        ],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "motionType": { "title": "Motiontype", "enum": ["SUN_TRACKING"], "type": "string" },
+          "area": { "title": "Area [m^2]", "exclusiveMinimum": 0.0, "type": "number" },
+          "surfaceCentroid": {
+            "title": "Centeroid [Vector3[m]]",
+            "type": "array",
+            "items": { "type": "number" }
+          },
+          "bodyFrameVector": {
+            "title": "ID of Associated BodyFrameVector Block",
+            "type": "integer",
+            "description": "Relationship to a `BodyFrameVector` block. Reverse key: `BodyFrameVector.surfaces`."
+          },
+          "surfaceMaterial": {
+            "title": "ID of Associated SurfaceMaterial Block",
+            "type": "integer",
+            "description": "Relationship to a `SurfaceMaterial` block. Reverse key: `SurfaceMaterial.surfaces`."
+          },
+          "satellite": {
+            "title": "ID of Associated Satellite Block",
+            "type": "integer",
+            "description": "Relationship to a `Satellite` block. Reverse key: `Satellite.surfaces`."
+          },
+          "panels": {
+            "title": "IDs of Associated SolarPanel Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `SolarPanel` blocks. Reverse key: `SolarPanel.surface`.",
+            "default": []
+          },
+          "thermal_interface_A": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.surfaceA`.",
+            "default": []
+          },
+          "thermal_interface_B": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.surfaceB`.",
+            "default": []
+          },
+          "heliocenterAngle": { "title": "Heliocenterangle", "type": "number" },
+          "solarViewFactor": {
+            "title": "Solarviewfactor",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "sat2Sun": { "title": "Sat2Sun", "type": "array", "items": { "type": "number" } },
+          "earthIrHeatFlowRate": { "title": "Earthirheatflowrate", "type": "number" },
+          "earthAlbedoHeatFlowRate": { "title": "Earthalbedoheatflowrate", "type": "number" },
+          "solarHeatFlowRate": { "title": "Solarheatflowrate", "type": "number" },
+          "spaceHeatFlowRate": { "title": "Spaceheatflowrate", "type": "number" },
+          "heatFlowRate": { "title": "Heatflowrate", "type": "number" },
+          "temperature": { "title": "Temperature", "type": "number" },
+          "hotMargin": { "title": "Hotmargin", "type": "number" },
+          "coldMargin": { "title": "Coldmargin", "type": "number" },
+          "articulationAngle": {
+            "title": "Articulationangle",
+            "maximum": 360.0,
+            "minimum": 0.0,
+            "type": "number",
+            "default": 0
+          }
         }
       },
       "Surface": {
@@ -10329,6 +12551,25 @@
           "temperature": { "title": "Temperature", "type": "number" },
           "hotMargin": { "title": "Hotmargin", "type": "number" },
           "coldMargin": { "title": "Coldmargin", "type": "number" }
+        }
+      },
+      "SurfaceBG": {
+        "title": "SurfaceBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/FixedSurface" },
+                { "$ref": "#/components/schemas/SunTrackingSurface" }
+              ]
+            },
+            "default": {}
+          }
         }
       },
       "SurfaceCreate": {
@@ -10430,6 +12671,20 @@
             "items": {},
             "description": "Relationship to one or more `Surface` blocks. Reverse key: `Surface.surfaceMaterial`.",
             "default": []
+          }
+        }
+      },
+      "SurfaceMaterialBG": {
+        "title": "SurfaceMaterialBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/SurfaceMaterial" },
+            "default": {}
           }
         }
       },
@@ -10575,6 +12830,26 @@
           }
         }
       },
+      "TargetBG": {
+        "title": "TargetBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                { "$ref": "#/components/schemas/SpaceTarget" },
+                { "$ref": "#/components/schemas/GroundTarget" },
+                { "$ref": "#/components/schemas/CelestialTarget" }
+              ]
+            },
+            "default": {}
+          }
+        }
+      },
       "TargetGroup": {
         "title": "TargetGroup",
         "required": ["name", "targetType", "conOps"],
@@ -10632,6 +12907,58 @@
             "items": {},
             "description": "Relationship to one or more `PointingMode` blocks. Reverse key: `PointingMode.targetGroupB`.",
             "default": []
+          }
+        }
+      },
+      "TargetGroupAssociation": {
+        "title": "TargetGroupAssociation",
+        "required": ["priority", "targetGroup", "target"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "priority": {
+            "title": "Priority",
+            "minimum": 0.0,
+            "type": "integer",
+            "description": "Higher numbers are higher priority.  0 is default."
+          },
+          "targetGroup": {
+            "title": "ID of Associated TargetGroup Block",
+            "type": "integer",
+            "description": "Relationship to a `TargetGroup` block. Reverse key: `TargetGroup.targetAssociations`."
+          },
+          "target": {
+            "title": "ID of Associated Target Block",
+            "type": "integer",
+            "description": "Relationship to a `Target` block. Reverse key: `Target.targetGroupAssociations`."
+          }
+        }
+      },
+      "TargetGroupAssociationBG": {
+        "title": "TargetGroupAssociationBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/TargetGroupAssociation" },
+            "default": {}
+          }
+        }
+      },
+      "TargetGroupBG": {
+        "title": "TargetGroupBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/TargetGroup" },
+            "default": {}
           }
         }
       },
@@ -10856,6 +13183,126 @@
           }
         }
       },
+      "TempController": {
+        "title": "TempController",
+        "required": [
+          "name",
+          "subsystem",
+          "onRegHeatFlowRate",
+          "heatFlowRateRating",
+          "controlledComponent"
+        ],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "partNumber": {
+            "title": "Part Number",
+            "maxLength": 32,
+            "type": "string",
+            "default": ""
+          },
+          "manufacturer": {
+            "title": "Manufacturer",
+            "maxLength": 32,
+            "type": "string",
+            "default": ""
+          },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
+          "subsystem": {
+            "title": "ID of Associated Subsystem Block",
+            "type": "integer",
+            "description": "Relationship to a `Subsystem` block. Reverse key: `Subsystem.components`."
+          },
+          "componentType": {
+            "title": "Componenttype",
+            "enum": ["GENERIC"],
+            "type": "string",
+            "default": "GENERIC"
+          },
+          "cotsTemplate": {
+            "title": "COTS Template Name",
+            "maxLength": 64,
+            "type": "string",
+            "description": "Read-only",
+            "default": ""
+          },
+          "loadStates": {
+            "title": "IDs of Associated LoadState Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `LoadState` blocks. Reverse key: `LoadState.component`.",
+            "default": []
+          },
+          "satellite": {
+            "title": "ID of Associated Satellite Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `Satellite` blocks. Reverse key: `Satellite.components`."
+          },
+          "thermal_interface_A": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.componentA`.",
+            "default": []
+          },
+          "thermal_interface_B": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.componentB`.",
+            "default": []
+          },
+          "dissipations": {
+            "title": "Dissipations",
+            "type": "object",
+            "additionalProperties": { "minimum": 0.0, "type": "number" }
+          },
+          "temperature": { "title": "Temperature", "type": "number" },
+          "hotMargin": { "title": "Hotmargin", "type": "number" },
+          "coldMargin": { "title": "Coldmargin", "type": "number" },
+          "onRegHeatFlowRate": {
+            "title": "Onregheatflowrate",
+            "exclusiveMinimum": 0.0,
+            "type": "number"
+          },
+          "heatFlowRateRating": { "title": "Heatflowraterating", "type": "number" },
+          "controlledComponent": {
+            "title": "ID of Associated Component Block",
+            "type": "integer",
+            "description": "Relationship to a `Component` block. Reverse key: `Component.tempControllers`."
+          },
+          "regHeatFlowRate": { "title": "Regheatflowrate", "type": "number" },
+          "tempControllerStates": {
+            "title": "IDs of Associated TempControllerState Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `TempControllerState` blocks. Reverse key: `TempControllerState.tempController`.",
+            "default": []
+          }
+        }
+      },
+      "TempControllerBG": {
+        "title": "TempControllerBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/TempController" },
+            "default": {}
+          }
+        }
+      },
       "TempControllerState": {
         "title": "TempControllerState",
         "required": ["name", "constantTemperature", "tempController"],
@@ -10877,6 +13324,20 @@
             "default": []
           },
           "active": { "title": "Active", "type": "boolean" }
+        }
+      },
+      "TempControllerStateBG": {
+        "title": "TempControllerStateBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/TempControllerState" },
+            "default": {}
+          }
         }
       },
       "TempControllerStateCreate": {
@@ -10920,6 +13381,36 @@
             "items": {},
             "description": "Relationship to one or more `OperationalMode` blocks. Reverse key: `OperationalMode.tempControllerStates`.",
             "default": []
+          }
+        }
+      },
+      "TemplateRef": {
+        "title": "TemplateRef",
+        "required": ["ref"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "ref": { "title": "Ref", "type": "integer" },
+          "agents": {
+            "title": "IDs of Associated Agent Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Agent` blocks. Reverse key: `Agent.templateRef`.",
+            "default": []
+          }
+        }
+      },
+      "TemplateRefBG": {
+        "title": "TemplateRefBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/TemplateRef" },
+            "default": {}
           }
         }
       },
@@ -10980,6 +13471,20 @@
           "coldTemp": { "title": "Coldtemp", "type": "number" },
           "hotMargin": { "title": "Hotmargin", "type": "number" },
           "coldMargin": { "title": "Coldmargin", "type": "number" }
+        }
+      },
+      "ThermalInterfaceBG": {
+        "title": "ThermalInterfaceBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/ThermalInterface" },
+            "default": {}
+          }
         }
       },
       "ThermalInterfaceCreate": {
@@ -11057,6 +13562,20 @@
             "items": {},
             "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.material`.",
             "default": []
+          }
+        }
+      },
+      "ThermalInterfaceMaterialBG": {
+        "title": "ThermalInterfaceMaterialBG",
+        "type": "object",
+        "properties": {
+          "name": { "title": "Name", "type": "string" },
+          "collection": { "$ref": "#/components/schemas/Collection" },
+          "data": {
+            "title": "Data",
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/ThermalInterfaceMaterial" },
+            "default": {}
           }
         }
       },
@@ -11156,16 +13675,7 @@
       },
       "Topology": {
         "title": "Topology",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "subsystem",
-          "componentType",
-          "topologyType",
-          "battery"
-        ],
+        "required": ["name", "subsystem", "componentType", "topologyType", "battery"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -11182,9 +13692,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -11467,13 +13982,7 @@
       },
       "TopologyUpdate": {
         "title": "TopologyUpdate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "topologyType"
-        ],
+        "required": ["name", "topologyType"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -11490,9 +13999,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "topologyType": {
             "title": "Topology Type",
             "anyOf": [
@@ -11529,6 +14043,145 @@
             "items": {},
             "description": "Relationship to one or more `Sensor` blocks. ",
             "default": []
+          },
+          "angularVelocitySensors": {
+            "title": "IDs of Associated AngularVelocitySensor Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `AngularVelocitySensor` blocks. ",
+            "default": []
+          }
+        }
+      },
+      "TwoConvMpptTopology": {
+        "title": "TwoConvMpptTopology",
+        "required": ["name", "subsystem", "componentType", "topologyType", "battery"],
+        "type": "object",
+        "properties": {
+          "id": { "title": "Id", "type": "integer" },
+          "partNumber": {
+            "title": "Part Number",
+            "maxLength": 32,
+            "type": "string",
+            "default": ""
+          },
+          "manufacturer": {
+            "title": "Manufacturer",
+            "maxLength": 32,
+            "type": "string",
+            "default": ""
+          },
+          "name": { "title": "Name", "maxLength": 32, "type": "string" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
+          "subsystem": {
+            "title": "ID of Associated Subsystem Block",
+            "type": "integer",
+            "description": "Relationship to a `Subsystem` block. Reverse key: `Subsystem.components`."
+          },
+          "componentType": {
+            "title": "Componenttype",
+            "enum": ["POWER_PROCESSOR"],
+            "type": "string"
+          },
+          "cotsTemplate": {
+            "title": "COTS Template Name",
+            "maxLength": 64,
+            "type": "string",
+            "description": "Read-only",
+            "default": ""
+          },
+          "loadStates": {
+            "title": "IDs of Associated LoadState Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `LoadState` blocks. Reverse key: `LoadState.component`.",
+            "default": []
+          },
+          "satellite": {
+            "title": "ID of Associated Satellite Block",
+            "type": "integer",
+            "description": "Relationship to zero or one `Satellite` blocks. Reverse key: `Satellite.components`."
+          },
+          "thermal_interface_A": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.componentA`.",
+            "default": []
+          },
+          "thermal_interface_B": {
+            "title": "IDs of Associated ThermalInterface Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `ThermalInterface` blocks. Reverse key: `ThermalInterface.componentB`.",
+            "default": []
+          },
+          "dissipations": {
+            "title": "Dissipations",
+            "type": "object",
+            "additionalProperties": { "minimum": 0.0, "type": "number" }
+          },
+          "temperature": { "title": "Temperature", "type": "number" },
+          "hotMargin": { "title": "Hotmargin", "type": "number" },
+          "coldMargin": { "title": "Coldmargin", "type": "number" },
+          "topologyType": { "title": "Topologytype", "enum": ["TWO_CONV_MPPT"], "type": "string" },
+          "topologyParams": {
+            "title": "Topology Definition Parameters",
+            "anyOf": [
+              { "$ref": "#/components/schemas/TopologyParamFRD" },
+              { "$ref": "#/components/schemas/TopologyParamSCH" },
+              { "$ref": "#/components/schemas/TopologyParamQRD" },
+              { "$ref": "#/components/schemas/TopologyParamTCM" },
+              { "$ref": "#/components/schemas/TopologyParamSCM" }
+            ],
+            "description": "This field may only be undefined initially.  It is required on first update."
+          },
+          "loads": {
+            "title": "IDs of Associated Load Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `Load` blocks. Reverse key: `Load.topology`.",
+            "default": []
+          },
+          "battery": {
+            "title": "ID of Associated Battery Block",
+            "type": "integer",
+            "description": "Relationship to a `Battery` block. Reverse key: `Battery.topology`."
+          },
+          "batteryCells": {
+            "title": "IDs of Associated BatteryCell Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `BatteryCell` blocks. Reverse key: `BatteryCell.topology`.",
+            "default": []
+          },
+          "busRegulators": {
+            "title": "IDs of Associated BusRegulator Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `BusRegulator` blocks. Reverse key: `BusRegulator.topology`.",
+            "default": []
+          },
+          "solarArrays": {
+            "title": "IDs of Associated SolarArray Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `SolarArray` blocks. Reverse key: `SolarArray.topology`.",
+            "default": []
+          },
+          "solarCells": {
+            "title": "IDs of Associated SolarCell Blocks",
+            "type": "array",
+            "items": {},
+            "description": "Relationship to one or more `SolarCell` blocks. Reverse key: `SolarCell.topology`.",
+            "default": []
           }
         }
       },
@@ -11561,16 +14214,7 @@
       },
       "VectorSensor": {
         "title": "VectorSensor",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "subsystem",
-          "componentType",
-          "oneSigmaPerAxisError",
-          "vector"
-        ],
+        "required": ["name", "subsystem", "componentType", "oneSigmaPerAxisError", "vector"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -11587,9 +14231,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "subsystem": {
             "title": "ID of Associated Subsystem Block",
             "type": "integer",
@@ -11665,14 +14314,7 @@
       },
       "VectorSensorCreate": {
         "title": "VectorSensorCreate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "oneSigmaPerAxisError",
-          "vector"
-        ],
+        "required": ["name", "oneSigmaPerAxisError", "vector"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -11689,9 +14331,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "fieldOfView": {
             "title": "ID of Associated FieldOfView Block",
             "type": "integer",
@@ -11707,14 +14354,7 @@
       },
       "VectorSensorUpdate": {
         "title": "VectorSensorUpdate",
-        "required": [
-          "name",
-          "hotTempRating",
-          "coldTempRating",
-          "thermalCapacitance",
-          "oneSigmaPerAxisError",
-          "vector"
-        ],
+        "required": ["name", "oneSigmaPerAxisError", "vector"],
         "type": "object",
         "properties": {
           "id": { "title": "Id", "type": "integer" },
@@ -11731,9 +14371,14 @@
             "default": ""
           },
           "name": { "title": "Name", "maxLength": 32, "type": "string" },
-          "hotTempRating": { "title": "Hottemprating", "type": "number" },
-          "coldTempRating": { "title": "Coldtemprating", "type": "number" },
-          "thermalCapacitance": { "title": "Thermalcapacitance", "minimum": 0.0, "type": "number" },
+          "hotTempRating": { "title": "Hottemprating", "type": "number", "default": 0 },
+          "coldTempRating": { "title": "Coldtemprating", "type": "number", "default": 0 },
+          "thermalCapacitance": {
+            "title": "Thermalcapacitance",
+            "minimum": 0.0,
+            "type": "number",
+            "default": 1
+          },
           "fieldOfView": {
             "title": "ID of Associated FieldOfView Block",
             "type": "integer",
@@ -11746,6 +14391,198 @@
             "description": "Relationship to a `Vector` block. Reverse key: `Vector.vectorSensors`."
           }
         }
+      },
+      "VehicleTemplate": {
+        "title": "VehicleTemplate",
+        "required": ["latestPrimeId", "conOps", "missionOrbit", "satellite", "nextId"],
+        "type": "object",
+        "properties": {
+          "latestPrimeId": { "title": "Latestprimeid", "type": "integer" },
+          "blockToBlockGroupMap": {
+            "title": "Blocktoblockgroupmap",
+            "type": "object",
+            "additionalProperties": { "type": "string" },
+            "default": {}
+          },
+          "Algorithm": {
+            "title": "Algorithm",
+            "allOf": [{ "$ref": "#/components/schemas/AlgorithmBG" }],
+            "default": {}
+          },
+          "Battery": {
+            "title": "Battery",
+            "allOf": [{ "$ref": "#/components/schemas/BatteryBG" }],
+            "default": {}
+          },
+          "BatteryCell": {
+            "title": "Batterycell",
+            "allOf": [{ "$ref": "#/components/schemas/BatteryCellBG" }],
+            "default": {}
+          },
+          "BodyFrameVector": {
+            "title": "Bodyframevector",
+            "allOf": [{ "$ref": "#/components/schemas/BodyFrameVectorBG" }],
+            "default": {}
+          },
+          "BusRegulator": {
+            "title": "Busregulator",
+            "allOf": [{ "$ref": "#/components/schemas/BusRegulatorBG" }],
+            "default": {}
+          },
+          "Component": {
+            "title": "Component",
+            "allOf": [{ "$ref": "#/components/schemas/ComponentBG" }],
+            "default": {}
+          },
+          "ConOps": {
+            "title": "Conops",
+            "allOf": [{ "$ref": "#/components/schemas/ConOpsBG" }],
+            "default": {}
+          },
+          "Condition": {
+            "title": "Condition",
+            "allOf": [{ "$ref": "#/components/schemas/ConditionBG" }],
+            "default": {}
+          },
+          "FieldOfView": {
+            "title": "Fieldofview",
+            "allOf": [{ "$ref": "#/components/schemas/FieldOfViewBG" }],
+            "default": {}
+          },
+          "FOVConstraint": {
+            "title": "Fovconstraint",
+            "allOf": [{ "$ref": "#/components/schemas/FOVConstraintBG" }],
+            "default": {}
+          },
+          "Load": {
+            "title": "Load",
+            "allOf": [{ "$ref": "#/components/schemas/LoadBG" }],
+            "default": {}
+          },
+          "LoadState": {
+            "title": "Loadstate",
+            "allOf": [{ "$ref": "#/components/schemas/LoadStateBG" }],
+            "default": {}
+          },
+          "LocalVector": {
+            "title": "Localvector",
+            "allOf": [{ "$ref": "#/components/schemas/LocalVectorBG" }],
+            "default": {}
+          },
+          "CelestialVector": {
+            "title": "Celestialvector",
+            "allOf": [{ "$ref": "#/components/schemas/CelestialVectorBG" }],
+            "default": {}
+          },
+          "OperationalMode": {
+            "title": "Operationalmode",
+            "allOf": [{ "$ref": "#/components/schemas/OperationalModeBG" }],
+            "default": {}
+          },
+          "Orbit": {
+            "title": "Orbit",
+            "allOf": [{ "$ref": "#/components/schemas/OrbitBG" }],
+            "default": {}
+          },
+          "PointingMode": {
+            "title": "Pointingmode",
+            "allOf": [{ "$ref": "#/components/schemas/PointingModeBG" }],
+            "default": {}
+          },
+          "Satellite": {
+            "title": "Satellite",
+            "allOf": [{ "$ref": "#/components/schemas/SatelliteBG" }],
+            "default": {}
+          },
+          "SolarArray": {
+            "title": "Solararray",
+            "allOf": [{ "$ref": "#/components/schemas/SolarArrayBG" }],
+            "default": {}
+          },
+          "SolarCell": {
+            "title": "Solarcell",
+            "allOf": [{ "$ref": "#/components/schemas/SolarCellBG" }],
+            "default": {}
+          },
+          "Subsystem": {
+            "title": "Subsystem",
+            "allOf": [{ "$ref": "#/components/schemas/SubsystemBG" }],
+            "default": {}
+          },
+          "Surface": {
+            "title": "Surface",
+            "allOf": [{ "$ref": "#/components/schemas/SurfaceBG" }],
+            "default": {}
+          },
+          "SurfaceMaterial": {
+            "title": "Surfacematerial",
+            "allOf": [{ "$ref": "#/components/schemas/SurfaceMaterialBG" }],
+            "default": {}
+          },
+          "TargetGroupAssociation": {
+            "title": "Targetgroupassociation",
+            "allOf": [{ "$ref": "#/components/schemas/TargetGroupAssociationBG" }],
+            "default": {}
+          },
+          "TargetGroup": {
+            "title": "Targetgroup",
+            "allOf": [{ "$ref": "#/components/schemas/TargetGroupBG" }],
+            "default": {}
+          },
+          "Target": {
+            "title": "Target",
+            "allOf": [{ "$ref": "#/components/schemas/TargetBG" }],
+            "default": {}
+          },
+          "TempController": {
+            "title": "Tempcontroller",
+            "allOf": [{ "$ref": "#/components/schemas/TempControllerBG" }],
+            "default": {}
+          },
+          "TempControllerState": {
+            "title": "Tempcontrollerstate",
+            "allOf": [{ "$ref": "#/components/schemas/TempControllerStateBG" }],
+            "default": {}
+          },
+          "ThermalInterface": {
+            "title": "Thermalinterface",
+            "allOf": [{ "$ref": "#/components/schemas/ThermalInterfaceBG" }],
+            "default": {}
+          },
+          "ThermalInterfaceMaterial": {
+            "title": "Thermalinterfacematerial",
+            "allOf": [{ "$ref": "#/components/schemas/ThermalInterfaceMaterialBG" }],
+            "default": {}
+          },
+          "conOps": {
+            "title": "ID of Associated ConOps Block",
+            "type": "integer",
+            "description": "Relationship to a `ConOps` block. "
+          },
+          "missionOrbit": {
+            "title": "ID of Associated Orbit Block",
+            "type": "integer",
+            "description": "Relationship to a `Orbit` block. "
+          },
+          "satellite": {
+            "title": "ID of Associated Satellite Block",
+            "type": "integer",
+            "description": "Relationship to a `Satellite` block. "
+          },
+          "nextId": {
+            "title": "Nextid",
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array",
+            "items": [{ "type": "integer" }, { "type": "integer" }]
+          },
+          "position": { "title": "Position" },
+          "velocity": { "title": "Velocity" },
+          "positionSolution": { "title": "Positionsolution" },
+          "positionCovariance": { "title": "Positioncovariance" },
+          "velocitySolution": { "title": "Velocitysolution" },
+          "velocityCovariance": { "title": "Velocitycovariance" }
+        }
       }
     }
   },
@@ -11756,36 +14593,36 @@
     {
       "name": "Blocks",
       "tags": [
-        "Field of View",
-        "Field of View Constraint",
-        "Load State",
-        "Conops",
-        "Bus Regulator",
-        "Pointing Mode",
-        "Operational Mode",
-        "Battery",
-        "Surface Material",
-        "Battery Cell",
-        "Condition",
-        "Temperature Controller State",
         "Sensor",
-        "Solar Cell",
-        "Body Frame Vector",
-        "Temperature Controller",
-        "Target",
-        "Thermal Interface Material",
-        "Orbit",
-        "Satellite",
-        "Vector",
-        "Actuator",
-        "Surface",
-        "Subsystem",
-        "Solar Array",
-        "Algorithm",
-        "Component",
         "Load",
+        "Field of View",
+        "Condition",
         "Target Group",
-        "Thermal Interface"
+        "Operational Mode",
+        "Bus Regulator",
+        "Surface",
+        "Conops",
+        "Load State",
+        "Subsystem",
+        "Body Frame Vector",
+        "Target",
+        "Actuator",
+        "Battery Cell",
+        "Component",
+        "Battery",
+        "Solar Array",
+        "Thermal Interface Material",
+        "Field of View Constraint",
+        "Satellite",
+        "Algorithm",
+        "Thermal Interface",
+        "Temperature Controller",
+        "Temperature Controller State",
+        "Vector",
+        "Solar Cell",
+        "Pointing Mode",
+        "Orbit",
+        "Surface Material"
       ]
     }
   ]
