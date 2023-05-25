@@ -3,7 +3,7 @@
  "info": {
   "title": "Sedaro Satellite API",
   "description": "\nAllows for consumption of Sedaro Satellite services.\nRead more about Sedaro Satellite at [docs.sedaro.com](https://docs.sedaro.com).\n\n### Clients\n\n**Python:** [sedaro](https://pypi.org/project/sedaro/)\n- This package provides additional functionality on top of the auto-generated OpenAPI client. See the package docs for more information.\n\n### API Key\n\nTo access the Sedaro service via this API, you will need an API key.  You can generate an API key for your account in the\nSedaro [Management Console](https://satellite.sedaro.com/#/account). Once complete, pass the API key in all requests\nvia the `X_API_KEY` HTTP header.\n\n*API keys grant full access to your account and should never be shared. If you think your API key has been compromised,\nyou can revoke it in the [Management Console](https://satellite.sedaro.com/#/account).*\n\n### Jupyter Notebooks\n\nFor additional examples of how to use this API for modeling and simulation, see our [Mod-Sim Notebooks](https://github.com/sedaro/modsim-notebooks).\n\n### Community, Support, Discussion\n\nIf you have any issues or suggestions, please reach out:\n\n1. Join the Sedaro Community [Slack](https://join.slack.com/t/sedaro-community/shared_invite/zt-1jps4i711-mXy88AZQ9AV7YcEXr8x7Ow)\n2. Email us at support@sedarotech.com\n\n### Known Issues\n\n- Currently the documentation for 200 responses to Block create, read, update, and delete (CRUD) operations is incorrect.\nThis is due to an issue with our documentation generator.  Under each Block Group, the documentation will show `name`,\n`collection`, and `data` keys.  In reality, this level does not exist and should be skipped.  See the schema under the\n`data` key of a Template's Block Group for the correct schema of such Block Group.\n- Error responses are more specific than what is shown throughout the documentation.  A 4xx or 5xx error will be returned\nin all error cases.  Only a `200` status indicates success.  See a given error response for additional details.\n",
-  "version": "4.0.0",
+  "version": "4.0.5",
   "x-logo": {
    "url": "https://api.sedaro.com/static/multimedia/logo_secondary_02242022.png",
    "backgroundColor": "#FAFAFA",
@@ -14,7 +14,7 @@
   "/models/branches/{branchId}/template": {
    "patch": {
     "tags": [
-     "Template"
+     "Templates"
     ],
     "summary": "CRUD Template and Blocks",
     "operationId": "crud_template",
@@ -324,6 +324,15 @@
       },
       "name": "binWidth",
       "in": "query"
+     },
+     {
+      "required": false,
+      "schema": {
+       "title": "Streams",
+       "type": "string"
+      },
+      "name": "streams",
+      "in": "query"
      }
     ],
     "responses": {
@@ -565,7 +574,7 @@
     "tags": [
      "Branches"
     ],
-    "summary": "Verify branch bassword",
+    "summary": "Verify branch password",
     "description": "Route to verify password when a user tries to access a branch with the provided `id` via a password protected shareable link.\nIf successful, returns a success message with a set-cookie. The cookie stores a `jwt` that allows for non-owner collaborators to send `GET` requests to the corresponding branch.",
     "operationId": "verify_branch_password",
     "parameters": [
@@ -854,9 +863,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Agent Name",
       "maxLength": 32,
@@ -913,9 +919,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -943,12 +946,12 @@
     "title": "AngleBase220",
     "type": "object",
     "properties": {
-     "rad": {
-      "title": "Rad",
-      "type": "number"
-     },
      "deg": {
       "title": "Deg",
+      "type": "number"
+     },
+     "rad": {
+      "title": "Rad",
       "type": "number"
      }
     },
@@ -958,14 +961,14 @@
     "title": "AngleFieldOfView31",
     "type": "object",
     "properties": {
+     "deg": {
+      "title": "Deg",
+      "type": "number"
+     },
      "rad": {
       "title": "Rad",
       "maximum": 3.141592653589793,
       "minimum": 0.0,
-      "type": "number"
-     },
-     "deg": {
-      "title": "Deg",
       "type": "number"
      }
     },
@@ -975,14 +978,14 @@
     "title": "AngleFieldOfView36",
     "type": "object",
     "properties": {
+     "deg": {
+      "title": "Deg",
+      "type": "number"
+     },
      "rad": {
       "title": "Rad",
       "maximum": 1.5707963267948966,
       "minimum": 0.0,
-      "type": "number"
-     },
-     "deg": {
-      "title": "Deg",
       "type": "number"
      }
     },
@@ -992,14 +995,14 @@
     "title": "AngleFieldOfView37",
     "type": "object",
     "properties": {
+     "deg": {
+      "title": "Deg",
+      "type": "number"
+     },
      "rad": {
       "title": "Rad",
       "maximum": 1.5707963267948966,
       "minimum": 0.0,
-      "type": "number"
-     },
-     "deg": {
-      "title": "Deg",
       "type": "number"
      }
     },
@@ -1009,13 +1012,13 @@
     "title": "AngleSensors20",
     "type": "object",
     "properties": {
+     "deg": {
+      "title": "Deg",
+      "type": "number"
+     },
      "rad": {
       "title": "Rad",
       "minimum": 0.0,
-      "type": "number"
-     },
-     "deg": {
-      "title": "Deg",
       "type": "number"
      }
     },
@@ -1025,13 +1028,13 @@
     "title": "AngleSensors51",
     "type": "object",
     "properties": {
+     "deg": {
+      "title": "Deg",
+      "type": "number"
+     },
      "rad": {
       "title": "Rad",
       "minimum": 0.0,
-      "type": "number"
-     },
-     "deg": {
-      "title": "Deg",
       "type": "number"
      }
     },
@@ -1041,13 +1044,13 @@
     "title": "AngleSensors56",
     "type": "object",
     "properties": {
+     "deg": {
+      "title": "Deg",
+      "type": "number"
+     },
      "rad": {
       "title": "Rad",
       "minimum": 0.0,
-      "type": "number"
-     },
-     "deg": {
-      "title": "Deg",
       "type": "number"
      }
     },
@@ -1057,12 +1060,12 @@
     "title": "AngularVelocityBase220",
     "type": "object",
     "properties": {
-     "rpm": {
-      "title": "Rpm",
-      "type": "number"
-     },
      "deg/s": {
       "title": "Deg/S",
+      "type": "number"
+     },
+     "rpm": {
+      "title": "Rpm",
       "type": "number"
      },
      "rad/s": {
@@ -1083,9 +1086,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -1263,12 +1263,12 @@
     "title": "AngularVelocitySensors82",
     "type": "object",
     "properties": {
-     "rpm": {
-      "title": "Rpm",
-      "type": "number"
-     },
      "deg/s": {
       "title": "Deg/S",
+      "type": "number"
+     },
+     "rpm": {
+      "title": "Rpm",
       "type": "number"
      },
      "rad/s": {
@@ -1289,9 +1289,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -1460,9 +1457,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -1515,9 +1509,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "configurationType": {
       "title": "Cell Configuration Type",
@@ -1655,9 +1646,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "partNumber": {
       "title": "Partnumber",
       "maxLength": 32,
@@ -1725,9 +1713,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -1936,9 +1921,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -1998,9 +1980,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -2432,9 +2411,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -2547,9 +2523,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -2621,9 +2594,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "type": "string"
@@ -2662,9 +2632,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -2758,9 +2725,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "startTime": {
       "title": "Start Time [MJD]",
       "type": "number",
@@ -2791,9 +2755,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -2939,6 +2900,70 @@
     "additionalProperties": false,
     "description": "Class to be used internally and inherited by `Metamodel` and `Block`. Adds helper methods and properties."
    },
+   "ComponentParameters": {
+    "title": "ComponentParameters",
+    "enum": [
+     "DATA_STORAGE_FILL_PERCENT",
+     "TEMPERATURE"
+    ],
+    "description": "An enumeration."
+   },
+   "ComponentToScalarCondition": {
+    "title": "ComponentToScalarCondition",
+    "required": [
+     "name",
+     "relationship",
+     "scalar",
+     "componentParam"
+    ],
+    "type": "object",
+    "properties": {
+     "id": {
+      "title": "Id",
+      "type": "string"
+     },
+     "name": {
+      "title": "Name",
+      "maxLength": 100,
+      "type": "string"
+     },
+     "terminator": {
+      "title": "Indicates whether condition compliance triggers simulation termination.",
+      "type": "boolean",
+      "default": false
+     },
+     "compliance": {
+      "title": "Compliance",
+      "type": "boolean"
+     },
+     "relationship": {
+      "title": "Relationship",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/ConditionRelationship"
+       }
+      ]
+     },
+     "scalar": {
+      "title": "Constant to compare to."
+     },
+     "component": {
+      "title": "ID of Associated Component Block",
+      "type": "string",
+      "description": "Relationship to a single `Component` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "componentParam": {
+      "title": "Component Parameter",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/ComponentParameters"
+       }
+      ]
+     }
+    },
+    "additionalProperties": false,
+    "description": "Class to be used internally and inherited by `Metamodel` and `Block`. Adds helper methods and properties."
+   },
    "CompoundCondition": {
     "title": "CompoundCondition",
     "required": [
@@ -2950,9 +2975,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -3095,9 +3117,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -3309,9 +3328,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -3428,9 +3444,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -3465,9 +3478,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -3532,9 +3542,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -3625,9 +3632,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -3696,9 +3700,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -3737,9 +3738,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -3933,12 +3931,12 @@
       "title": "Cm",
       "type": "number"
      },
-     "m": {
-      "title": "M",
-      "type": "number"
-     },
      "mm": {
       "title": "Mm",
+      "type": "number"
+     },
+     "m": {
+      "title": "M",
       "type": "number"
      },
      "km": {
@@ -3953,21 +3951,21 @@
     "title": "DurationLoad70",
     "type": "object",
     "properties": {
-     "min": {
-      "title": "Min",
-      "type": "number"
-     },
      "hour": {
       "title": "Hour",
+      "type": "number"
+     },
+     "day": {
+      "title": "Day",
+      "minimum": 0.0,
       "type": "number"
      },
      "s": {
       "title": "S",
       "type": "number"
      },
-     "day": {
-      "title": "Day",
-      "minimum": 0.0,
+     "min": {
+      "title": "Min",
       "type": "number"
      }
     },
@@ -3977,21 +3975,21 @@
     "title": "DurationOperationalMode18",
     "type": "object",
     "properties": {
-     "min": {
-      "title": "Min",
-      "type": "number"
-     },
      "hour": {
       "title": "Hour",
+      "type": "number"
+     },
+     "day": {
+      "title": "Day",
+      "minimum": 0.0,
       "type": "number"
      },
      "s": {
       "title": "S",
       "type": "number"
      },
-     "day": {
-      "title": "Day",
-      "minimum": 0.0,
+     "min": {
+      "title": "Min",
       "type": "number"
      }
     },
@@ -4001,21 +3999,21 @@
     "title": "DurationOperationalMode19",
     "type": "object",
     "properties": {
-     "min": {
-      "title": "Min",
-      "type": "number"
-     },
      "hour": {
       "title": "Hour",
+      "type": "number"
+     },
+     "day": {
+      "title": "Day",
+      "minimum": 0.0,
       "type": "number"
      },
      "s": {
       "title": "S",
       "type": "number"
      },
-     "day": {
-      "title": "Day",
-      "minimum": 0.0,
+     "min": {
+      "title": "Min",
       "type": "number"
      }
     },
@@ -4025,21 +4023,21 @@
     "title": "DurationOperationalMode20",
     "type": "object",
     "properties": {
-     "min": {
-      "title": "Min",
-      "type": "number"
-     },
      "hour": {
       "title": "Hour",
+      "type": "number"
+     },
+     "day": {
+      "title": "Day",
+      "minimum": 0.0,
       "type": "number"
      },
      "s": {
       "title": "S",
       "type": "number"
      },
-     "day": {
-      "title": "Day",
-      "minimum": 0.0,
+     "min": {
+      "title": "Min",
       "type": "number"
      }
     },
@@ -4049,21 +4047,21 @@
     "title": "DurationOperationalMode28",
     "type": "object",
     "properties": {
-     "min": {
-      "title": "Min",
-      "type": "number"
-     },
      "hour": {
       "title": "Hour",
+      "type": "number"
+     },
+     "day": {
+      "title": "Day",
+      "minimum": 0.0,
       "type": "number"
      },
      "s": {
       "title": "S",
       "type": "number"
      },
-     "day": {
-      "title": "Day",
-      "minimum": 0.0,
+     "min": {
+      "title": "Min",
       "type": "number"
      }
     },
@@ -4073,21 +4071,21 @@
     "title": "DurationOperationalMode29",
     "type": "object",
     "properties": {
-     "min": {
-      "title": "Min",
-      "type": "number"
-     },
      "hour": {
       "title": "Hour",
+      "type": "number"
+     },
+     "day": {
+      "title": "Day",
+      "minimum": 0.0,
       "type": "number"
      },
      "s": {
       "title": "S",
       "type": "number"
      },
-     "day": {
-      "title": "Day",
-      "minimum": 0.0,
+     "min": {
+      "title": "Min",
       "type": "number"
      }
     },
@@ -4103,9 +4101,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -4228,9 +4223,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -4348,8 +4340,8 @@
     "title": "FrameVectorBase220",
     "type": "object",
     "properties": {
-     "eci": {
-      "title": "Eci",
+     "body": {
+      "title": "Body",
       "maxItems": 3,
       "minItems": 3,
       "type": "array",
@@ -4357,8 +4349,8 @@
        "type": "number"
       }
      },
-     "body": {
-      "title": "Body",
+     "eci": {
+      "title": "Eci",
       "maxItems": 3,
       "minItems": 3,
       "type": "array",
@@ -4379,9 +4371,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -4422,9 +4411,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -4735,9 +4721,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -4819,9 +4802,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -4919,9 +4899,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -5141,9 +5118,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -5241,9 +5215,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -5413,9 +5384,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -5500,9 +5468,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "type": "string"
@@ -5543,9 +5508,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -5629,9 +5591,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -5864,9 +5823,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -5947,9 +5903,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -6008,32 +5961,6 @@
      }
     }
    },
-   "Metamodel": {
-    "title": "Metamodel",
-    "type": "object",
-    "properties": {
-     "blocks": {
-      "title": "Blocks",
-      "type": "object",
-      "additionalProperties": {
-       "type": "object"
-      },
-      "default": {}
-     },
-     "index": {
-      "title": "Index",
-      "type": "object",
-      "additionalProperties": {
-       "type": "array",
-       "items": {
-        "type": "string"
-       }
-      }
-     }
-    },
-    "additionalProperties": false,
-    "description": "Class to inherit when creating a `Metamodel`"
-   },
    "Modem": {
     "title": "Modem",
     "required": [
@@ -6044,9 +5971,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -6211,9 +6135,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -6309,9 +6230,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -6502,9 +6420,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "initialStateDefType": {
       "title": "Initial State Definition Type",
       "allOf": [
@@ -6587,6 +6502,12 @@
       "title": "Atmospheric Density [kg/m\u00b3]",
       "type": "number",
       "default": 0.0
+     },
+     "lst": {
+      "title": "Lst",
+      "maximum": 360.0,
+      "minimum": -360.0,
+      "type": "number"
      }
     },
     "additionalProperties": false,
@@ -6640,9 +6561,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -6700,9 +6618,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -6799,9 +6714,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -6926,6 +6838,15 @@
     "title": "PositionBase220",
     "type": "object",
     "properties": {
+     "ecef": {
+      "title": "Ecef",
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
      "lla": {
       "title": "Lla",
       "maxItems": 3,
@@ -6952,15 +6873,6 @@
       "items": {
        "type": "number"
       }
-     },
-     "ecef": {
-      "title": "Ecef",
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array",
-      "items": {
-       "type": "number"
-      }
      }
     },
     "additionalProperties": false
@@ -6976,9 +6888,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -7165,9 +7074,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -7236,9 +7142,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -7448,9 +7351,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -7694,15 +7594,6 @@
     "title": "QuaternionBase220",
     "type": "object",
     "properties": {
-     "eci_body": {
-      "title": "Eci Body",
-      "maxItems": 4,
-      "minItems": 4,
-      "type": "array",
-      "items": {
-       "type": "number"
-      }
-     },
      "body_ecef": {
       "title": "Body Ecef",
       "maxItems": 4,
@@ -7712,8 +7603,8 @@
        "type": "number"
       }
      },
-     "ecef_body": {
-      "title": "Ecef Body",
+     "eci_body": {
+      "title": "Eci Body",
       "maxItems": 4,
       "minItems": 4,
       "type": "array",
@@ -7723,6 +7614,15 @@
      },
      "body_eci": {
       "title": "Body Eci",
+      "maxItems": 4,
+      "minItems": 4,
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
+     "ecef_body": {
+      "title": "Ecef Body",
       "maxItems": 4,
       "minItems": 4,
       "type": "array",
@@ -7747,9 +7647,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -7997,9 +7894,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -8094,9 +7988,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -8151,9 +8042,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -8224,9 +8112,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -8276,9 +8161,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      }
     },
     "additionalProperties": false,
@@ -8310,9 +8192,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -8370,9 +8249,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -8422,9 +8298,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -8530,13 +8403,13 @@
          "$ref": "#/components/schemas/AgentGroup"
         },
         {
+         "$ref": "#/components/schemas/Orbit"
+        },
+        {
          "$ref": "#/components/schemas/ClockConfig"
         },
         {
          "$ref": "#/components/schemas/Agent"
-        },
-        {
-         "$ref": "#/components/schemas/Orbit"
         }
        ]
       }
@@ -8643,9 +8516,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "availableSolarRootPower": {
       "title": "Availablesolarrootpower",
@@ -8892,9 +8762,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "availableSolarRootPower": {
       "title": "Availablesolarrootpower",
       "type": "number"
@@ -9138,9 +9005,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -9210,9 +9074,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -9310,9 +9171,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "partNumber": {
       "title": "Part Number",
       "maxLength": 32,
@@ -9367,9 +9225,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -9623,9 +9478,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -9715,9 +9567,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -9929,9 +9778,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -10165,9 +10011,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -10211,9 +10054,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -10285,9 +10125,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -10449,9 +10286,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "partNumber": {
       "title": "Part Number",
       "maxLength": 32,
@@ -10526,9 +10360,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -10581,9 +10412,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -10653,9 +10481,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -10753,9 +10578,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -10846,9 +10668,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -10948,9 +10767,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "type": "string"
@@ -10985,9 +10801,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -11056,9 +10869,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -11114,9 +10924,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -11181,9 +10988,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "type": "string"
@@ -11219,9 +11023,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -11261,10 +11062,6 @@
     "title": "TemperatureBase220",
     "type": "object",
     "properties": {
-     "degC": {
-      "title": "Degc",
-      "type": "number"
-     },
      "degK": {
       "title": "Degk",
       "minimum": 0.0,
@@ -11272,6 +11069,10 @@
      },
      "degF": {
       "title": "Degf",
+      "type": "number"
+     },
+     "degC": {
+      "title": "Degc",
       "type": "number"
      }
     },
@@ -11305,9 +11106,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -11426,9 +11224,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "partNumber": {
       "title": "Part Number",
       "maxLength": 32,
@@ -11490,9 +11285,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -11705,9 +11497,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -11761,9 +11550,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -11816,9 +11602,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "availableSolarRootPower": {
       "title": "Availablesolarrootpower",
@@ -12136,9 +11919,6 @@
       "title": "Id",
       "type": "string"
      },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
-     },
      "name": {
       "title": "Name",
       "maxLength": 100,
@@ -12183,9 +11963,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "partNumber": {
       "title": "Part Number",
@@ -12373,9 +12150,6 @@
      "id": {
       "title": "Id",
       "type": "string"
-     },
-     "metamodel": {
-      "$ref": "#/components/schemas/Metamodel"
      },
      "name": {
       "title": "Name",
@@ -12823,6 +12597,21 @@
        "type": "number"
       }
      },
+     "commandedAttitude": {
+      "title": "Commanded Attitude Quaternion",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/QuaternionBase220"
+       }
+      ]
+     },
+     "commandedAngularRates": {
+      "title": "Commanded Angular Velocity [rad/s]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
      "lvlhAxes": {
       "title": "Lvlhaxes",
       "type": "array",
@@ -12905,106 +12694,133 @@
       "items": {
        "anyOf": [
         {
-         "$ref": "#/components/schemas/TargetGroup"
-        },
-        {
-         "$ref": "#/components/schemas/ReactionWheel"
-        },
-        {
-         "$ref": "#/components/schemas/Heater"
-        },
-        {
-         "$ref": "#/components/schemas/Cooler"
-        },
-        {
-         "$ref": "#/components/schemas/FuelReservoir"
-        },
-        {
-         "$ref": "#/components/schemas/TargetToScalarCondition"
-        },
-        {
-         "$ref": "#/components/schemas/TempControllerState"
-        },
-        {
-         "$ref": "#/components/schemas/SpherocylinderFuelTank"
-        },
-        {
-         "$ref": "#/components/schemas/StaticThrustControlAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/TriadAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/SingleConvMpptPowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/PositionSensor"
-        },
-        {
-         "$ref": "#/components/schemas/LocalVector"
-        },
-        {
-         "$ref": "#/components/schemas/PowerLoad"
-        },
-        {
-         "$ref": "#/components/schemas/GpsAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroupToSatelliteCondition"
-        },
-        {
-         "$ref": "#/components/schemas/SolarArray"
-        },
-        {
-         "$ref": "#/components/schemas/Modem"
-        },
-        {
-         "$ref": "#/components/schemas/LaserCommModule"
+         "$ref": "#/components/schemas/CircularFieldOfView"
         },
         {
          "$ref": "#/components/schemas/CelestialTarget"
         },
         {
-         "$ref": "#/components/schemas/SolarPanel"
+         "$ref": "#/components/schemas/PassiveTransmitInterface"
         },
         {
-         "$ref": "#/components/schemas/DataBus"
+         "$ref": "#/components/schemas/QuasiRegDetPowerProcessor"
         },
         {
-         "$ref": "#/components/schemas/CircularFieldOfView"
+         "$ref": "#/components/schemas/MaxAlignPointingMode"
+        },
+        {
+         "$ref": "#/components/schemas/VectorSensor"
+        },
+        {
+         "$ref": "#/components/schemas/LoadState"
+        },
+        {
+         "$ref": "#/components/schemas/VectorInFovCondition"
+        },
+        {
+         "$ref": "#/components/schemas/DataStorage"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroupInFovCondition"
         },
         {
          "$ref": "#/components/schemas/SunTrackingSurface"
         },
         {
-         "$ref": "#/components/schemas/DirectionSensor"
+         "$ref": "#/components/schemas/BatteryCell"
+        },
+        {
+         "$ref": "#/components/schemas/LockPointingMode"
+        },
+        {
+         "$ref": "#/components/schemas/ThermalInterface"
+        },
+        {
+         "$ref": "#/components/schemas/SlidingModeAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/ResistanceLoad"
+        },
+        {
+         "$ref": "#/components/schemas/MekfAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/TriadAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/VectorTrackingSurface"
         },
         {
          "$ref": "#/components/schemas/ReceiveInterface"
         },
         {
+         "$ref": "#/components/schemas/SatelliteToScalarCondition"
+        },
+        {
+         "$ref": "#/components/schemas/BodyInFovCondition"
+        },
+        {
+         "$ref": "#/components/schemas/PowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/TwoConvMpptPowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/SingleConvMpptPowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/ThermalInterfaceMaterial"
+        },
+        {
+         "$ref": "#/components/schemas/DataBus"
+        },
+        {
+         "$ref": "#/components/schemas/ReactionWheel"
+        },
+        {
+         "$ref": "#/components/schemas/FixedSurface"
+        },
+        {
+         "$ref": "#/components/schemas/Battery"
+        },
+        {
+         "$ref": "#/components/schemas/FullyRegDetPowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroupVector"
+        },
+        {
+         "$ref": "#/components/schemas/StaticThrustControlAlgorithm"
+        },
+        {
          "$ref": "#/components/schemas/InternalDataInterface"
         },
         {
-         "$ref": "#/components/schemas/DataInterface"
+         "$ref": "#/components/schemas/TargetGroupToSatelliteCondition"
         },
         {
-         "$ref": "#/components/schemas/SameTargetMultiCondition"
+         "$ref": "#/components/schemas/TargetInFovCondition"
+        },
+        {
+         "$ref": "#/components/schemas/CelestialVector"
+        },
+        {
+         "$ref": "#/components/schemas/RectangularFieldOfView"
+        },
+        {
+         "$ref": "#/components/schemas/LocalVector"
+        },
+        {
+         "$ref": "#/components/schemas/AveragingAlgorithm"
         },
         {
          "$ref": "#/components/schemas/EkfAlgorithm"
         },
         {
-         "$ref": "#/components/schemas/SatelliteToScalarCondition"
+         "$ref": "#/components/schemas/DataMode"
         },
         {
-         "$ref": "#/components/schemas/Subsystem"
-        },
-        {
-         "$ref": "#/components/schemas/DataType"
-        },
-        {
-         "$ref": "#/components/schemas/AveragingAlgorithm"
+         "$ref": "#/components/schemas/SolarArray"
         },
         {
          "$ref": "#/components/schemas/TargetGroupToTargetCondition"
@@ -13013,166 +12829,142 @@
          "$ref": "#/components/schemas/SatelliteToTargetCondition"
         },
         {
-         "$ref": "#/components/schemas/BusRegulator"
-        },
-        {
-         "$ref": "#/components/schemas/SolarCell"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroupVector"
-        },
-        {
-         "$ref": "#/components/schemas/AngularVelocitySensor"
-        },
-        {
-         "$ref": "#/components/schemas/OperationalMode"
-        },
-        {
-         "$ref": "#/components/schemas/TargetToTargetCondition"
-        },
-        {
          "$ref": "#/components/schemas/OpticalAttitudeSensor"
-        },
-        {
-         "$ref": "#/components/schemas/FullyRegDetPowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/TwoConvMpptPowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/DataMode"
-        },
-        {
-         "$ref": "#/components/schemas/FixedSurface"
-        },
-        {
-         "$ref": "#/components/schemas/SingleConvHybridPowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/SatelliteToSatelliteCondition"
-        },
-        {
-         "$ref": "#/components/schemas/Component"
-        },
-        {
-         "$ref": "#/components/schemas/Orbit"
-        },
-        {
-         "$ref": "#/components/schemas/Thruster"
-        },
-        {
-         "$ref": "#/components/schemas/GroundTarget"
-        },
-        {
-         "$ref": "#/components/schemas/RectangularFieldOfView"
-        },
-        {
-         "$ref": "#/components/schemas/ThermalInterface"
-        },
-        {
-         "$ref": "#/components/schemas/CompoundCondition"
-        },
-        {
-         "$ref": "#/components/schemas/DataStorage"
-        },
-        {
-         "$ref": "#/components/schemas/Battery"
-        },
-        {
-         "$ref": "#/components/schemas/VectorTrackingSurface"
-        },
-        {
-         "$ref": "#/components/schemas/CooperativeTransmitInterface"
-        },
-        {
-         "$ref": "#/components/schemas/PowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/SpaceTarget"
-        },
-        {
-         "$ref": "#/components/schemas/VectorInFovCondition"
-        },
-        {
-         "$ref": "#/components/schemas/QuasiRegDetPowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/VectorSensor"
-        },
-        {
-         "$ref": "#/components/schemas/SphericalFuelTank"
-        },
-        {
-         "$ref": "#/components/schemas/LoadState"
-        },
-        {
-         "$ref": "#/components/schemas/ResistanceLoad"
-        },
-        {
-         "$ref": "#/components/schemas/TargetVector"
-        },
-        {
-         "$ref": "#/components/schemas/MaxAlignPointingMode"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroupToScalarCondition"
-        },
-        {
-         "$ref": "#/components/schemas/BodyFrameVector"
-        },
-        {
-         "$ref": "#/components/schemas/Magnetorquer"
-        },
-        {
-         "$ref": "#/components/schemas/LockPointingMode"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroupInFovCondition"
-        },
-        {
-         "$ref": "#/components/schemas/ThermalInterfaceMaterial"
-        },
-        {
-         "$ref": "#/components/schemas/BatteryCell"
-        },
-        {
-         "$ref": "#/components/schemas/SurfaceMaterial"
-        },
-        {
-         "$ref": "#/components/schemas/TimeCondition"
-        },
-        {
-         "$ref": "#/components/schemas/Antenna"
-        },
-        {
-         "$ref": "#/components/schemas/PassivePointingMode"
-        },
-        {
-         "$ref": "#/components/schemas/MekfAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/SlidingModeAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/Satellite"
         },
         {
          "$ref": "#/components/schemas/BatteryPack"
         },
         {
-         "$ref": "#/components/schemas/PassiveTransmitInterface"
+         "$ref": "#/components/schemas/CooperativeTransmitInterface"
+        },
+        {
+         "$ref": "#/components/schemas/BusRegulator"
+        },
+        {
+         "$ref": "#/components/schemas/Magnetorquer"
+        },
+        {
+         "$ref": "#/components/schemas/TempControllerState"
+        },
+        {
+         "$ref": "#/components/schemas/Modem"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroupToScalarCondition"
+        },
+        {
+         "$ref": "#/components/schemas/SatelliteToSatelliteCondition"
+        },
+        {
+         "$ref": "#/components/schemas/TimeCondition"
+        },
+        {
+         "$ref": "#/components/schemas/SpherocylinderFuelTank"
+        },
+        {
+         "$ref": "#/components/schemas/LaserCommModule"
+        },
+        {
+         "$ref": "#/components/schemas/Component"
+        },
+        {
+         "$ref": "#/components/schemas/Cooler"
+        },
+        {
+         "$ref": "#/components/schemas/Heater"
         },
         {
          "$ref": "#/components/schemas/PidAlgorithm"
         },
         {
-         "$ref": "#/components/schemas/BodyInFovCondition"
+         "$ref": "#/components/schemas/TargetToTargetCondition"
         },
         {
-         "$ref": "#/components/schemas/CelestialVector"
+         "$ref": "#/components/schemas/PowerLoad"
         },
         {
-         "$ref": "#/components/schemas/TargetInFovCondition"
+         "$ref": "#/components/schemas/TargetVector"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroup"
+        },
+        {
+         "$ref": "#/components/schemas/GpsAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/SameTargetMultiCondition"
+        },
+        {
+         "$ref": "#/components/schemas/BodyFrameVector"
+        },
+        {
+         "$ref": "#/components/schemas/Antenna"
+        },
+        {
+         "$ref": "#/components/schemas/OperationalMode"
+        },
+        {
+         "$ref": "#/components/schemas/SurfaceMaterial"
+        },
+        {
+         "$ref": "#/components/schemas/CompoundCondition"
+        },
+        {
+         "$ref": "#/components/schemas/DirectionSensor"
+        },
+        {
+         "$ref": "#/components/schemas/Subsystem"
+        },
+        {
+         "$ref": "#/components/schemas/DataType"
+        },
+        {
+         "$ref": "#/components/schemas/GroundTarget"
+        },
+        {
+         "$ref": "#/components/schemas/SolarPanel"
+        },
+        {
+         "$ref": "#/components/schemas/Satellite"
+        },
+        {
+         "$ref": "#/components/schemas/PositionSensor"
+        },
+        {
+         "$ref": "#/components/schemas/SphericalFuelTank"
+        },
+        {
+         "$ref": "#/components/schemas/Orbit"
+        },
+        {
+         "$ref": "#/components/schemas/ComponentToScalarCondition"
+        },
+        {
+         "$ref": "#/components/schemas/PassivePointingMode"
+        },
+        {
+         "$ref": "#/components/schemas/SolarCell"
+        },
+        {
+         "$ref": "#/components/schemas/DataInterface"
+        },
+        {
+         "$ref": "#/components/schemas/TargetToScalarCondition"
+        },
+        {
+         "$ref": "#/components/schemas/FuelReservoir"
+        },
+        {
+         "$ref": "#/components/schemas/SpaceTarget"
+        },
+        {
+         "$ref": "#/components/schemas/Thruster"
+        },
+        {
+         "$ref": "#/components/schemas/SingleConvHybridPowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/AngularVelocitySensor"
         }
        ]
       }
@@ -13463,6 +13255,21 @@
        "type": "number"
       }
      },
+     "commandedAttitude": {
+      "title": "Commanded Attitude Quaternion",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/QuaternionBase220"
+       }
+      ]
+     },
+     "commandedAngularRates": {
+      "title": "Commanded Angular Velocity [rad/s]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
      "lvlhAxes": {
       "title": "Lvlhaxes",
       "type": "array",
@@ -13536,18 +13343,18 @@
   },
   {
    "name": "Data",
-   "description": "\n### Queries\n\nData is queried via 4 URL query parameters:\n\n- `id`: The ID of the data set to query.  This ID is defined on a [Simulation Job](#tag/Jobs).\n- `start`: The start time of the window in MJD. If omitted, defaults to the minimum timestamp in the dataset.\n- `stop`: The stop time of the window in MJD. If omitted, defaults to the maximum timestamp in the dataset.\n- `binWidth`: (optional) The bin width to use to down-sample the data.  If omitted, data will be full resolution.\n- `axisOrder`: (optional) The shape of each series in the response. Options: `TIME_MAJOR` (default) and `TIME_MINOR`.\n\nExample request: `GET: /data/<id>?start=<start>&stop=<stop>&binWidth=<binWidth>`\n\n#### Response\n\nData is returned from a query in the following format:\n\n```jsonc\n{\n    \"series\": {\n        <streamId>: [\n            [<timestamp1::MJD>, <timestamp2::MJD>, ...],\n            {\n                <agentId>: {\n                    <blockId>: {\n                        <stateVariableA>: [<valueA1>, <valueA2>, ...],\n                        <stateVariableB>: [<valueB1>, <valueB2>, ...],\n                        ...\n                    },\n                    <stateVariableC>: [<valueC1>, <valueC2>, ...]\n                },\n                ...\n            }\n        ],\n        ...\n    }\n}\n```\n\nNote that a \"Stream\" is a set of state variables that share the same timestamps.  Specifically, the values in a Stream\ncorrespond to a modsim Engine of a particular Agent.  The `series` object contains a key for each stream in the data set.\nThe value of each stream key is a 2-element array.  The first element is an array of timestamps - the X-axis for all variables\nin the stream.  The second element is an object containing the state variables that compose the stream.  The state variables\nare grouped under an Agent ID and then a Block ID (if applicable).  The value of each entry is an array of values that aligns\nwith the timestamp vector.\n\n#### Axis Order (`axisOrder`)\n\nAxis order defines the shape of each multi-dimensional series in the Data Service query response.  In the following example,\n`n` is the time dimension, `position` is a notional State Variable of shape `(3,)`, and `matrix` is a notional State Variable\nof shape `(3, 4)`.\n\n**`TIME_MAJOR`**\n- `position.shape == (n, 3)`\n- `matrix.shape == (n, 3, 4)`\n\n**`TIME_MINOR`**\n- `position.shape == (3, n)`\n- `matrix.shape == (3, 4, n)`\n"
+   "description": "\n### Queries\n\nData is queried via 6 URL query parameters:\n\n- `id`: The ID of the data set to query.  This ID is defined on a [Simulation Job](#tag/Jobs).\n- `start`: The start time of the window in MJD. If omitted, defaults to the minimum timestamp in the dataset.\n- `stop`: The stop time of the window in MJD. If omitted, defaults to the maximum timestamp in the dataset.\n- `binWidth`: (optional) The bin width to use to down-sample the data.  If omitted, data will be full resolution.\n- `axisOrder`: (optional) The shape of each series in the response. Options: `TIME_MAJOR` (default) and `TIME_MINOR`.\n- `streams`: (optional) The specific agents and engines for which to fetch data. If omitted, all streams are fetched.\n    This argument takes the form of a list of requests separated by commas.\n    A request can have either one or two elements. The first element is always the ID of the Agent (str).\n    The second element (optional) is the name of an engine (str). This must be one of the following: 'GNC', 'CDH', 'Power', 'Thermal'.\n    If the second element is not provided, all data from all engines of the given Agent are fetched. If a request has two elements, they are\n    separated by a period. Here is an example:\n\n    ...&streams=NT06aqHUT5djI1_JPAsck.CDH,NT06aqHUT5djI1_JPAsck.Power,NT0Ln1gS8elWEK4Y-l7m-\n\n    This will fetch the Power and CDH data for Agent(id='NT06aqHUT5djI1_JPAsck'), and all data for\n    Agent(id='NT0Ln1gS8elWEK4Y-l7m-').\n\nExample request: `GET: /data/<id>?start=<start>&stop=<stop>&binWidth=<binWidth>`\n\n#### Response\n\nData is returned from a query in the following format:\n\n```jsonc\n{\n    \"series\": {\n        <streamId>: [\n            [<timestamp1::MJD>, <timestamp2::MJD>, ...],\n            {\n                <agentId>: {\n                    <blockId>: {\n                        <stateVariableA>: [<valueA1>, <valueA2>, ...],\n                        <stateVariableB>: [<valueB1>, <valueB2>, ...],\n                        ...\n                    },\n                    <stateVariableC>: [<valueC1>, <valueC2>, ...]\n                },\n                ...\n            }\n        ],\n        ...\n    }\n}\n```\n\nNote that a \"Stream\" is a set of state variables that share the same timestamps.  Specifically, the values in a Stream\ncorrespond to a modsim Engine of a particular Agent.  The `series` object contains a key for each stream in the data set.\nThe value of each stream key is a 2-element array.  The first element is an array of timestamps - the X-axis for all variables\nin the stream.  The second element is an object containing the state variables that compose the stream.  The state variables\nare grouped under an Agent ID and then a Block ID (if applicable).  The value of each entry is an array of values that aligns\nwith the timestamp vector.\n\n#### Axis Order (`axisOrder`)\n\nAxis order defines the shape of each multi-dimensional series in the Data Service query response.  In the following example,\n`n` is the time dimension, `position` is a notional State Variable of shape `(3,)`, and `matrix` is a notional State Variable\nof shape `(3, 4)`.\n\n**`TIME_MAJOR`**\n- `position.shape == (n, 3)`\n- `matrix.shape == (n, 3, 4)`\n\n**`TIME_MINOR`**\n- `position.shape == (3, n)`\n- `matrix.shape == (3, 4, n)`\n"
   },
   {
-   "name": "Template",
-   "description": "\nTemplate root properties can be updated and multiple `Block`s can be created, updated, and/or deleted in the same    request as follows:\n\n- Properties on the template root are updated via the `root` key.\n- `Block`s are created via dictionaries in the `Block`s list, making sure to include all required fields and exclude an    `id` property.\n- `Block`s are updated via dictionaries in the `Block`s list, making sure to include an `id` property and any fields to    be updated.\n- `Block`s are deleted via strings in the `delete` key corresponding to `id`s of `Block`s being deleted.\n\n```jsonc\n{\n    // UPDATE root properties\n    \"root\": {\n        \"property\": \"value\"\n    },\n    \"blocks\": [\n        // CREATE block\n        {\n            \"property\": \"value\",\n            \"type\": \"ClassName\",\n        },\n        // UPDATE block\n        {\n            \"id\": \"6000ce5a-07de-4a46-ad0e-ac117d343adc\",\n            \"property\": \"value\",\n        },\n    ],\n    // DELETE blocks\n    \"delete\": [\"5eb8db2f-96fa-4f90-b3d4-dbef83e34078\", \"12ef959b-4372-41ce-8e80-6f54fa4c83de\"]\n}\n```\n"
+   "name": "Templates",
+   "description": "\nTemplate root properties can be updated and multiple `Block`s can be created, updated, and/or deleted in the same    request as follows:\n\n- Properties on the template root are updated via the `root` key.\n- `Block`s are **created** via dictionaries in the `Block`s list, making sure to include all required fields, the `type`    (name of the class), and **exclude** an `id` property.\n- `Block`s are **updated** via dictionaries in the `Block`s list, making sure to **include** an `id` property, the `type`    (name of the class) and any fields to be updated.\n- `Block`s are deleted via strings in the `delete` key corresponding to `id`s of `Block`s being deleted.\n\n```jsonc\n{\n    // UPDATE root properties\n    \"root\": {\n        \"property\": \"value\"\n    },\n    \"blocks\": [\n        // CREATE block\n        {\n            \"property\": \"value\",\n            \"type\": \"ClassName\",\n        },\n        // UPDATE block\n        {\n            \"id\": \"6000ce5a-07de-4a46-ad0e-ac117d343adc\",\n            \"property\": \"value\",\n        },\n    ],\n    // DELETE blocks\n    \"delete\": [\"5eb8db2f-96fa-4f90-b3d4-dbef83e34078\", \"12ef959b-4372-41ce-8e80-6f54fa4c83de\"]\n}\n```\n"
   }
  ],
  "x-tagGroups": [
   {
-   "name": "Repositories",
+   "name": "Templates",
    "tags": [
-    "Branches"
+    "Templates"
    ]
   },
   {
@@ -13563,9 +13370,9 @@
    ]
   },
   {
-   "name": "Template",
+   "name": "Repositories",
    "tags": [
-    "Template"
+    "Branches"
    ]
   }
  ]
