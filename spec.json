@@ -3,9 +3,9 @@
  "info": {
   "title": "Sedaro API",
   "description": "\nAllows for consumption of Sedaro services.\nRead more about Sedaro at [docs.sedaro.com](https://docs.sedaro.com).\n\n### Clients\n\n**Python:** [sedaro](https://pypi.org/project/sedaro/)\n- This package provides additional functionality on top of the auto-generated OpenAPI client. See the package docs for more information.\n\n### API Key\n\nTo access the Sedaro service via this API, you will need an API key.  You can generate an API key for your account in the\nSedaro [Management Console](https://satellite.sedaro.com/#/account). Once complete, pass the API key in all requests\nvia the `X_API_KEY` HTTP header.\n\n*API keys grant full access to your account and should never be shared. If you think your API key has been compromised,\nyou can revoke it in the [Management Console](https://satellite.sedaro.com/#/account).*\n\n### Jupyter Notebooks\n\nFor additional examples of how to use this API for modeling and simulation, see our [Mod-Sim Notebooks](https://github.com/sedaro/modsim-notebooks).\n\n### Community, Support, Discussion\n\nIf you have any issues or suggestions, please reach out:\n\n1. Join the Sedaro Community [Slack](https://join.slack.com/t/sedaro-community/shared_invite/zt-1jps4i711-mXy88AZQ9AV7YcEXr8x7Ow)\n2. Email us at support@sedarotech.com\n\n### Known Issues\n\n- Currently the documentation for 200 responses to Block create, read, update, and delete (CRUD) operations is incorrect.\nThis is due to an issue with our documentation generator.  Under each Block Group, the documentation will show `name`,\n`collection`, and `data` keys.  In reality, this level does not exist and should be skipped.  See the schema under the\n`data` key of a Template's Block Group for the correct schema of such Block Group.\n- Error responses are more specific than what is shown throughout the documentation.  A 4xx or 5xx error will be returned\nin all error cases.  Only a `200` status indicates success.  See a given error response for additional details.\n",
-  "version": "4.1.7",
+  "version": "4.3.1",
   "x-logo": {
-   "url": "https://api.sedaro.com/static/multimedia/logo_secondary_02242022.png",
+   "url": "https://api.sedaro.com/static/multimedia/logo_secondary_06142023.png",
    "backgroundColor": "#FAFAFA",
    "altText": "Sedaro API Docs"
   }
@@ -264,6 +264,149 @@
        "application/json": {
         "schema": {
          "$ref": "#/components/schemas/MessageRes"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/simulations/jobs/{jobId}/externals/{agentId}/{externalStateBlockId}": {
+   "get": {
+    "tags": [
+     "Externals"
+    ],
+    "summary": "Read `ExternalState` for a simulation",
+    "description": "This endpoint is used to read/consume state from a running simulation.\n- `jobId`: The ID of the running simulation for which to communicate\n- `agentId`: The ID of the `Agent` in the simulation for which the produced state pertains\n- `externalStateBlockId`: The ID of the relevant `ExternalState` Block of the `Agent` with ID `agentId` which defines the `consumed` state variables.\n- `time` (optional): The simulation `time` at which to read the `consumed` state. During `SpontaneousExternalState` \ntransactions, if `time` is omitted, the relevant Engine's `time` will be used.  `time` should be omitted for `PerRoundExternalState` transactions.",
+    "operationId": "get_external",
+    "parameters": [
+     {
+      "required": true,
+      "schema": {
+       "title": "Jobid",
+       "type": "string"
+      },
+      "name": "jobId",
+      "in": "path"
+     },
+     {
+      "required": true,
+      "schema": {
+       "title": "Agentid",
+       "type": "string"
+      },
+      "name": "agentId",
+      "in": "path"
+     },
+     {
+      "required": true,
+      "schema": {
+       "title": "Externalstateblockid",
+       "type": "string"
+      },
+      "name": "externalStateBlockId",
+      "in": "path"
+     },
+     {
+      "required": false,
+      "schema": {
+       "title": "Time",
+       "type": "number"
+      },
+      "name": "time",
+      "in": "query"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "title": "Response Get External",
+         "type": "array",
+         "items": {}
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "Externals"
+    ],
+    "summary": "Set `ExternalState` for a simulation",
+    "description": "This endpoint is used to publish/produce state to a running simulation.\n- `jobId`: The ID of the running simulation for which to communicate\n- `agentId`: The ID of the `Agent` in the simulation for which the produced state pertains\n- `externalStateBlockId`: The ID of the relevant `ExternalState` Block of the `Agent` with ID `agentId` which defines the `produced` state variables.\n\nSee details on the request body below.",
+    "operationId": "put_external",
+    "parameters": [
+     {
+      "required": true,
+      "schema": {
+       "title": "Jobid",
+       "type": "string"
+      },
+      "name": "jobId",
+      "in": "path"
+     },
+     {
+      "required": true,
+      "schema": {
+       "title": "Agentid",
+       "type": "string"
+      },
+      "name": "agentId",
+      "in": "path"
+     },
+     {
+      "required": true,
+      "schema": {
+       "title": "Externalstateblockid",
+       "type": "string"
+      },
+      "name": "externalStateBlockId",
+      "in": "path"
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ExternalStateSetRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "title": "Response Put External",
+         "type": "array",
+         "items": {}
         }
        }
       }
@@ -903,6 +1046,13 @@
       "title": "ID of Associated Orbit Block",
       "type": "string",
       "description": "Relationship to zero or one `Orbit` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "externalState": {
+      "title": "IDs of Associated ExternalState Blocks",
+      "type": "array",
+      "items": {},
+      "description": "Relationship to one or more `ExternalState` blocks. On delete: `set-none` (remove ID of referenced block from this relationship field).",
+      "default": []
      }
     },
     "additionalProperties": false,
@@ -943,16 +1093,16 @@
     "additionalProperties": false,
     "description": "Class to be used internally and inherited by `Metamodel` and `Block`. Adds helper methods and properties."
    },
-   "AngleBase220": {
-    "title": "AngleBase220",
+   "AngleBase299": {
+    "title": "AngleBase299",
     "type": "object",
     "properties": {
-     "rad": {
-      "title": "Rad",
-      "type": "number"
-     },
      "deg": {
       "title": "Deg",
+      "type": "number"
+     },
+     "rad": {
+      "title": "Rad",
       "type": "number"
      }
     },
@@ -962,14 +1112,14 @@
     "title": "AngleFieldOfView31",
     "type": "object",
     "properties": {
+     "deg": {
+      "title": "Deg",
+      "type": "number"
+     },
      "rad": {
       "title": "Rad",
       "maximum": 3.141592653589793,
       "minimum": 0.0,
-      "type": "number"
-     },
-     "deg": {
-      "title": "Deg",
       "type": "number"
      }
     },
@@ -979,14 +1129,14 @@
     "title": "AngleFieldOfView36",
     "type": "object",
     "properties": {
+     "deg": {
+      "title": "Deg",
+      "type": "number"
+     },
      "rad": {
       "title": "Rad",
       "maximum": 1.5707963267948966,
       "minimum": 0.0,
-      "type": "number"
-     },
-     "deg": {
-      "title": "Deg",
       "type": "number"
      }
     },
@@ -996,14 +1146,14 @@
     "title": "AngleFieldOfView37",
     "type": "object",
     "properties": {
+     "deg": {
+      "title": "Deg",
+      "type": "number"
+     },
      "rad": {
       "title": "Rad",
       "maximum": 1.5707963267948966,
       "minimum": 0.0,
-      "type": "number"
-     },
-     "deg": {
-      "title": "Deg",
       "type": "number"
      }
     },
@@ -1013,13 +1163,13 @@
     "title": "AngleSensors20",
     "type": "object",
     "properties": {
+     "deg": {
+      "title": "Deg",
+      "type": "number"
+     },
      "rad": {
       "title": "Rad",
       "minimum": 0.0,
-      "type": "number"
-     },
-     "deg": {
-      "title": "Deg",
       "type": "number"
      }
     },
@@ -1029,13 +1179,13 @@
     "title": "AngleSensors51",
     "type": "object",
     "properties": {
+     "deg": {
+      "title": "Deg",
+      "type": "number"
+     },
      "rad": {
       "title": "Rad",
       "minimum": 0.0,
-      "type": "number"
-     },
-     "deg": {
-      "title": "Deg",
       "type": "number"
      }
     },
@@ -1045,28 +1195,28 @@
     "title": "AngleSensors56",
     "type": "object",
     "properties": {
+     "deg": {
+      "title": "Deg",
+      "type": "number"
+     },
      "rad": {
       "title": "Rad",
       "minimum": 0.0,
-      "type": "number"
-     },
-     "deg": {
-      "title": "Deg",
       "type": "number"
      }
     },
     "additionalProperties": false
    },
-   "AngularVelocityBase220": {
-    "title": "AngularVelocityBase220",
+   "AngularVelocityBase299": {
+    "title": "AngularVelocityBase299",
     "type": "object",
     "properties": {
-     "rpm": {
-      "title": "Rpm",
-      "type": "number"
-     },
      "deg/s": {
       "title": "Deg/S",
+      "type": "number"
+     },
+     "rpm": {
+      "title": "Rpm",
       "type": "number"
      },
      "rad/s": {
@@ -1109,7 +1259,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -1120,7 +1270,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -1203,7 +1353,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -1264,12 +1414,12 @@
     "title": "AngularVelocitySensors82",
     "type": "object",
     "properties": {
-     "rpm": {
-      "title": "Rpm",
-      "type": "number"
-     },
      "deg/s": {
       "title": "Deg/S",
+      "type": "number"
+     },
+     "rpm": {
+      "title": "Rpm",
       "type": "number"
      },
      "rad/s": {
@@ -1312,7 +1462,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -1323,7 +1473,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -1406,7 +1556,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -1736,7 +1886,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -1747,7 +1897,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -1830,7 +1980,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -2545,13 +2695,13 @@
       "title": "Position"
      },
      "lat": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "lon": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "alt": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "range": {
       "title": "Range",
@@ -2565,10 +2715,10 @@
       "title": "Relativeposition"
      },
      "azimuth": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "elevation": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "polynomialEphemerisBody": {
       "title": "Polynomial Ephemeris Body",
@@ -2739,7 +2889,13 @@
      "realTime": {
       "title": "Real-Time Mode",
       "type": "boolean",
-      "description": "**Note**: `realTime` is currently not supported.  Support is anticipated in January 2023. Once supported, if true, the simulation will run faster than real-time up to current wall time and then step in sync with wall time.",
+      "description": "If true, the simulation will run 1x real-time.  This means if the simulation time-step is 10s, 10s of             wall time will elapse between the beginning of that round and the next. If false, the simulation will run as             fast as possible.  Use `syncTime` if you want simulation time to be syncronized to wall time.",
+      "default": false
+     },
+     "syncTime": {
+      "title": "Sync-Time Mode",
+      "type": "boolean",
+      "description": "If true, the simulation will run faster than real-time up to current wall time and then step in             sync with wall time. `syncTime` is only considered when `realTime` is true.",
       "default": false
      }
     },
@@ -2778,7 +2934,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -2789,7 +2945,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -2872,7 +3028,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -3140,7 +3296,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -3151,7 +3307,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -3234,7 +3390,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -3289,7 +3445,7 @@
       "title": "Commanded Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ]
      },
@@ -3377,11 +3533,6 @@
       "type": "boolean",
       "default": false
      },
-     "linkTarget": {
-      "title": "ID of Associated Target Block",
-      "type": "string",
-      "description": "Relationship to a single `Target` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
      "targetInFov": {
       "title": "One-Way Field of View Access",
       "type": "boolean",
@@ -3401,10 +3552,25 @@
       "type": "string",
       "description": "Relationship to a single `DirectedEnergyDevice` block. Inverse key: `DirectedEnergyDevice.externalInterfaces`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
+     "linkTarget": {
+      "title": "ID of Associated Target Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "linkTargetGroup": {
+      "title": "ID of Associated TargetGroup Block",
+      "type": "string",
+      "description": "Relationship to zero or one `TargetGroup` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
      "canLink": {
       "title": "Link Availability Status",
       "type": "boolean",
       "default": false
+     },
+     "activeLinkTarget": {
+      "title": "ID of Associated Target Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      }
     },
     "additionalProperties": false,
@@ -3761,7 +3927,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -3772,7 +3938,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -3855,7 +4021,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -3928,14 +4094,6 @@
     "title": "DistanceSensors70",
     "type": "object",
     "properties": {
-     "m": {
-      "title": "M",
-      "type": "number"
-     },
-     "cm": {
-      "title": "Cm",
-      "type": "number"
-     },
      "km": {
       "title": "Km",
       "minimum": 0.0,
@@ -3943,6 +4101,14 @@
      },
      "mm": {
       "title": "Mm",
+      "type": "number"
+     },
+     "cm": {
+      "title": "Cm",
+      "type": "number"
+     },
+     "m": {
+      "title": "M",
       "type": "number"
      }
     },
@@ -3952,12 +4118,12 @@
     "title": "DurationLoad70",
     "type": "object",
     "properties": {
-     "min": {
-      "title": "Min",
-      "type": "number"
-     },
      "s": {
       "title": "S",
+      "type": "number"
+     },
+     "min": {
+      "title": "Min",
       "type": "number"
      },
      "hour": {
@@ -3976,12 +4142,12 @@
     "title": "DurationOperationalMode18",
     "type": "object",
     "properties": {
-     "min": {
-      "title": "Min",
-      "type": "number"
-     },
      "s": {
       "title": "S",
+      "type": "number"
+     },
+     "min": {
+      "title": "Min",
       "type": "number"
      },
      "hour": {
@@ -4000,12 +4166,12 @@
     "title": "DurationOperationalMode19",
     "type": "object",
     "properties": {
-     "min": {
-      "title": "Min",
-      "type": "number"
-     },
      "s": {
       "title": "S",
+      "type": "number"
+     },
+     "min": {
+      "title": "Min",
       "type": "number"
      },
      "hour": {
@@ -4024,12 +4190,12 @@
     "title": "DurationOperationalMode20",
     "type": "object",
     "properties": {
-     "min": {
-      "title": "Min",
-      "type": "number"
-     },
      "s": {
       "title": "S",
+      "type": "number"
+     },
+     "min": {
+      "title": "Min",
       "type": "number"
      },
      "hour": {
@@ -4048,12 +4214,12 @@
     "title": "DurationOperationalMode28",
     "type": "object",
     "properties": {
-     "min": {
-      "title": "Min",
-      "type": "number"
-     },
      "s": {
       "title": "S",
+      "type": "number"
+     },
+     "min": {
+      "title": "Min",
       "type": "number"
      },
      "hour": {
@@ -4072,12 +4238,12 @@
     "title": "DurationOperationalMode29",
     "type": "object",
     "properties": {
-     "min": {
-      "title": "Min",
-      "type": "number"
-     },
      "s": {
       "title": "S",
+      "type": "number"
+     },
+     "min": {
+      "title": "Min",
       "type": "number"
      },
      "hour": {
@@ -4211,6 +4377,24 @@
      }
     }
    },
+   "ExternalStateSetRequest": {
+    "title": "ExternalStateSetRequest",
+    "type": "object",
+    "properties": {
+     "values": {
+      "title": "External State Values",
+      "type": "array",
+      "items": {},
+      "description": "\nA list containing the values of the external state to be produced.  The shape of this list and its \ncontents should match that defined by the `produced` query on the `ExternalState` block targeted by this request.\n\nExamples:\n```python\nblock = {\n  produced: [\n    {'root': 'velocity'},\n  ],\n  ...\n}\nvalues == [\n    [1, 0, 0]\n]\n\nblock = {\n  produced: [\n    {'root': 'velocity'}, \n    {'root': 'commandedAttitude'},\n  ],\n  ...\n}\nvalues == [\n    [1, 0, 0], \n    [0, 0, 0, 1]\n]\n\nblock = {\n  produced: [\n    {'root': 'velocity'}, \n    {'Battery': 'voltage'},\n    # Recall that this syntax queries for the `voltage` of all blocks of type `Battery` in the model.  \n    # In this example, assume there is a single Battery\n  ],\n  ...\n}\nvalues == [\n    [1, 0, 0], \n    [28.2]\n]\n```\n\nSome state must be produced as numpy arrays.  In this case, follow the numpy serialization/deserialization approach described above.\n",
+      "default": []
+     },
+     "timestamp": {
+      "title": "External State Values Timestamp [MJD]",
+      "type": "number",
+      "description": "\nThe timestamp of the external state `values`. `values` take effect once the relevant simulation \nEngine's `time` is >= `timestamp`. When a `timestamp` is provided, all future `timestamp`s must be \nsequential and increasing. When multiple `timestamp`ed `values` exist in a queue, the most current for \nwhich `time` is >= `timestamp` is taken. \n\nDuring `SpontaneousExternalState` transactions, if `timestamp` is omitted, the relevant Engine's `time` will be used.  \n`timestamp` should be omitted for `PerRoundExternalState` transactions.\n"
+     }
+    }
+   },
    "FixedSurface": {
     "title": "FixedSurface",
     "required": [
@@ -4277,7 +4461,7 @@
       "title": "Surface Normal Vector",
       "allOf": [
        {
-        "$ref": "#/components/schemas/FrameVectorBase220"
+        "$ref": "#/components/schemas/FrameVectorBase299"
        }
       ]
      },
@@ -4285,7 +4469,7 @@
       "title": "Sat to Sun Relative Vector [km]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/FrameVectorBase220"
+        "$ref": "#/components/schemas/FrameVectorBase299"
        }
       ]
      },
@@ -4318,7 +4502,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -4337,12 +4521,12 @@
     "additionalProperties": false,
     "description": "Class to be used internally and inherited by `Metamodel` and `Block`. Adds helper methods and properties."
    },
-   "FrameVectorBase220": {
-    "title": "FrameVectorBase220",
+   "FrameVectorBase299": {
+    "title": "FrameVectorBase299",
     "type": "object",
     "properties": {
-     "eci": {
-      "title": "Eci",
+     "ecef": {
+      "title": "Ecef",
       "maxItems": 3,
       "minItems": 3,
       "type": "array",
@@ -4350,8 +4534,8 @@
        "type": "number"
       }
      },
-     "ecef": {
-      "title": "Ecef",
+     "eci": {
+      "title": "Eci",
       "maxItems": 3,
       "minItems": 3,
       "type": "array",
@@ -4443,7 +4627,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -4454,7 +4638,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -4537,7 +4721,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -4834,13 +5018,13 @@
       "title": "Position"
      },
      "lat": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "lon": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "alt": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "range": {
       "title": "Range",
@@ -4854,16 +5038,16 @@
       "title": "Relativeposition"
      },
      "azimuth": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "elevation": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "solarAz": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "solarEl": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      }
     },
     "additionalProperties": false,
@@ -4931,7 +5115,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -4942,7 +5126,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -5025,7 +5209,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -5080,7 +5264,7 @@
       "title": "Commanded Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ]
      },
@@ -5247,7 +5431,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -5258,7 +5442,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -5341,7 +5525,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -5567,7 +5751,7 @@
      "lockVector": {
       "title": "ID of Associated ReferenceVector Block",
       "type": "string",
-      "description": "Relationship to zero or one `ReferenceVector` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+      "description": "Relationship to a single `ReferenceVector` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
      "acAlgorithm": {
       "title": "ID of Associated AttitudeControlAlgorithm Block",
@@ -5578,7 +5762,7 @@
       "title": "Commanded Spin Rate [rad/s]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/AngularVelocityBase220"
+        "$ref": "#/components/schemas/AngularVelocityBase299"
        }
       ],
       "default": {
@@ -5623,7 +5807,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -5634,7 +5818,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -5717,7 +5901,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -5881,7 +6065,7 @@
      "lockVector": {
       "title": "ID of Associated ReferenceVector Block",
       "type": "string",
-      "description": "Relationship to zero or one `ReferenceVector` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+      "description": "Relationship to a single `ReferenceVector` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
      "acAlgorithm": {
       "title": "ID of Associated AttitudeControlAlgorithm Block",
@@ -5891,12 +6075,12 @@
      "maxAlignBodyFrameVector": {
       "title": "ID of Associated BodyFrameVector Block",
       "type": "string",
-      "description": "Relationship to zero or one `BodyFrameVector` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+      "description": "Relationship to a single `BodyFrameVector` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
      "maxAlignVector": {
       "title": "ID of Associated ReferenceVector Block",
       "type": "string",
-      "description": "Relationship to zero or one `ReferenceVector` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+      "description": "Relationship to a single `ReferenceVector` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      }
     },
     "additionalProperties": false,
@@ -6003,7 +6187,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -6014,7 +6198,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -6097,7 +6281,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -6262,7 +6446,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -6273,7 +6457,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -6356,7 +6540,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -6677,11 +6861,6 @@
       "type": "boolean",
       "default": false
      },
-     "linkTarget": {
-      "title": "ID of Associated Target Block",
-      "type": "string",
-      "description": "Relationship to a single `Target` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
      "targetInFov": {
       "title": "One-Way Field of View Access",
       "type": "boolean",
@@ -6701,10 +6880,82 @@
       "type": "string",
       "description": "Relationship to a single `DirectedEnergyDevice` block. Inverse key: `DirectedEnergyDevice.externalInterfaces`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
+     "linkTarget": {
+      "title": "ID of Associated Target Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "linkTargetGroup": {
+      "title": "ID of Associated TargetGroup Block",
+      "type": "string",
+      "description": "Relationship to zero or one `TargetGroup` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
      "canLink": {
       "title": "Link Availability Status",
       "type": "boolean",
       "default": false
+     },
+     "activeLinkTarget": {
+      "title": "ID of Associated Target Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     }
+    },
+    "additionalProperties": false,
+    "description": "Class to be used internally and inherited by `Metamodel` and `Block`. Adds helper methods and properties."
+   },
+   "PerRoundExternalState": {
+    "title": "PerRoundExternalState",
+    "required": [
+     "engineIndex"
+    ],
+    "type": "object",
+    "properties": {
+     "id": {
+      "title": "Id",
+      "type": "string"
+     },
+     "consumed": {
+      "title": "Consumed State Variable Query",
+      "type": "array",
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "object"
+        }
+       ]
+      },
+      "default": []
+     },
+     "produced": {
+      "title": "Produced State Variable Query",
+      "type": "array",
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "object"
+        }
+       ]
+      },
+      "default": []
+     },
+     "engineIndex": {
+      "title": "Engine Index",
+      "type": "integer",
+      "description": "The index of the Engine to interface to.  This defines the `timeStep` at which these values are propagated. `0`: GNC, `1`: C&DH, `2`: Power, `3`: Thermal"
+     },
+     "agents": {
+      "title": "IDs of Associated Agent Blocks",
+      "type": "array",
+      "items": {},
+      "description": "Relationship to one or more `Agent` blocks. On delete: `set-none` (remove ID of referenced block from this relationship field).",
+      "default": []
      }
     },
     "additionalProperties": false,
@@ -6844,10 +7095,19 @@
     ],
     "description": "An enumeration."
    },
-   "PositionBase220": {
-    "title": "PositionBase220",
+   "PositionBase299": {
+    "title": "PositionBase299",
     "type": "object",
     "properties": {
+     "ecef": {
+      "title": "Ecef",
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
      "eci": {
       "title": "Eci",
       "maxItems": 3,
@@ -6859,15 +7119,6 @@
      },
      "llaDeg": {
       "title": "Lladeg",
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array",
-      "items": {
-       "type": "number"
-      }
-     },
-     "ecef": {
-      "title": "Ecef",
       "maxItems": 3,
       "minItems": 3,
       "type": "array",
@@ -6920,7 +7171,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -6931,7 +7182,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -7014,7 +7265,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -7174,7 +7425,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -7185,7 +7436,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -7268,7 +7519,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -7383,7 +7634,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -7394,7 +7645,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -7477,7 +7728,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -7600,12 +7851,12 @@
     },
     "additionalProperties": false
    },
-   "QuaternionBase220": {
-    "title": "QuaternionBase220",
+   "QuaternionBase299": {
+    "title": "QuaternionBase299",
     "type": "object",
     "properties": {
-     "ecef_body": {
-      "title": "Ecef Body",
+     "body_eci": {
+      "title": "Body Eci",
       "maxItems": 4,
       "minItems": 4,
       "type": "array",
@@ -7613,8 +7864,8 @@
        "type": "number"
       }
      },
-     "body_eci": {
-      "title": "Body Eci",
+     "ecef_body": {
+      "title": "Ecef Body",
       "maxItems": 4,
       "minItems": 4,
       "type": "array",
@@ -7679,7 +7930,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -7690,7 +7941,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -7773,7 +8024,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -7952,11 +8203,6 @@
       "type": "boolean",
       "default": false
      },
-     "linkTarget": {
-      "title": "ID of Associated Target Block",
-      "type": "string",
-      "description": "Relationship to a single `Target` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
      "targetInFov": {
       "title": "One-Way Field of View Access",
       "type": "boolean",
@@ -7976,10 +8222,25 @@
       "type": "string",
       "description": "Relationship to a single `DirectedEnergyDevice` block. Inverse key: `DirectedEnergyDevice.externalInterfaces`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
+     "linkTarget": {
+      "title": "ID of Associated Target Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "linkTargetGroup": {
+      "title": "ID of Associated TargetGroup Block",
+      "type": "string",
+      "description": "Relationship to zero or one `TargetGroup` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
      "canLink": {
       "title": "Link Availability Status",
       "type": "boolean",
       "default": false
+     },
+     "activeLinkTarget": {
+      "title": "ID of Associated Target Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      }
     },
     "additionalProperties": false,
@@ -8412,16 +8673,22 @@
       "items": {
        "anyOf": [
         {
-         "$ref": "#/components/schemas/AgentGroup"
+         "$ref": "#/components/schemas/Agent"
         },
         {
-         "$ref": "#/components/schemas/Agent"
+         "$ref": "#/components/schemas/SpontaneousExternalState"
+        },
+        {
+         "$ref": "#/components/schemas/Orbit"
+        },
+        {
+         "$ref": "#/components/schemas/PerRoundExternalState"
         },
         {
          "$ref": "#/components/schemas/ClockConfig"
         },
         {
-         "$ref": "#/components/schemas/Orbit"
+         "$ref": "#/components/schemas/AgentGroup"
         }
        ]
       }
@@ -8469,21 +8736,21 @@
       "type": "integer",
       "default": 0
      },
-     "_block_names": {
-      "title": " Block Names",
-      "type": "array",
-      "items": {},
-      "description": "Names of all valid `Block`s for this `Metamodel` class"
+     "_relationships": {
+      "title": " Relationships",
+      "type": "object",
+      "description": "Object mapping `Block` class names and `root` to the names of relationship fields. The field\n    names then map to an object of descriptive information about the field."
      },
      "_supers": {
       "title": " Supers",
       "type": "object",
       "description": "Object mapping `Block` class names to a list of names of their direct super classes."
      },
-     "_relationships": {
-      "title": " Relationships",
-      "type": "object",
-      "description": "Object mapping `Block` class names and `root` to the names of relationship fields. The field\n    names then map to an object of descriptive information about the field."
+     "_blockNames": {
+      "title": " Blocknames",
+      "type": "array",
+      "items": {},
+      "description": "Names of all valid `Block`s for this `Metamodel` class"
      },
      "_quantityKinds": {
       "title": " Quantitykinds",
@@ -8617,7 +8884,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -8628,7 +8895,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -8711,7 +8978,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -8862,7 +9129,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -8873,7 +9140,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -8956,7 +9223,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -9311,7 +9578,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -9322,7 +9589,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -9405,7 +9672,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -9563,13 +9830,13 @@
       "title": "Position"
      },
      "lat": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "lon": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "alt": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "range": {
       "title": "Range",
@@ -9583,13 +9850,13 @@
       "title": "Relativeposition"
      },
      "azimuth": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "elevation": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      },
      "beta": {
-      "$ref": "#/components/schemas/AngleBase220"
+      "$ref": "#/components/schemas/AngleBase299"
      }
     },
     "additionalProperties": false,
@@ -9624,6 +9891,7 @@
      "capacity",
      "priority",
      "location",
+     "wetMass",
      "diameter"
     ],
     "type": "object",
@@ -9653,7 +9921,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -9664,7 +9932,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -9747,7 +10015,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -9834,6 +10102,7 @@
      "capacity",
      "priority",
      "location",
+     "wetMass",
      "capDiameter",
      "cylinderLength"
     ],
@@ -9864,7 +10133,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -9875,7 +10144,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -9958,7 +10227,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -10043,6 +10312,63 @@
       "title": "ID of Associated BodyFrameVector Block",
       "type": "string",
       "description": "Relationship to a single `BodyFrameVector` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     }
+    },
+    "additionalProperties": false,
+    "description": "Class to be used internally and inherited by `Metamodel` and `Block`. Adds helper methods and properties."
+   },
+   "SpontaneousExternalState": {
+    "title": "SpontaneousExternalState",
+    "required": [
+     "engineIndex"
+    ],
+    "type": "object",
+    "properties": {
+     "id": {
+      "title": "Id",
+      "type": "string"
+     },
+     "consumed": {
+      "title": "Consumed State Variable Query",
+      "type": "array",
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "object"
+        }
+       ]
+      },
+      "default": []
+     },
+     "produced": {
+      "title": "Produced State Variable Query",
+      "type": "array",
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "object"
+        }
+       ]
+      },
+      "default": []
+     },
+     "engineIndex": {
+      "title": "Engine Index",
+      "type": "integer",
+      "description": "The index of the Engine to interface to.  This defines the `timeStep` at which these values are propagated. `0`: GNC, `1`: C&DH, `2`: Power, `3`: Thermal"
+     },
+     "agents": {
+      "title": "IDs of Associated Agent Blocks",
+      "type": "array",
+      "items": {},
+      "description": "Relationship to one or more `Agent` blocks. On delete: `set-none` (remove ID of referenced block from this relationship field).",
+      "default": []
      }
     },
     "additionalProperties": false,
@@ -10243,7 +10569,7 @@
       "title": "Surface Normal Vector",
       "allOf": [
        {
-        "$ref": "#/components/schemas/FrameVectorBase220"
+        "$ref": "#/components/schemas/FrameVectorBase299"
        }
       ]
      },
@@ -10251,7 +10577,7 @@
       "title": "Sat to Sun Relative Vector [km]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/FrameVectorBase220"
+        "$ref": "#/components/schemas/FrameVectorBase299"
        }
       ]
      },
@@ -10284,7 +10610,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -10390,7 +10716,7 @@
       "title": "Maximum Rated Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -10401,7 +10727,7 @@
       "title": "Minimum Rated Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -11097,7 +11423,7 @@
       "title": "Temperature Set Point [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ]
      },
@@ -11122,21 +11448,21 @@
     "additionalProperties": false,
     "description": "Class to be used internally and inherited by `Metamodel` and `Block`. Adds helper methods and properties."
    },
-   "TemperatureBase220": {
-    "title": "TemperatureBase220",
+   "TemperatureBase299": {
+    "title": "TemperatureBase299",
     "type": "object",
     "properties": {
+     "degK": {
+      "title": "Degk",
+      "minimum": 0.0,
+      "type": "number"
+     },
      "degF": {
       "title": "Degf",
       "type": "number"
      },
      "degC": {
       "title": "Degc",
-      "type": "number"
-     },
-     "degK": {
-      "title": "Degk",
-      "minimum": 0.0,
       "type": "number"
      }
     },
@@ -11249,7 +11575,7 @@
       "title": "Hot Side Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ]
      },
@@ -11257,7 +11583,7 @@
       "title": "Cold Side Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ]
      },
@@ -11319,7 +11645,7 @@
       "title": "Maximum Rated Interface Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ]
      },
@@ -11327,7 +11653,7 @@
       "title": "Minimum Rated Interface Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ]
      }
@@ -11371,7 +11697,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -11382,7 +11708,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -11465,7 +11791,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -11696,7 +12022,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -11707,7 +12033,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -11790,7 +12116,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -12049,7 +12375,7 @@
       "title": "Maximum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -12060,7 +12386,7 @@
       "title": "Minimum Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -12143,7 +12469,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -12268,7 +12594,7 @@
       "title": "Surface Normal Vector",
       "allOf": [
        {
-        "$ref": "#/components/schemas/FrameVectorBase220"
+        "$ref": "#/components/schemas/FrameVectorBase299"
        }
       ]
      },
@@ -12276,7 +12602,7 @@
       "title": "Sat to Sun Relative Vector [km]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/FrameVectorBase220"
+        "$ref": "#/components/schemas/FrameVectorBase299"
        }
       ]
      },
@@ -12309,7 +12635,7 @@
       "title": "Temperature [C]",
       "allOf": [
        {
-        "$ref": "#/components/schemas/TemperatureBase220"
+        "$ref": "#/components/schemas/TemperatureBase299"
        }
       ],
       "default": {
@@ -12487,7 +12813,7 @@
       "description": "Relationship to zero or one `PowerProcessor` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
      "position": {
-      "$ref": "#/components/schemas/PositionBase220"
+      "$ref": "#/components/schemas/PositionBase299"
      },
      "velocity": {
       "title": "Velocity",
@@ -12500,7 +12826,7 @@
       "title": "Attitude Quaternion",
       "allOf": [
        {
-        "$ref": "#/components/schemas/QuaternionBase220"
+        "$ref": "#/components/schemas/QuaternionBase299"
        }
       ],
       "default": {
@@ -12628,7 +12954,7 @@
       "title": "Attitude Solution Quaternion",
       "allOf": [
        {
-        "$ref": "#/components/schemas/QuaternionBase220"
+        "$ref": "#/components/schemas/QuaternionBase299"
        }
       ]
      },
@@ -12657,7 +12983,7 @@
       "title": "Commanded Attitude Quaternion",
       "allOf": [
        {
-        "$ref": "#/components/schemas/QuaternionBase220"
+        "$ref": "#/components/schemas/QuaternionBase299"
        }
       ]
      },
@@ -12750,256 +13076,22 @@
       "items": {
        "anyOf": [
         {
-         "$ref": "#/components/schemas/StaticThrustControlAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/AngularVelocitySensor"
-        },
-        {
-         "$ref": "#/components/schemas/TriadAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/Heater"
-        },
-        {
-         "$ref": "#/components/schemas/CooperativeTransmitInterface"
-        },
-        {
-         "$ref": "#/components/schemas/BatteryCell"
-        },
-        {
-         "$ref": "#/components/schemas/SunTrackingSurface"
-        },
-        {
-         "$ref": "#/components/schemas/Satellite"
-        },
-        {
-         "$ref": "#/components/schemas/ThermalInterface"
-        },
-        {
-         "$ref": "#/components/schemas/Cooler"
-        },
-        {
-         "$ref": "#/components/schemas/ReactionWheel"
-        },
-        {
-         "$ref": "#/components/schemas/PowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/DirectionSensor"
-        },
-        {
-         "$ref": "#/components/schemas/AveragingAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/SphericalFuelTank"
-        },
-        {
-         "$ref": "#/components/schemas/BodyFrameVector"
-        },
-        {
-         "$ref": "#/components/schemas/CelestialVector"
-        },
-        {
-         "$ref": "#/components/schemas/PassiveTransmitInterface"
-        },
-        {
-         "$ref": "#/components/schemas/DataInterface"
-        },
-        {
-         "$ref": "#/components/schemas/SlidingModeAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroup"
-        },
-        {
-         "$ref": "#/components/schemas/LaserCommModule"
-        },
-        {
-         "$ref": "#/components/schemas/Modem"
-        },
-        {
-         "$ref": "#/components/schemas/SolarCell"
-        },
-        {
-         "$ref": "#/components/schemas/FixedSurface"
-        },
-        {
-         "$ref": "#/components/schemas/CompoundCondition"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroupVector"
-        },
-        {
-         "$ref": "#/components/schemas/TempControllerState"
-        },
-        {
-         "$ref": "#/components/schemas/Component"
-        },
-        {
-         "$ref": "#/components/schemas/DataMode"
-        },
-        {
-         "$ref": "#/components/schemas/EkfAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/Subsystem"
-        },
-        {
-         "$ref": "#/components/schemas/SatelliteToScalarCondition"
-        },
-        {
-         "$ref": "#/components/schemas/FullyRegDetPowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/ComponentToScalarCondition"
-        },
-        {
-         "$ref": "#/components/schemas/InternalDataInterface"
-        },
-        {
-         "$ref": "#/components/schemas/TimeCondition"
-        },
-        {
-         "$ref": "#/components/schemas/SolarPanel"
-        },
-        {
-         "$ref": "#/components/schemas/BodyInFovCondition"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroupToTargetCondition"
-        },
-        {
-         "$ref": "#/components/schemas/OpticalAttitudeSensor"
-        },
-        {
-         "$ref": "#/components/schemas/SameTargetMultiCondition"
-        },
-        {
-         "$ref": "#/components/schemas/ReceiveInterface"
-        },
-        {
-         "$ref": "#/components/schemas/ThermalInterfaceMaterial"
-        },
-        {
-         "$ref": "#/components/schemas/SpherocylinderFuelTank"
-        },
-        {
-         "$ref": "#/components/schemas/TwoConvMpptPowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/SingleConvMpptPowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/FuelReservoir"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroupToScalarCondition"
-        },
-        {
-         "$ref": "#/components/schemas/OperationalMode"
-        },
-        {
-         "$ref": "#/components/schemas/VectorInFovCondition"
-        },
-        {
-         "$ref": "#/components/schemas/BatteryPack"
-        },
-        {
-         "$ref": "#/components/schemas/Thruster"
-        },
-        {
-         "$ref": "#/components/schemas/ResistanceLoad"
-        },
-        {
-         "$ref": "#/components/schemas/QuasiRegDetPowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/VectorTrackingSurface"
-        },
-        {
-         "$ref": "#/components/schemas/LocalVector"
-        },
-        {
-         "$ref": "#/components/schemas/DataStorage"
-        },
-        {
-         "$ref": "#/components/schemas/Battery"
-        },
-        {
-         "$ref": "#/components/schemas/BusRegulator"
-        },
-        {
-         "$ref": "#/components/schemas/CelestialTarget"
-        },
-        {
-         "$ref": "#/components/schemas/GroundTarget"
-        },
-        {
-         "$ref": "#/components/schemas/DataType"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroupToSatelliteCondition"
-        },
-        {
-         "$ref": "#/components/schemas/SatelliteToSatelliteCondition"
-        },
-        {
-         "$ref": "#/components/schemas/MaxAlignPointingMode"
-        },
-        {
-         "$ref": "#/components/schemas/VectorSensor"
-        },
-        {
-         "$ref": "#/components/schemas/PidAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/Magnetorquer"
-        },
-        {
-         "$ref": "#/components/schemas/LockPointingMode"
-        },
-        {
-         "$ref": "#/components/schemas/PowerLoad"
-        },
-        {
-         "$ref": "#/components/schemas/SingleConvHybridPowerProcessor"
-        },
-        {
          "$ref": "#/components/schemas/PositionSensor"
-        },
-        {
-         "$ref": "#/components/schemas/CircularFieldOfView"
-        },
-        {
-         "$ref": "#/components/schemas/Orbit"
-        },
-        {
-         "$ref": "#/components/schemas/TargetVector"
-        },
-        {
-         "$ref": "#/components/schemas/LoadState"
-        },
-        {
-         "$ref": "#/components/schemas/SatelliteToTargetCondition"
         },
         {
          "$ref": "#/components/schemas/MekfAlgorithm"
         },
         {
-         "$ref": "#/components/schemas/DataBus"
+         "$ref": "#/components/schemas/BodyInFovCondition"
         },
         {
-         "$ref": "#/components/schemas/SpaceTarget"
+         "$ref": "#/components/schemas/GroundTarget"
         },
         {
-         "$ref": "#/components/schemas/Antenna"
+         "$ref": "#/components/schemas/SatelliteToTargetCondition"
         },
         {
-         "$ref": "#/components/schemas/TargetGroupInFovCondition"
-        },
-        {
-         "$ref": "#/components/schemas/GpsAlgorithm"
+         "$ref": "#/components/schemas/ReceiveInterface"
         },
         {
          "$ref": "#/components/schemas/TargetToScalarCondition"
@@ -13008,19 +13100,253 @@
          "$ref": "#/components/schemas/SurfaceMaterial"
         },
         {
-         "$ref": "#/components/schemas/TargetInFovCondition"
+         "$ref": "#/components/schemas/CircularFieldOfView"
+        },
+        {
+         "$ref": "#/components/schemas/SlidingModeAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/GpsAlgorithm"
         },
         {
          "$ref": "#/components/schemas/TargetToTargetCondition"
         },
         {
-         "$ref": "#/components/schemas/RectangularFieldOfView"
+         "$ref": "#/components/schemas/PowerLoad"
+        },
+        {
+         "$ref": "#/components/schemas/OpticalAttitudeSensor"
+        },
+        {
+         "$ref": "#/components/schemas/Modem"
+        },
+        {
+         "$ref": "#/components/schemas/Orbit"
+        },
+        {
+         "$ref": "#/components/schemas/SolarPanel"
+        },
+        {
+         "$ref": "#/components/schemas/SolarCell"
+        },
+        {
+         "$ref": "#/components/schemas/EkfAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/AveragingAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/PassiveTransmitInterface"
+        },
+        {
+         "$ref": "#/components/schemas/LaserCommModule"
+        },
+        {
+         "$ref": "#/components/schemas/SphericalFuelTank"
+        },
+        {
+         "$ref": "#/components/schemas/Antenna"
+        },
+        {
+         "$ref": "#/components/schemas/MaxAlignPointingMode"
+        },
+        {
+         "$ref": "#/components/schemas/LoadState"
+        },
+        {
+         "$ref": "#/components/schemas/TargetVector"
+        },
+        {
+         "$ref": "#/components/schemas/Battery"
+        },
+        {
+         "$ref": "#/components/schemas/Magnetorquer"
+        },
+        {
+         "$ref": "#/components/schemas/PowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/Satellite"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroupToScalarCondition"
+        },
+        {
+         "$ref": "#/components/schemas/SingleConvMpptPowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/ThermalInterfaceMaterial"
+        },
+        {
+         "$ref": "#/components/schemas/FuelReservoir"
         },
         {
          "$ref": "#/components/schemas/SolarArray"
         },
         {
+         "$ref": "#/components/schemas/TargetGroup"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroupToTargetCondition"
+        },
+        {
+         "$ref": "#/components/schemas/SpherocylinderFuelTank"
+        },
+        {
+         "$ref": "#/components/schemas/PidAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/SameTargetMultiCondition"
+        },
+        {
+         "$ref": "#/components/schemas/VectorSensor"
+        },
+        {
+         "$ref": "#/components/schemas/DataInterface"
+        },
+        {
+         "$ref": "#/components/schemas/SatelliteToSatelliteCondition"
+        },
+        {
+         "$ref": "#/components/schemas/TempControllerState"
+        },
+        {
+         "$ref": "#/components/schemas/SunTrackingSurface"
+        },
+        {
+         "$ref": "#/components/schemas/VectorTrackingSurface"
+        },
+        {
+         "$ref": "#/components/schemas/BodyFrameVector"
+        },
+        {
+         "$ref": "#/components/schemas/AngularVelocitySensor"
+        },
+        {
+         "$ref": "#/components/schemas/SatelliteToScalarCondition"
+        },
+        {
+         "$ref": "#/components/schemas/VectorInFovCondition"
+        },
+        {
+         "$ref": "#/components/schemas/CelestialVector"
+        },
+        {
+         "$ref": "#/components/schemas/LockPointingMode"
+        },
+        {
+         "$ref": "#/components/schemas/BatteryCell"
+        },
+        {
+         "$ref": "#/components/schemas/OperationalMode"
+        },
+        {
+         "$ref": "#/components/schemas/ComponentToScalarCondition"
+        },
+        {
+         "$ref": "#/components/schemas/ThermalInterface"
+        },
+        {
+         "$ref": "#/components/schemas/TwoConvMpptPowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/CelestialTarget"
+        },
+        {
+         "$ref": "#/components/schemas/DataBus"
+        },
+        {
+         "$ref": "#/components/schemas/Component"
+        },
+        {
+         "$ref": "#/components/schemas/FullyRegDetPowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/TimeCondition"
+        },
+        {
          "$ref": "#/components/schemas/PassivePointingMode"
+        },
+        {
+         "$ref": "#/components/schemas/DirectionSensor"
+        },
+        {
+         "$ref": "#/components/schemas/TriadAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/CooperativeTransmitInterface"
+        },
+        {
+         "$ref": "#/components/schemas/QuasiRegDetPowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/StaticThrustControlAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/BusRegulator"
+        },
+        {
+         "$ref": "#/components/schemas/Cooler"
+        },
+        {
+         "$ref": "#/components/schemas/Heater"
+        },
+        {
+         "$ref": "#/components/schemas/LocalVector"
+        },
+        {
+         "$ref": "#/components/schemas/Subsystem"
+        },
+        {
+         "$ref": "#/components/schemas/SpaceTarget"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroupVector"
+        },
+        {
+         "$ref": "#/components/schemas/BatteryPack"
+        },
+        {
+         "$ref": "#/components/schemas/Thruster"
+        },
+        {
+         "$ref": "#/components/schemas/InternalDataInterface"
+        },
+        {
+         "$ref": "#/components/schemas/DataMode"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroupInFovCondition"
+        },
+        {
+         "$ref": "#/components/schemas/FixedSurface"
+        },
+        {
+         "$ref": "#/components/schemas/ResistanceLoad"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroupToSatelliteCondition"
+        },
+        {
+         "$ref": "#/components/schemas/CompoundCondition"
+        },
+        {
+         "$ref": "#/components/schemas/TargetInFovCondition"
+        },
+        {
+         "$ref": "#/components/schemas/DataStorage"
+        },
+        {
+         "$ref": "#/components/schemas/RectangularFieldOfView"
+        },
+        {
+         "$ref": "#/components/schemas/DataType"
+        },
+        {
+         "$ref": "#/components/schemas/SingleConvHybridPowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/ReactionWheel"
         }
        ]
       }
@@ -13155,7 +13481,7 @@
       "description": "Relationship to zero or one `PowerProcessor` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
      "position": {
-      "$ref": "#/components/schemas/PositionBase220"
+      "$ref": "#/components/schemas/PositionBase299"
      },
      "velocity": {
       "title": "Velocity",
@@ -13168,7 +13494,7 @@
       "title": "Attitude Quaternion",
       "allOf": [
        {
-        "$ref": "#/components/schemas/QuaternionBase220"
+        "$ref": "#/components/schemas/QuaternionBase299"
        }
       ],
       "default": {
@@ -13296,7 +13622,7 @@
       "title": "Attitude Solution Quaternion",
       "allOf": [
        {
-        "$ref": "#/components/schemas/QuaternionBase220"
+        "$ref": "#/components/schemas/QuaternionBase299"
        }
       ]
      },
@@ -13325,7 +13651,7 @@
       "title": "Commanded Attitude Quaternion",
       "allOf": [
        {
-        "$ref": "#/components/schemas/QuaternionBase220"
+        "$ref": "#/components/schemas/QuaternionBase299"
        }
       ]
      },
@@ -13396,21 +13722,21 @@
       },
       "default": []
      },
-     "_block_names": {
-      "title": " Block Names",
-      "type": "array",
-      "items": {},
-      "description": "Names of all valid `Block`s for this `Metamodel` class"
+     "_relationships": {
+      "title": " Relationships",
+      "type": "object",
+      "description": "Object mapping `Block` class names and `root` to the names of relationship fields. The field\n    names then map to an object of descriptive information about the field."
      },
      "_supers": {
       "title": " Supers",
       "type": "object",
       "description": "Object mapping `Block` class names to a list of names of their direct super classes."
      },
-     "_relationships": {
-      "title": " Relationships",
-      "type": "object",
-      "description": "Object mapping `Block` class names and `root` to the names of relationship fields. The field\n    names then map to an object of descriptive information about the field."
+     "_blockNames": {
+      "title": " Blocknames",
+      "type": "array",
+      "items": {},
+      "description": "Names of all valid `Block`s for this `Metamodel` class"
      },
      "_quantityKinds": {
       "title": " Quantitykinds",
@@ -13522,7 +13848,7 @@
       "description": "Relationship to zero or one `PowerProcessor` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
      "position": {
-      "$ref": "#/components/schemas/PositionBase220"
+      "$ref": "#/components/schemas/PositionBase299"
      },
      "velocity": {
       "title": "Velocity",
@@ -13535,7 +13861,7 @@
       "title": "Attitude Quaternion",
       "allOf": [
        {
-        "$ref": "#/components/schemas/QuaternionBase220"
+        "$ref": "#/components/schemas/QuaternionBase299"
        }
       ],
       "default": {
@@ -13663,7 +13989,7 @@
       "title": "Attitude Solution Quaternion",
       "allOf": [
        {
-        "$ref": "#/components/schemas/QuaternionBase220"
+        "$ref": "#/components/schemas/QuaternionBase299"
        }
       ]
      },
@@ -13692,7 +14018,7 @@
       "title": "Commanded Attitude Quaternion",
       "allOf": [
        {
-        "$ref": "#/components/schemas/QuaternionBase220"
+        "$ref": "#/components/schemas/QuaternionBase299"
        }
       ]
      },
@@ -13781,6 +14107,10 @@
   {
    "name": "Templates",
    "description": "\n#### Introduction to Modeling in Sedaro\n\nIn Sedaro, Branches most fundamentally define Templates - either an Agent Template or a Scenario Template. These    Templates then define reusable, instantiatable definitions for an Agent or Scenario as follows:\n\n- **Agent:** An actor within a simulation.\n\n- **Scenario:** Defines the simulation, including the involved Agents and which Templates define them.\n\nTherefore:\n\n- **Agent Template:** Captures the model for a system.\n\n- **Scenario Template:** Captures the instantiation of differentiated Agents, the resolution of their abstract \"Targets\",    and the configuration of the simulation clock.\n\nTemplates are defined in SedaroML. **SedaroML** is a modeling language for defining system properties and structure as    normalized, interrelated, and hierarchical blocks of attributes. SedaroML is JSON-based and is designed to be easily    human and machine readable/writeable.  This includes model interpretation, traversal, etc. The SedaroML model with    all meta attributes is called a `Metamodel`.  A template `Metamodel` is located under the `data` key of a    Repository's Branch.\n\nThere are some specific concepts in SedaroML that are important to understand:\n  - **Attributes:** Individual properties of a Block (e.g., `mass`, `voltage`, etc.) captured as a key-value pair.\n\n  - **Root:** The `root` refers to the highest level key/value pairs of the JSON-object of SedaroML. The keys are    attributes, just like on `block`s, but `root` is not a `block` itself. All `Metamodel`s contain `blocks` and `index`    attributes in `root` which store and help with querying for all `block`s in the `Metamodel`.\n\n  - **Blocks:** A `block` is a set of attributes, including a `type` which defines the type of the `block` (e.g.,        `ReactionWheel`, `Battery`, etc.). All `block`s are located under the `blocks` attribute of the model.\n\n  - **Hierarchy:** The `block`s in a SedaroML model have hierarchy such that a `block` `type` can extend one or more    `block` `type`s (e.g., a `ReactionWheel` is a specialized `Actuator` and an `Actuator` is a specialized    `Component`). The hierarchy of a model can be interpreted using the `index` and `_supers` meta attributes of a    `Metamodel`.  `index` provides a lookup to traverse from a `block` `type` to its sub-`block` `type`s, ultimately    down to the individual `block` instances in the model. `_supers` provides a lookup to traverse from a `block` `type`    to its super-`block` `type`s.\n\n  - **Relationships:** The model Root and its Blocks can be related to one another using relationship attributes.  The    `_relationships` meta attribute provides a lookup from `block` `type` to its relationships attributes.\n\n  - **Quantity Kinds:** In SedaroML, an attribute that has a value and a unit is called a \"Quantity\". Quantities may be    composed of other Quantities, called Compound Quantities. A category of Quantities that share the same unit system    is called a \"Quantity Kind\".  If a model attribute is an explicit Quantity, it will be included in the    `_quantityKinds` meta attribute lookup. Attributes that are Explicit Quantity Kinds may be defined in any of the    supported units for the Quantity Kind. For example, all angle attributes in SedaroML may be defined in either    degrees or radians. If the unit isn't provided, the default unit for the given Quantity Kind is assumed.\n\nSedaroML is used to define both Agent Templates and Scenario models, with Scenario models referencing Agent Template    Branches (and therefore their models) via the `templateRef` attribute of an `Agent` Block.\n"
+  },
+  {
+   "name": "Externals",
+   "description": "\n### Introduction\n\"Cosimulation\" refers to multiple simulators working in conjunction to simulate something. Cosimulation in Sedaro is \nachieved via the definition of `ExternalState` Blocks within a Scenario model.  `ExternalState` Blocks related to one\nor more `Agent` Blocks in the Scenario model and they define the external cosimulation interfaces.  Interfaces can be\nuni- or bi-directional and support two different modes: `Per-Round` and `Spontaneous`.\n\n### Cosimulation Modes\nIn `Per-Round` cosimulation, the external simulator is expected to produce and/or consume state at each \"round\" or \nsimulation Engine time-step. In `Spontaneous` cosimulation, the external simulator may produce and/or consume state at \nany time. This method of cosimulation is recommended for real-time simulations (`ClockConfig.realTime == true`) and \nis important for use-cases such as commanding a system or part of a system to a new state (i.e., human/software-in-the-loop).\n\n`Spontaneous` state is timestamped and interpreted such that it impacts the simulation during the round at or immediately \nfollowing the `timestamp`. Spontaneous state production is also unique in that it is not required to ever provide a \nvalue and can remain optionally unused during a simulation. In this case, the simulation will continue to consume the \ninitial value for the state until a new value is provided.\n\nEach cosimulation interface is independent meaning some may be `Per Round` while others are `Spontaneous`.  This also \nmeans that individual cosimulators can consume/produce state simulataneously over different interfaces.\n\n### Blocking vs Non-Blocking\n#### Per-Round\nIf simulation state depends on `produced` external state, the simulation will block (or wait) until this state is provided\nvia the following `PATCH` endpoint.  Once provided, the simulation will continue until it is blocked again. Anything that\nis not dependent on the external state will continue to run during the blocking period.\n\n#### Spontaneous\nSpontaneous external state will never block the simulation but will take effect upon arrival.\n\n#### Consume\nCalling `consume` with a `time` value that the simulation hasn't reached yet will block until the simulation catches up. \nThis is currently subject to a **10 minute timeout**. If the request fails after 10 minutes, it is recommended that it \nbe reattempted.\n\nSimilarly, calling `consume` with a `time` that too far lags the current simulation might result in an error as the \nvalue has been garbage collected from the simulation caches and is no longer available for retrieval. If this is the \ncase, please fetch the data from the Data Service (via the Results API) instead.\n\n### Numpy Array Serialization/Deserialization\nBecause all requests and responses of this API must be JSON serializable, numpy arrays are represented in the following\nway in both API requests and responses (as a representation of the value `np.array([x, y, z])`):\n\n```jsonc\n{ \n    \"ndarray\": [x, y, z] \n}\n```\n\n### Configuring Cosimulation\nCosimulation interfaces are configured via the definition of `ExternalState` Blocks on the [Scenario model](#tag/Templates) before the simulation\nis started. The currently supported Blocks are `PerRoundExternalState` and `SpontaneousExternalState`.  \n\nSee the [Templates](#tag/Templates) section for details on defining Blocks and their individual attributes.\n\nExample Blocks:\n\n```jsonc\n// Per Round External State Block\n{\n    \"id\": \"NZ2SGPWRnmdJhwUT4GD5k\",\n    \"type\": \"PerRoundExternalState\",\n    \"produced\": [{\"root\": \"velocity\"}], // Implicit QuantityKind\n    \"consumed\": [{\"prev.root.position.as\": \"Position.eci\"}], // Explicit QuantityKind\n    \"engineIndex\": 0, // 0: GNC, 1: C&DH, 2: Power, 3: Thermal\n    \"agents\": [\"NSghFfVT8ieam0ydeZGX-\"]\n}\n\n// Spontaneous External State Block\n{\n    \"id\": \"NZ2SHUkS95z1GtmMZ0CTk\",\n    \"type\": \"SpontaneousExternalState\",\n    \"produced\": [{\"root\": \"activeOpMode\"}],\n    \"consumed\": [{\"prev.root.position.as\": \"Position.eci\"}],\n    \"engineIndex\": 0, // 0: GNC, 1: C&DH, 2: Power, 3: Thermal\n    \"agents\": [\"NSghFfVT8ieam0ydeZGX-\"]\n}\n```\n\nOnce the simulation is running, the following endpoints are used to interact with any cosimulation interfaces.\n"
   }
  ],
  "x-tagGroups": [
@@ -13806,6 +14136,12 @@
    "name": "Repositories",
    "tags": [
     "Branches"
+   ]
+  },
+  {
+   "name": "Cosimulation",
+   "tags": [
+    "Externals"
    ]
   }
  ]
