@@ -14,10 +14,10 @@
   "/models/branches/{branchId}/template": {
    "patch": {
     "tags": [
-     "Templates"
+     "MetaModels"
     ],
-    "summary": "Update a Template Model",
-    "description": "`Metamodel` `root` properties can be updated and multiple `Block`s can be created, updated, and/or deleted in the same\nrequest as follows:\n\n- Properties on the template root are updated via the `root` key.\n- `Block`s are **created** via dictionaries in the `Block`s list, making sure to include all required fields, the `type`\n(name of the class), and **exclude** an `id` property.\n- `Block`s are **updated** via dictionaries in the `Block`s list, making sure to **include** an `id` property, the `type`\n(name of the class) and any fields to be updated.\n- `Block`s are deleted via strings in the `delete` key corresponding to `id`s of `Block`s to be deleted.\n\n```jsonc\n{\n    // UPDATE root properties\n    \"root\": {\n        \"property\": \"value\"\n    },\n    \"blocks\": [\n        // CREATE block\n        {\n            \"property\": \"value\",\n            \"type\": \"ClassName\",\n        },\n        // UPDATE block\n        {\n            \"id\": \"NWDjzoSSKT7yGJpZdSN9-\",\n            \"property\": \"value\",\n            \"type\": \"ClassName\",\n        },\n    ],\n    // DELETE blocks\n    \"delete\": [\"NWDk7l3UPDZ0AlJW2Ut0V\", \"NWDkZ7oToTp-W9IiutbnF\"]\n}\n```",
+    "summary": "Update a MetaModel",
+    "description": "`Metamodel` `root` properties can be updated and multiple `Block`s can be created, updated, and/or deleted in the same\nrequest as follows:\n\n- Properties on the MetaModel root are updated via the `root` key.\n- `Block`s are **created** via dictionaries in the `Block`s list, making sure to include all required fields, the `type`\n(name of the class), and **exclude** an `id` property.\n- `Block`s are **updated** via dictionaries in the `Block`s list, making sure to **include** an `id` property, the `type`\n(name of the class) and any fields to be updated.\n- `Block`s are deleted via strings in the `delete` key corresponding to `id`s of `Block`s to be deleted.\n\n```jsonc\n{\n    // UPDATE root properties\n    \"root\": {\n        \"property\": \"value\"\n    },\n    \"blocks\": [\n        // CREATE block\n        {\n            \"property\": \"value\",\n            \"type\": \"ClassName\",\n        },\n        // UPDATE block\n        {\n            \"id\": \"NWDjzoSSKT7yGJpZdSN9-\",\n            \"property\": \"value\",\n            \"type\": \"ClassName\",\n        },\n    ],\n    // DELETE blocks\n    \"delete\": [\"NWDk7l3UPDZ0AlJW2Ut0V\", \"NWDkZ7oToTp-W9IiutbnF\"]\n}\n```",
     "operationId": "crud_template",
     "parameters": [
      {
@@ -37,10 +37,10 @@
         "title": "Data",
         "anyOf": [
          {
-          "$ref": "#/components/schemas/VehicleTemplateUpdateInterface"
+          "$ref": "#/components/schemas/VehicleModelUpdateInterface"
          },
          {
-          "$ref": "#/components/schemas/ScenarioTemplateUpdateInterface"
+          "$ref": "#/components/schemas/ScenarioModelUpdateInterface"
          }
         ]
        }
@@ -54,7 +54,7 @@
       "content": {
        "application/json": {
         "schema": {
-         "$ref": "#/components/schemas/TemplateCrudRes"
+         "$ref": "#/components/schemas/ModelCrudRes"
         }
        }
       }
@@ -1509,12 +1509,12 @@
     "title": "AngularVelocityBase306",
     "type": "object",
     "properties": {
-     "deg/s": {
-      "title": "Deg/S",
-      "type": "number"
-     },
      "rpm": {
       "title": "Rpm",
+      "type": "number"
+     },
+     "deg/s": {
+      "title": "Deg/S",
       "type": "number"
      },
      "rad/s": {
@@ -1724,12 +1724,12 @@
     "title": "AngularVelocitySensors84",
     "type": "object",
     "properties": {
-     "deg/s": {
-      "title": "Deg/S",
-      "type": "number"
-     },
      "rpm": {
       "title": "Rpm",
+      "type": "number"
+     },
+     "deg/s": {
+      "title": "Deg/S",
       "type": "number"
      },
      "rad/s": {
@@ -2725,10 +2725,10 @@
       "title": "Data",
       "anyOf": [
        {
-        "$ref": "#/components/schemas/VehicleTemplateRes"
+        "$ref": "#/components/schemas/VehicleModelRes"
        },
        {
-        "$ref": "#/components/schemas/ScenarioTemplateRes"
+        "$ref": "#/components/schemas/ScenarioModelRes"
        }
       ]
      }
@@ -2782,7 +2782,7 @@
       ]
      },
      "data": {
-      "$ref": "#/components/schemas/ScenarioTemplateRes"
+      "$ref": "#/components/schemas/ScenarioModelRes"
      }
     }
    },
@@ -2850,7 +2850,7 @@
       ]
      },
      "data": {
-      "$ref": "#/components/schemas/VehicleTemplateRes"
+      "$ref": "#/components/schemas/VehicleModelRes"
      }
     }
    },
@@ -4557,16 +4557,16 @@
     "title": "DistanceBase306",
     "type": "object",
     "properties": {
-     "mm": {
-      "title": "Mm",
-      "type": "number"
-     },
      "km": {
       "title": "Km",
       "type": "number"
      },
      "cm": {
       "title": "Cm",
+      "type": "number"
+     },
+     "mm": {
+      "title": "Mm",
       "type": "number"
      },
      "m": {
@@ -4580,10 +4580,6 @@
     "title": "DistanceSensors72",
     "type": "object",
     "properties": {
-     "mm": {
-      "title": "Mm",
-      "type": "number"
-     },
      "km": {
       "title": "Km",
       "minimum": 0.0,
@@ -4591,6 +4587,10 @@
      },
      "cm": {
       "title": "Cm",
+      "type": "number"
+     },
+     "mm": {
+      "title": "Mm",
       "type": "number"
      },
      "m": {
@@ -4604,20 +4604,20 @@
     "title": "DurationBase306",
     "type": "object",
     "properties": {
-     "day": {
-      "title": "Day",
-      "type": "number"
-     },
      "s": {
       "title": "S",
       "type": "number"
      },
-     "min": {
-      "title": "Min",
+     "day": {
+      "title": "Day",
       "type": "number"
      },
      "hour": {
       "title": "Hour",
+      "type": "number"
+     },
+     "min": {
+      "title": "Min",
       "type": "number"
      }
     },
@@ -4627,21 +4627,21 @@
     "title": "DurationLoad69",
     "type": "object",
     "properties": {
+     "s": {
+      "title": "S",
+      "type": "number"
+     },
      "day": {
       "title": "Day",
       "minimum": 0.0,
       "type": "number"
      },
-     "s": {
-      "title": "S",
+     "hour": {
+      "title": "Hour",
       "type": "number"
      },
      "min": {
       "title": "Min",
-      "type": "number"
-     },
-     "hour": {
-      "title": "Hour",
       "type": "number"
      }
     },
@@ -4651,21 +4651,21 @@
     "title": "DurationOperationalMode18",
     "type": "object",
     "properties": {
+     "s": {
+      "title": "S",
+      "type": "number"
+     },
      "day": {
       "title": "Day",
       "minimum": 0.0,
       "type": "number"
      },
-     "s": {
-      "title": "S",
+     "hour": {
+      "title": "Hour",
       "type": "number"
      },
      "min": {
       "title": "Min",
-      "type": "number"
-     },
-     "hour": {
-      "title": "Hour",
       "type": "number"
      }
     },
@@ -4675,21 +4675,21 @@
     "title": "DurationOperationalMode20",
     "type": "object",
     "properties": {
+     "s": {
+      "title": "S",
+      "type": "number"
+     },
      "day": {
       "title": "Day",
       "minimum": 0.0,
       "type": "number"
      },
-     "s": {
-      "title": "S",
+     "hour": {
+      "title": "Hour",
       "type": "number"
      },
      "min": {
       "title": "Min",
-      "type": "number"
-     },
-     "hour": {
-      "title": "Hour",
       "type": "number"
      }
     },
@@ -4699,21 +4699,21 @@
     "title": "DurationOperationalMode22",
     "type": "object",
     "properties": {
+     "s": {
+      "title": "S",
+      "type": "number"
+     },
      "day": {
       "title": "Day",
       "minimum": 0.0,
       "type": "number"
      },
-     "s": {
-      "title": "S",
+     "hour": {
+      "title": "Hour",
       "type": "number"
      },
      "min": {
       "title": "Min",
-      "type": "number"
-     },
-     "hour": {
-      "title": "Hour",
       "type": "number"
      }
     },
@@ -4723,21 +4723,21 @@
     "title": "DurationOperationalMode31",
     "type": "object",
     "properties": {
+     "s": {
+      "title": "S",
+      "type": "number"
+     },
      "day": {
       "title": "Day",
       "minimum": 0.0,
       "type": "number"
      },
-     "s": {
-      "title": "S",
+     "hour": {
+      "title": "Hour",
       "type": "number"
      },
      "min": {
       "title": "Min",
-      "type": "number"
-     },
-     "hour": {
-      "title": "Hour",
       "type": "number"
      }
     },
@@ -4747,21 +4747,21 @@
     "title": "DurationOperationalMode33",
     "type": "object",
     "properties": {
+     "s": {
+      "title": "S",
+      "type": "number"
+     },
      "day": {
       "title": "Day",
       "minimum": 0.0,
       "type": "number"
      },
-     "s": {
-      "title": "S",
+     "hour": {
+      "title": "Hour",
       "type": "number"
      },
      "min": {
       "title": "Min",
-      "type": "number"
-     },
-     "hour": {
-      "title": "Hour",
       "type": "number"
      }
     },
@@ -5074,8 +5074,8 @@
     "title": "FrameVectorBase306",
     "type": "object",
     "properties": {
-     "body": {
-      "title": "Body",
+     "eci": {
+      "title": "Eci",
       "maxItems": 3,
       "minItems": 3,
       "type": "array",
@@ -5083,8 +5083,8 @@
        "type": "number"
       }
      },
-     "eci": {
-      "title": "Eci",
+     "body": {
+      "title": "Body",
       "maxItems": 3,
       "minItems": 3,
       "type": "array",
@@ -6897,6 +6897,22 @@
      }
     }
    },
+   "ModelCrudRes": {
+    "title": "ModelCrudRes",
+    "required": [
+     "crud",
+     "branch"
+    ],
+    "type": "object",
+    "properties": {
+     "crud": {
+      "$ref": "#/components/schemas/CrudRes"
+     },
+     "branch": {
+      "$ref": "#/components/schemas/BranchRes"
+     }
+    }
+   },
    "Modem": {
     "title": "Modem",
     "required": [
@@ -7939,17 +7955,8 @@
        "type": "number"
       }
      },
-     "gcLla": {
-      "title": "Gclla",
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array",
-      "items": {
-       "type": "number"
-      }
-     },
-     "gcLlaDeg": {
-      "title": "Gclladeg",
+     "eci": {
+      "title": "Eci",
       "maxItems": 3,
       "minItems": 3,
       "type": "array",
@@ -7966,8 +7973,8 @@
        "type": "number"
       }
      },
-     "eci": {
-      "title": "Eci",
+     "ecef": {
+      "title": "Ecef",
       "maxItems": 3,
       "minItems": 3,
       "type": "array",
@@ -7975,8 +7982,17 @@
        "type": "number"
       }
      },
-     "ecef": {
-      "title": "Ecef",
+     "gcLla": {
+      "title": "Gclla",
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
+     "gcLlaDeg": {
+      "title": "Gclladeg",
       "maxItems": 3,
       "minItems": 3,
       "type": "array",
@@ -8775,17 +8791,8 @@
     "title": "QuaternionBase306",
     "type": "object",
     "properties": {
-     "body_ecef": {
-      "title": "Body Ecef",
-      "maxItems": 4,
-      "minItems": 4,
-      "type": "array",
-      "items": {
-       "type": "number"
-      }
-     },
-     "ecef_body": {
-      "title": "Ecef Body",
+     "body_eci": {
+      "title": "Body Eci",
       "maxItems": 4,
       "minItems": 4,
       "type": "array",
@@ -8802,8 +8809,17 @@
        "type": "number"
       }
      },
-     "body_eci": {
-      "title": "Body Eci",
+     "ecef_body": {
+      "title": "Ecef Body",
+      "maxItems": 4,
+      "minItems": 4,
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
+     "body_ecef": {
+      "title": "Body Ecef",
       "maxItems": 4,
       "minItems": 4,
       "type": "array",
@@ -9693,6 +9709,132 @@
     "additionalProperties": false,
     "description": "Class to be used internally and inherited by `Metamodel` and `Block`. Adds helper methods and properties."
    },
+   "ScenarioModelRes": {
+    "title": "ScenarioModelRes",
+    "type": "object",
+    "properties": {
+     "blocks": {
+      "title": "Blocks",
+      "type": "object",
+      "additionalProperties": {
+       "type": "object"
+      },
+      "description": "Object that maps all `Block` `id`'s to respetive `Block`s in the `Metamodel` instance.",
+      "default": {}
+     },
+     "index": {
+      "title": "Index",
+      "type": "object",
+      "additionalProperties": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "description": "Object that maps `Block` class names to subclasses and to `Block` `id`s of the given class."
+     },
+     "clockConfig": {
+      "title": "ID of Associated ClockConfig Block",
+      "type": "string",
+      "description": "Relationship to zero or one `ClockConfig` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "seed": {
+      "title": "Pseudorandomness Seed",
+      "type": "integer",
+      "description": "This value is used as part of the seed for the random number generators used throughout the simulation for purposes such as simulated error injection. Simulations are deterministic for a given `seed`.",
+      "default": 0
+     },
+     "_supers": {
+      "title": " Supers",
+      "type": "object",
+      "description": "Object mapping `Block` class names to a list of names of their direct super classes."
+     },
+     "_quantityKinds": {
+      "title": " Quantitykinds",
+      "type": "object",
+      "description": "Object mapping `Block` class names and `root` to the names of `QuantityKind` fields. The field\n    names then map to an object of descriptive information about the field."
+     },
+     "_relationships": {
+      "title": " Relationships",
+      "type": "object",
+      "description": "Object mapping `Block` class names and `root` to the names of relationship fields. The field\n    names then map to an object of descriptive information about the field."
+     },
+     "_blockNames": {
+      "title": " Blocknames",
+      "type": "array",
+      "items": {},
+      "description": "Names of all valid `Block`s for this `Metamodel` class"
+     }
+    },
+    "additionalProperties": false,
+    "description": "Class for ScenarioModel with meta attributes"
+   },
+   "ScenarioModelRoot": {
+    "title": "ScenarioModelRoot",
+    "type": "object",
+    "properties": {
+     "clockConfig": {
+      "title": "ID of Associated ClockConfig Block",
+      "type": "string",
+      "description": "Relationship to zero or one `ClockConfig` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "seed": {
+      "title": "Pseudorandomness Seed",
+      "type": "integer",
+      "description": "This value is used as part of the seed for the random number generators used throughout the simulation for purposes such as simulated error injection. Simulations are deterministic for a given `seed`.",
+      "default": 0
+     }
+    },
+    "additionalProperties": false,
+    "description": "Scenario Root Attributes"
+   },
+   "ScenarioModelUpdateInterface": {
+    "title": "ScenarioModelUpdateInterface",
+    "required": [
+     "root",
+     "blocks",
+     "delete"
+    ],
+    "type": "object",
+    "properties": {
+     "root": {
+      "$ref": "#/components/schemas/ScenarioModelRoot"
+     },
+     "blocks": {
+      "title": "Blocks",
+      "type": "array",
+      "items": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/PerRoundExternalState"
+        },
+        {
+         "$ref": "#/components/schemas/SpontaneousExternalState"
+        },
+        {
+         "$ref": "#/components/schemas/ClockConfig"
+        },
+        {
+         "$ref": "#/components/schemas/AgentGroup"
+        },
+        {
+         "$ref": "#/components/schemas/Orbit"
+        },
+        {
+         "$ref": "#/components/schemas/Agent"
+        }
+       ]
+      }
+     },
+     "delete": {
+      "title": "Delete",
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    }
+   },
    "ScenarioTemplate": {
     "title": "ScenarioTemplate",
     "type": "object",
@@ -9731,132 +9873,6 @@
     },
     "additionalProperties": false,
     "description": "Class to inherit when creating a `Metamodel`"
-   },
-   "ScenarioTemplateRes": {
-    "title": "ScenarioTemplateRes",
-    "type": "object",
-    "properties": {
-     "blocks": {
-      "title": "Blocks",
-      "type": "object",
-      "additionalProperties": {
-       "type": "object"
-      },
-      "description": "Object that maps all `Block` `id`'s to respetive `Block`s in the `Metamodel` instance.",
-      "default": {}
-     },
-     "index": {
-      "title": "Index",
-      "type": "object",
-      "additionalProperties": {
-       "type": "array",
-       "items": {
-        "type": "string"
-       }
-      },
-      "description": "Object that maps `Block` class names to subclasses and to `Block` `id`s of the given class."
-     },
-     "clockConfig": {
-      "title": "ID of Associated ClockConfig Block",
-      "type": "string",
-      "description": "Relationship to zero or one `ClockConfig` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "seed": {
-      "title": "Pseudorandomness Seed",
-      "type": "integer",
-      "description": "This value is used as part of the seed for the random number generators used throughout the simulation for purposes such as simulated error injection. Simulations are deterministic for a given `seed`.",
-      "default": 0
-     },
-     "_quantityKinds": {
-      "title": " Quantitykinds",
-      "type": "object",
-      "description": "Object mapping `Block` class names and `root` to the names of `QuantityKind` fields. The field\n    names then map to an object of descriptive information about the field."
-     },
-     "_relationships": {
-      "title": " Relationships",
-      "type": "object",
-      "description": "Object mapping `Block` class names and `root` to the names of relationship fields. The field\n    names then map to an object of descriptive information about the field."
-     },
-     "_supers": {
-      "title": " Supers",
-      "type": "object",
-      "description": "Object mapping `Block` class names to a list of names of their direct super classes."
-     },
-     "_blockNames": {
-      "title": " Blocknames",
-      "type": "array",
-      "items": {},
-      "description": "Names of all valid `Block`s for this `Metamodel` class"
-     }
-    },
-    "additionalProperties": false,
-    "description": "Class for ScenarioTemplate with meta attributes"
-   },
-   "ScenarioTemplateRoot": {
-    "title": "ScenarioTemplateRoot",
-    "type": "object",
-    "properties": {
-     "clockConfig": {
-      "title": "ID of Associated ClockConfig Block",
-      "type": "string",
-      "description": "Relationship to zero or one `ClockConfig` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "seed": {
-      "title": "Pseudorandomness Seed",
-      "type": "integer",
-      "description": "This value is used as part of the seed for the random number generators used throughout the simulation for purposes such as simulated error injection. Simulations are deterministic for a given `seed`.",
-      "default": 0
-     }
-    },
-    "additionalProperties": false,
-    "description": "Scenario Root Attributes"
-   },
-   "ScenarioTemplateUpdateInterface": {
-    "title": "ScenarioTemplateUpdateInterface",
-    "required": [
-     "root",
-     "blocks",
-     "delete"
-    ],
-    "type": "object",
-    "properties": {
-     "root": {
-      "$ref": "#/components/schemas/ScenarioTemplateRoot"
-     },
-     "blocks": {
-      "title": "Blocks",
-      "type": "array",
-      "items": {
-       "anyOf": [
-        {
-         "$ref": "#/components/schemas/PerRoundExternalState"
-        },
-        {
-         "$ref": "#/components/schemas/SpontaneousExternalState"
-        },
-        {
-         "$ref": "#/components/schemas/ClockConfig"
-        },
-        {
-         "$ref": "#/components/schemas/AgentGroup"
-        },
-        {
-         "$ref": "#/components/schemas/Orbit"
-        },
-        {
-         "$ref": "#/components/schemas/Agent"
-        }
-       ]
-      }
-     },
-     "delete": {
-      "title": "Delete",
-      "type": "array",
-      "items": {
-       "type": "string"
-      }
-     }
-    }
    },
    "SideCategories": {
     "title": "SideCategories",
@@ -12783,37 +12799,21 @@
     "title": "TemperatureBase306",
     "type": "object",
     "properties": {
-     "degF": {
-      "title": "Degf",
+     "degK": {
+      "title": "Degk",
+      "minimum": 0.0,
       "type": "number"
      },
      "degC": {
       "title": "Degc",
       "type": "number"
      },
-     "degK": {
-      "title": "Degk",
-      "minimum": 0.0,
+     "degF": {
+      "title": "Degf",
       "type": "number"
      }
     },
     "additionalProperties": false
-   },
-   "TemplateCrudRes": {
-    "title": "TemplateCrudRes",
-    "required": [
-     "crud",
-     "branch"
-    ],
-    "type": "object",
-    "properties": {
-     "crud": {
-      "$ref": "#/components/schemas/CrudRes"
-     },
-     "branch": {
-      "$ref": "#/components/schemas/BranchRes"
-     }
-    }
    },
    "ThermalInterface": {
     "title": "ThermalInterface",
@@ -14096,6 +14096,1102 @@
     "additionalProperties": false,
     "description": "Class to be used internally and inherited by `Metamodel` and `Block`. Adds helper methods and properties."
    },
+   "VehicleModelRes": {
+    "title": "VehicleModelRes",
+    "required": [
+     "cadKey",
+     "cadSignedUrl",
+     "cadScaleFactor",
+     "mass",
+     "inertia"
+    ],
+    "type": "object",
+    "properties": {
+     "blocks": {
+      "title": "Blocks",
+      "type": "object",
+      "additionalProperties": {
+       "type": "object"
+      },
+      "description": "Object that maps all `Block` `id`'s to respetive `Block`s in the `Metamodel` instance.",
+      "default": {}
+     },
+     "index": {
+      "title": "Index",
+      "type": "object",
+      "additionalProperties": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "description": "Object that maps `Block` class names to subclasses and to `Block` `id`s of the given class."
+     },
+     "cadFileName": {
+      "title": "Vehicle CAD Model Filename",
+      "maxLength": 100,
+      "type": "string",
+      "default": ""
+     },
+     "cadKey": {
+      "title": "Vehicle CAD Model Key",
+      "maxLength": 48,
+      "type": "string"
+     },
+     "cadSignedUrl": {
+      "title": "Vehicle CAD Model URL",
+      "maxLength": 1024,
+      "type": "string"
+     },
+     "cadScaleFactor": {
+      "title": "Vehicle CAD Model Scale Factor",
+      "exclusiveMaximum": 100000000.0,
+      "exclusiveMinimum": 0.0,
+      "type": "number",
+      "description": "A normalizing factor that scales the model such that its largest bounding dimension is `1`."
+     },
+     "enabledModules": {
+      "title": "Enabled Simulation Modules",
+      "type": "array",
+      "items": {
+       "type": "string"
+      },
+      "description": "Enable/disable specific simulation modules. GNC and CDH must always be enabled.",
+      "default": [
+       "GNC",
+       "CDH",
+       "Power",
+       "Thermal"
+      ]
+     },
+     "mass": {
+      "title": "Dry Mass [kg]",
+      "exclusiveMinimum": 0.0,
+      "type": "number"
+     },
+     "inertia": {
+      "title": "Inertia Matrix [Matrix3[kg-m^2]]",
+      "type": "array",
+      "items": {
+       "maxItems": 3,
+       "minItems": 3,
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      }
+     },
+     "missionOrbit": {
+      "title": "ID of Associated Orbit Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Orbit` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "activeOpMode": {
+      "title": "ID of Associated OperationalMode Block",
+      "type": "string",
+      "description": "Relationship to zero or one `OperationalMode` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "powerProcessor": {
+      "title": "ID of Associated PowerProcessor Block",
+      "type": "string",
+      "description": "Relationship to zero or one `PowerProcessor` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "dynamicMass": {
+      "title": "Dynamic Mass [kg]",
+      "exclusiveMinimum": 0.0,
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "dynamicInertia": {
+      "title": "Dynamic Inertia Matrix [Matrix3[kg-m^2]]",
+      "type": "array",
+      "items": {
+       "maxItems": 3,
+       "minItems": 3,
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "position": {
+      "title": "Agent Position",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/PositionBase306"
+       }
+      ],
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>This value is set based on the `Orbit` associated to this `Agent` in a `Scenario`."
+     },
+     "velocity": {
+      "title": "Agent Velocity",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>This value is set based on the `Orbit` associated to this `Agent` in a `Scenario`."
+     },
+     "attitude": {
+      "title": "Attitude Quaternion",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/QuaternionBase306"
+       }
+      ],
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": {
+       "body_eci": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+       ]
+      }
+     },
+     "angularVelocity": {
+      "title": "Angular Velocity [rad/s]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     },
+     "torque": {
+      "title": "Total Torque [N\u2022m]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     },
+     "srpTorque": {
+      "title": "SRP Torque [N\u2022m]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     },
+     "dragTorque": {
+      "title": "Drag Torque [N\u2022m]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     },
+     "gravityGradientTorque": {
+      "title": "Gravity Gradient Torque [N\u2022m]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     },
+     "positionSolution": {
+      "title": "Active Position Solution [m]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "positionSolutionError": {
+      "title": "Active Position Solution Error [m]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "positionCovariance": {
+      "title": "Active Position Solution Covariance",
+      "type": "array",
+      "items": {
+       "maxItems": 3,
+       "minItems": 3,
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "velocitySolution": {
+      "title": "Active Velocity Solution [km/s]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "velocitySolutionError": {
+      "title": "Active Velocity Solution Error [km/s]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "velocityCovariance": {
+      "title": "Active Velocity Solution Error [km/s]",
+      "type": "array",
+      "items": {
+       "maxItems": 3,
+       "minItems": 3,
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "attitudeSolution": {
+      "title": "Attitude Solution Quaternion",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "attitudeSolutionError": {
+      "title": "Attitude Error YPR [rad]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "angularVelocitySolution": {
+      "title": "Angular Velocity Solution [rad/s]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "angularVelocitySolutionError": {
+      "title": "Angular Velocity Error [rad/s]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "commandedAttitude": {
+      "title": "Commanded Attitude Quaternion",
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
+     "commandedAngularRates": {
+      "title": "Commanded Angular Velocity [rad/s]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
+     "lvlhAxes": {
+      "title": "LVLH Axes",
+      "type": "array",
+      "items": {
+       "maxItems": 3,
+       "minItems": 3,
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "enuAxes": {
+      "title": "ENU Axes",
+      "type": "array",
+      "items": {
+       "maxItems": 3,
+       "minItems": 3,
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "beta": {
+      "title": "Beta Angle",
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "orbitalElements": {
+      "title": "Orbital Elements",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/OrbitalElementsData"
+       }
+      ],
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "shadow": {
+      "title": "Eclipse State",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "activeCommInterfaces": {
+      "title": "Active Data Handling Interfaces",
+      "type": "array",
+      "items": {
+       "type": "array",
+       "items": {
+        "anyOf": [
+         {
+          "type": "boolean"
+         },
+         {
+          "type": "string"
+         },
+         {
+          "type": "integer"
+         }
+        ]
+       }
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>List of currently active interfaces on this Agent. Each entry contains a tuple of `transmitStatus`, `agentId`, `bitRate`, and `canLink`.",
+      "default": []
+     },
+     "selfId": {
+      "title": "Self ID",
+      "type": "string",
+      "description": "**This field is for internal use only**"
+     },
+     "_supers": {
+      "title": " Supers",
+      "type": "object",
+      "description": "Object mapping `Block` class names to a list of names of their direct super classes."
+     },
+     "_quantityKinds": {
+      "title": " Quantitykinds",
+      "type": "object",
+      "description": "Object mapping `Block` class names and `root` to the names of `QuantityKind` fields. The field\n    names then map to an object of descriptive information about the field."
+     },
+     "_relationships": {
+      "title": " Relationships",
+      "type": "object",
+      "description": "Object mapping `Block` class names and `root` to the names of relationship fields. The field\n    names then map to an object of descriptive information about the field."
+     },
+     "_blockNames": {
+      "title": " Blocknames",
+      "type": "array",
+      "items": {},
+      "description": "Names of all valid `Block`s for this `Metamodel` class"
+     }
+    },
+    "additionalProperties": false,
+    "description": "Class for VehicleModel with meta attributes"
+   },
+   "VehicleModelRoot": {
+    "title": "VehicleModelRoot",
+    "required": [
+     "cadKey",
+     "cadSignedUrl",
+     "cadScaleFactor",
+     "mass",
+     "inertia"
+    ],
+    "type": "object",
+    "properties": {
+     "cadFileName": {
+      "title": "Vehicle CAD Model Filename",
+      "maxLength": 100,
+      "type": "string",
+      "default": ""
+     },
+     "cadKey": {
+      "title": "Vehicle CAD Model Key",
+      "maxLength": 48,
+      "type": "string"
+     },
+     "cadSignedUrl": {
+      "title": "Vehicle CAD Model URL",
+      "maxLength": 1024,
+      "type": "string"
+     },
+     "cadScaleFactor": {
+      "title": "Vehicle CAD Model Scale Factor",
+      "exclusiveMaximum": 100000000.0,
+      "exclusiveMinimum": 0.0,
+      "type": "number",
+      "description": "A normalizing factor that scales the model such that its largest bounding dimension is `1`."
+     },
+     "enabledModules": {
+      "title": "Enabled Simulation Modules",
+      "type": "array",
+      "items": {
+       "type": "string"
+      },
+      "description": "Enable/disable specific simulation modules. GNC and CDH must always be enabled.",
+      "default": [
+       "GNC",
+       "CDH",
+       "Power",
+       "Thermal"
+      ]
+     },
+     "mass": {
+      "title": "Dry Mass [kg]",
+      "exclusiveMinimum": 0.0,
+      "type": "number"
+     },
+     "inertia": {
+      "title": "Inertia Matrix [Matrix3[kg-m^2]]",
+      "type": "array",
+      "items": {
+       "maxItems": 3,
+       "minItems": 3,
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      }
+     },
+     "missionOrbit": {
+      "title": "ID of Associated Orbit Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Orbit` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "activeOpMode": {
+      "title": "ID of Associated OperationalMode Block",
+      "type": "string",
+      "description": "Relationship to zero or one `OperationalMode` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "powerProcessor": {
+      "title": "ID of Associated PowerProcessor Block",
+      "type": "string",
+      "description": "Relationship to zero or one `PowerProcessor` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "dynamicMass": {
+      "title": "Dynamic Mass [kg]",
+      "exclusiveMinimum": 0.0,
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "dynamicInertia": {
+      "title": "Dynamic Inertia Matrix [Matrix3[kg-m^2]]",
+      "type": "array",
+      "items": {
+       "maxItems": 3,
+       "minItems": 3,
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "position": {
+      "title": "Agent Position",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/PositionBase306"
+       }
+      ],
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>This value is set based on the `Orbit` associated to this `Agent` in a `Scenario`."
+     },
+     "velocity": {
+      "title": "Agent Velocity",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>This value is set based on the `Orbit` associated to this `Agent` in a `Scenario`."
+     },
+     "attitude": {
+      "title": "Attitude Quaternion",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/QuaternionBase306"
+       }
+      ],
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": {
+       "body_eci": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+       ]
+      }
+     },
+     "angularVelocity": {
+      "title": "Angular Velocity [rad/s]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     },
+     "torque": {
+      "title": "Total Torque [N\u2022m]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     },
+     "srpTorque": {
+      "title": "SRP Torque [N\u2022m]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     },
+     "dragTorque": {
+      "title": "Drag Torque [N\u2022m]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     },
+     "gravityGradientTorque": {
+      "title": "Gravity Gradient Torque [N\u2022m]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     },
+     "positionSolution": {
+      "title": "Active Position Solution [m]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "positionSolutionError": {
+      "title": "Active Position Solution Error [m]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "positionCovariance": {
+      "title": "Active Position Solution Covariance",
+      "type": "array",
+      "items": {
+       "maxItems": 3,
+       "minItems": 3,
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "velocitySolution": {
+      "title": "Active Velocity Solution [km/s]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "velocitySolutionError": {
+      "title": "Active Velocity Solution Error [km/s]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "velocityCovariance": {
+      "title": "Active Velocity Solution Error [km/s]",
+      "type": "array",
+      "items": {
+       "maxItems": 3,
+       "minItems": 3,
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "attitudeSolution": {
+      "title": "Attitude Solution Quaternion",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "attitudeSolutionError": {
+      "title": "Attitude Error YPR [rad]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "angularVelocitySolution": {
+      "title": "Angular Velocity Solution [rad/s]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "angularVelocitySolutionError": {
+      "title": "Angular Velocity Error [rad/s]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "commandedAttitude": {
+      "title": "Commanded Attitude Quaternion",
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
+     "commandedAngularRates": {
+      "title": "Commanded Angular Velocity [rad/s]",
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
+     "lvlhAxes": {
+      "title": "LVLH Axes",
+      "type": "array",
+      "items": {
+       "maxItems": 3,
+       "minItems": 3,
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "enuAxes": {
+      "title": "ENU Axes",
+      "type": "array",
+      "items": {
+       "maxItems": 3,
+       "minItems": 3,
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "beta": {
+      "title": "Beta Angle",
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "orbitalElements": {
+      "title": "Orbital Elements",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/OrbitalElementsData"
+       }
+      ],
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "shadow": {
+      "title": "Eclipse State",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "activeCommInterfaces": {
+      "title": "Active Data Handling Interfaces",
+      "type": "array",
+      "items": {
+       "type": "array",
+       "items": {
+        "anyOf": [
+         {
+          "type": "boolean"
+         },
+         {
+          "type": "string"
+         },
+         {
+          "type": "integer"
+         }
+        ]
+       }
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>List of currently active interfaces on this Agent. Each entry contains a tuple of `transmitStatus`, `agentId`, `bitRate`, and `canLink`.",
+      "default": []
+     },
+     "selfId": {
+      "title": "Self ID",
+      "type": "string",
+      "description": "**This field is for internal use only**"
+     }
+    },
+    "additionalProperties": false,
+    "description": "Vehicle Model Root Attributes"
+   },
+   "VehicleModelUpdateInterface": {
+    "title": "VehicleModelUpdateInterface",
+    "required": [
+     "root",
+     "blocks",
+     "delete"
+    ],
+    "type": "object",
+    "properties": {
+     "root": {
+      "$ref": "#/components/schemas/VehicleModelRoot"
+     },
+     "blocks": {
+      "title": "Blocks",
+      "type": "array",
+      "items": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/Antenna"
+        },
+        {
+         "$ref": "#/components/schemas/ResistanceLoad"
+        },
+        {
+         "$ref": "#/components/schemas/PowerLoad"
+        },
+        {
+         "$ref": "#/components/schemas/DataInterface"
+        },
+        {
+         "$ref": "#/components/schemas/InternalDataInterface"
+        },
+        {
+         "$ref": "#/components/schemas/ReceiveInterface"
+        },
+        {
+         "$ref": "#/components/schemas/ThermalInterface"
+        },
+        {
+         "$ref": "#/components/schemas/PassiveTransmitInterface"
+        },
+        {
+         "$ref": "#/components/schemas/CooperativeTransmitInterface"
+        },
+        {
+         "$ref": "#/components/schemas/FixedSurface"
+        },
+        {
+         "$ref": "#/components/schemas/SunTrackingSurface"
+        },
+        {
+         "$ref": "#/components/schemas/VectorTrackingSurface"
+        },
+        {
+         "$ref": "#/components/schemas/DataMode"
+        },
+        {
+         "$ref": "#/components/schemas/PassivePointingMode"
+        },
+        {
+         "$ref": "#/components/schemas/LockPointingMode"
+        },
+        {
+         "$ref": "#/components/schemas/MaxAlignPointingMode"
+        },
+        {
+         "$ref": "#/components/schemas/OperationalMode"
+        },
+        {
+         "$ref": "#/components/schemas/DataStorage"
+        },
+        {
+         "$ref": "#/components/schemas/LaserCommModule"
+        },
+        {
+         "$ref": "#/components/schemas/DataType"
+        },
+        {
+         "$ref": "#/components/schemas/LoadState"
+        },
+        {
+         "$ref": "#/components/schemas/TempControllerState"
+        },
+        {
+         "$ref": "#/components/schemas/BatteryPack"
+        },
+        {
+         "$ref": "#/components/schemas/SphericalFuelTank"
+        },
+        {
+         "$ref": "#/components/schemas/SpherocylinderFuelTank"
+        },
+        {
+         "$ref": "#/components/schemas/ThermalInterfaceMaterial"
+        },
+        {
+         "$ref": "#/components/schemas/SurfaceMaterial"
+        },
+        {
+         "$ref": "#/components/schemas/ReactionWheel"
+        },
+        {
+         "$ref": "#/components/schemas/SolarPanel"
+        },
+        {
+         "$ref": "#/components/schemas/SolarCell"
+        },
+        {
+         "$ref": "#/components/schemas/BatteryCell"
+        },
+        {
+         "$ref": "#/components/schemas/Modem"
+        },
+        {
+         "$ref": "#/components/schemas/Subsystem"
+        },
+        {
+         "$ref": "#/components/schemas/TriadAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/PidAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/SlidingModeAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/EkfAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/MekfAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/AveragingAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/StaticThrustControlAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/GpsAlgorithm"
+        },
+        {
+         "$ref": "#/components/schemas/CompoundCondition"
+        },
+        {
+         "$ref": "#/components/schemas/TimeCondition"
+        },
+        {
+         "$ref": "#/components/schemas/SatelliteToSatelliteCondition"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroupToSatelliteCondition"
+        },
+        {
+         "$ref": "#/components/schemas/SameTargetMultiCondition"
+        },
+        {
+         "$ref": "#/components/schemas/SatelliteToScalarCondition"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroupToScalarCondition"
+        },
+        {
+         "$ref": "#/components/schemas/TargetToScalarCondition"
+        },
+        {
+         "$ref": "#/components/schemas/ComponentToScalarCondition"
+        },
+        {
+         "$ref": "#/components/schemas/SatelliteToTargetCondition"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroupToTargetCondition"
+        },
+        {
+         "$ref": "#/components/schemas/TargetToTargetCondition"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroupInFovCondition"
+        },
+        {
+         "$ref": "#/components/schemas/VectorInFovCondition"
+        },
+        {
+         "$ref": "#/components/schemas/TargetInFovCondition"
+        },
+        {
+         "$ref": "#/components/schemas/BodyInFovCondition"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroup"
+        },
+        {
+         "$ref": "#/components/schemas/Cooler"
+        },
+        {
+         "$ref": "#/components/schemas/Heater"
+        },
+        {
+         "$ref": "#/components/schemas/Thruster"
+        },
+        {
+         "$ref": "#/components/schemas/Magnetorquer"
+        },
+        {
+         "$ref": "#/components/schemas/FuelReservoir"
+        },
+        {
+         "$ref": "#/components/schemas/OpticalAttitudeSensor"
+        },
+        {
+         "$ref": "#/components/schemas/DirectionSensor"
+        },
+        {
+         "$ref": "#/components/schemas/PositionSensor"
+        },
+        {
+         "$ref": "#/components/schemas/VectorSensor"
+        },
+        {
+         "$ref": "#/components/schemas/AngularVelocitySensor"
+        },
+        {
+         "$ref": "#/components/schemas/PowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/SingleConvHybridPowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/QuasiRegDetPowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/FullyRegDetPowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/SingleConvMpptPowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/TwoConvMpptPowerProcessor"
+        },
+        {
+         "$ref": "#/components/schemas/BusRegulator"
+        },
+        {
+         "$ref": "#/components/schemas/BodyFrameVector"
+        },
+        {
+         "$ref": "#/components/schemas/LocalVector"
+        },
+        {
+         "$ref": "#/components/schemas/CelestialVector"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroupVector"
+        },
+        {
+         "$ref": "#/components/schemas/TargetVector"
+        },
+        {
+         "$ref": "#/components/schemas/DataBus"
+        },
+        {
+         "$ref": "#/components/schemas/GroundTarget"
+        },
+        {
+         "$ref": "#/components/schemas/SpaceTarget"
+        },
+        {
+         "$ref": "#/components/schemas/CelestialTarget"
+        },
+        {
+         "$ref": "#/components/schemas/Orbit"
+        },
+        {
+         "$ref": "#/components/schemas/Component"
+        },
+        {
+         "$ref": "#/components/schemas/CircularFieldOfView"
+        },
+        {
+         "$ref": "#/components/schemas/RectangularFieldOfView"
+        },
+        {
+         "$ref": "#/components/schemas/SolarArray"
+        },
+        {
+         "$ref": "#/components/schemas/Battery"
+        }
+       ]
+      }
+     },
+     "delete": {
+      "title": "Delete",
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    }
+   },
    "VehicleTemplate": {
     "title": "VehicleTemplate",
     "required": [
@@ -14493,1102 +15589,6 @@
     },
     "additionalProperties": false,
     "description": "Class to inherit when creating a `Metamodel`"
-   },
-   "VehicleTemplateRes": {
-    "title": "VehicleTemplateRes",
-    "required": [
-     "cadKey",
-     "cadSignedUrl",
-     "cadScaleFactor",
-     "mass",
-     "inertia"
-    ],
-    "type": "object",
-    "properties": {
-     "blocks": {
-      "title": "Blocks",
-      "type": "object",
-      "additionalProperties": {
-       "type": "object"
-      },
-      "description": "Object that maps all `Block` `id`'s to respetive `Block`s in the `Metamodel` instance.",
-      "default": {}
-     },
-     "index": {
-      "title": "Index",
-      "type": "object",
-      "additionalProperties": {
-       "type": "array",
-       "items": {
-        "type": "string"
-       }
-      },
-      "description": "Object that maps `Block` class names to subclasses and to `Block` `id`s of the given class."
-     },
-     "cadFileName": {
-      "title": "Vehicle CAD Model Filename",
-      "maxLength": 100,
-      "type": "string",
-      "default": ""
-     },
-     "cadKey": {
-      "title": "Vehicle CAD Model Key",
-      "maxLength": 48,
-      "type": "string"
-     },
-     "cadSignedUrl": {
-      "title": "Vehicle CAD Model URL",
-      "maxLength": 1024,
-      "type": "string"
-     },
-     "cadScaleFactor": {
-      "title": "Vehicle CAD Model Scale Factor",
-      "exclusiveMaximum": 100000000.0,
-      "exclusiveMinimum": 0.0,
-      "type": "number",
-      "description": "A normalizing factor that scales the model such that its largest bounding dimension is `1`."
-     },
-     "enabledModules": {
-      "title": "Enabled Simulation Modules",
-      "type": "array",
-      "items": {
-       "type": "string"
-      },
-      "description": "Enable/disable specific simulation modules. GNC and CDH must always be enabled.",
-      "default": [
-       "GNC",
-       "CDH",
-       "Power",
-       "Thermal"
-      ]
-     },
-     "mass": {
-      "title": "Dry Mass [kg]",
-      "exclusiveMinimum": 0.0,
-      "type": "number"
-     },
-     "inertia": {
-      "title": "Inertia Matrix [Matrix3[kg-m^2]]",
-      "type": "array",
-      "items": {
-       "maxItems": 3,
-       "minItems": 3,
-       "type": "array",
-       "items": {
-        "type": "number"
-       }
-      }
-     },
-     "missionOrbit": {
-      "title": "ID of Associated Orbit Block",
-      "type": "string",
-      "description": "Relationship to zero or one `Orbit` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "activeOpMode": {
-      "title": "ID of Associated OperationalMode Block",
-      "type": "string",
-      "description": "Relationship to zero or one `OperationalMode` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "powerProcessor": {
-      "title": "ID of Associated PowerProcessor Block",
-      "type": "string",
-      "description": "Relationship to zero or one `PowerProcessor` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "dynamicMass": {
-      "title": "Dynamic Mass [kg]",
-      "exclusiveMinimum": 0.0,
-      "type": "number",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "dynamicInertia": {
-      "title": "Dynamic Inertia Matrix [Matrix3[kg-m^2]]",
-      "type": "array",
-      "items": {
-       "maxItems": 3,
-       "minItems": 3,
-       "type": "array",
-       "items": {
-        "type": "number"
-       }
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "position": {
-      "title": "Agent Position",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/PositionBase306"
-       }
-      ],
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>This value is set based on the `Orbit` associated to this `Agent` in a `Scenario`."
-     },
-     "velocity": {
-      "title": "Agent Velocity",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>This value is set based on the `Orbit` associated to this `Agent` in a `Scenario`."
-     },
-     "attitude": {
-      "title": "Attitude Quaternion",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/QuaternionBase306"
-       }
-      ],
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": {
-       "body_eci": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-       ]
-      }
-     },
-     "angularVelocity": {
-      "title": "Angular Velocity [rad/s]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": [
-       0.0,
-       0.0,
-       0.0
-      ]
-     },
-     "torque": {
-      "title": "Total Torque [N\u2022m]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": [
-       0.0,
-       0.0,
-       0.0
-      ]
-     },
-     "srpTorque": {
-      "title": "SRP Torque [N\u2022m]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": [
-       0.0,
-       0.0,
-       0.0
-      ]
-     },
-     "dragTorque": {
-      "title": "Drag Torque [N\u2022m]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": [
-       0.0,
-       0.0,
-       0.0
-      ]
-     },
-     "gravityGradientTorque": {
-      "title": "Gravity Gradient Torque [N\u2022m]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": [
-       0.0,
-       0.0,
-       0.0
-      ]
-     },
-     "positionSolution": {
-      "title": "Active Position Solution [m]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "positionSolutionError": {
-      "title": "Active Position Solution Error [m]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "positionCovariance": {
-      "title": "Active Position Solution Covariance",
-      "type": "array",
-      "items": {
-       "maxItems": 3,
-       "minItems": 3,
-       "type": "array",
-       "items": {
-        "type": "number"
-       }
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "velocitySolution": {
-      "title": "Active Velocity Solution [km/s]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "velocitySolutionError": {
-      "title": "Active Velocity Solution Error [km/s]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "velocityCovariance": {
-      "title": "Active Velocity Solution Error [km/s]",
-      "type": "array",
-      "items": {
-       "maxItems": 3,
-       "minItems": 3,
-       "type": "array",
-       "items": {
-        "type": "number"
-       }
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "attitudeSolution": {
-      "title": "Attitude Solution Quaternion",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "attitudeSolutionError": {
-      "title": "Attitude Error YPR [rad]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "angularVelocitySolution": {
-      "title": "Angular Velocity Solution [rad/s]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "angularVelocitySolutionError": {
-      "title": "Angular Velocity Error [rad/s]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "commandedAttitude": {
-      "title": "Commanded Attitude Quaternion",
-      "type": "array",
-      "items": {
-       "type": "number"
-      }
-     },
-     "commandedAngularRates": {
-      "title": "Commanded Angular Velocity [rad/s]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      }
-     },
-     "lvlhAxes": {
-      "title": "LVLH Axes",
-      "type": "array",
-      "items": {
-       "maxItems": 3,
-       "minItems": 3,
-       "type": "array",
-       "items": {
-        "type": "number"
-       }
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "enuAxes": {
-      "title": "ENU Axes",
-      "type": "array",
-      "items": {
-       "maxItems": 3,
-       "minItems": 3,
-       "type": "array",
-       "items": {
-        "type": "number"
-       }
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "beta": {
-      "title": "Beta Angle",
-      "type": "number",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "orbitalElements": {
-      "title": "Orbital Elements",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/OrbitalElementsData"
-       }
-      ],
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "shadow": {
-      "title": "Eclipse State",
-      "type": "boolean",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "activeCommInterfaces": {
-      "title": "Active Data Handling Interfaces",
-      "type": "array",
-      "items": {
-       "type": "array",
-       "items": {
-        "anyOf": [
-         {
-          "type": "boolean"
-         },
-         {
-          "type": "string"
-         },
-         {
-          "type": "integer"
-         }
-        ]
-       }
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>List of currently active interfaces on this Agent. Each entry contains a tuple of `transmitStatus`, `agentId`, `bitRate`, and `canLink`.",
-      "default": []
-     },
-     "selfId": {
-      "title": "Self ID",
-      "type": "string",
-      "description": "**This field is for internal use only**"
-     },
-     "_quantityKinds": {
-      "title": " Quantitykinds",
-      "type": "object",
-      "description": "Object mapping `Block` class names and `root` to the names of `QuantityKind` fields. The field\n    names then map to an object of descriptive information about the field."
-     },
-     "_relationships": {
-      "title": " Relationships",
-      "type": "object",
-      "description": "Object mapping `Block` class names and `root` to the names of relationship fields. The field\n    names then map to an object of descriptive information about the field."
-     },
-     "_supers": {
-      "title": " Supers",
-      "type": "object",
-      "description": "Object mapping `Block` class names to a list of names of their direct super classes."
-     },
-     "_blockNames": {
-      "title": " Blocknames",
-      "type": "array",
-      "items": {},
-      "description": "Names of all valid `Block`s for this `Metamodel` class"
-     }
-    },
-    "additionalProperties": false,
-    "description": "Class for VehicleTemplate with meta attributes"
-   },
-   "VehicleTemplateRoot": {
-    "title": "VehicleTemplateRoot",
-    "required": [
-     "cadKey",
-     "cadSignedUrl",
-     "cadScaleFactor",
-     "mass",
-     "inertia"
-    ],
-    "type": "object",
-    "properties": {
-     "cadFileName": {
-      "title": "Vehicle CAD Model Filename",
-      "maxLength": 100,
-      "type": "string",
-      "default": ""
-     },
-     "cadKey": {
-      "title": "Vehicle CAD Model Key",
-      "maxLength": 48,
-      "type": "string"
-     },
-     "cadSignedUrl": {
-      "title": "Vehicle CAD Model URL",
-      "maxLength": 1024,
-      "type": "string"
-     },
-     "cadScaleFactor": {
-      "title": "Vehicle CAD Model Scale Factor",
-      "exclusiveMaximum": 100000000.0,
-      "exclusiveMinimum": 0.0,
-      "type": "number",
-      "description": "A normalizing factor that scales the model such that its largest bounding dimension is `1`."
-     },
-     "enabledModules": {
-      "title": "Enabled Simulation Modules",
-      "type": "array",
-      "items": {
-       "type": "string"
-      },
-      "description": "Enable/disable specific simulation modules. GNC and CDH must always be enabled.",
-      "default": [
-       "GNC",
-       "CDH",
-       "Power",
-       "Thermal"
-      ]
-     },
-     "mass": {
-      "title": "Dry Mass [kg]",
-      "exclusiveMinimum": 0.0,
-      "type": "number"
-     },
-     "inertia": {
-      "title": "Inertia Matrix [Matrix3[kg-m^2]]",
-      "type": "array",
-      "items": {
-       "maxItems": 3,
-       "minItems": 3,
-       "type": "array",
-       "items": {
-        "type": "number"
-       }
-      }
-     },
-     "missionOrbit": {
-      "title": "ID of Associated Orbit Block",
-      "type": "string",
-      "description": "Relationship to zero or one `Orbit` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "activeOpMode": {
-      "title": "ID of Associated OperationalMode Block",
-      "type": "string",
-      "description": "Relationship to zero or one `OperationalMode` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "powerProcessor": {
-      "title": "ID of Associated PowerProcessor Block",
-      "type": "string",
-      "description": "Relationship to zero or one `PowerProcessor` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "dynamicMass": {
-      "title": "Dynamic Mass [kg]",
-      "exclusiveMinimum": 0.0,
-      "type": "number",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "dynamicInertia": {
-      "title": "Dynamic Inertia Matrix [Matrix3[kg-m^2]]",
-      "type": "array",
-      "items": {
-       "maxItems": 3,
-       "minItems": 3,
-       "type": "array",
-       "items": {
-        "type": "number"
-       }
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "position": {
-      "title": "Agent Position",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/PositionBase306"
-       }
-      ],
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>This value is set based on the `Orbit` associated to this `Agent` in a `Scenario`."
-     },
-     "velocity": {
-      "title": "Agent Velocity",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>This value is set based on the `Orbit` associated to this `Agent` in a `Scenario`."
-     },
-     "attitude": {
-      "title": "Attitude Quaternion",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/QuaternionBase306"
-       }
-      ],
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": {
-       "body_eci": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-       ]
-      }
-     },
-     "angularVelocity": {
-      "title": "Angular Velocity [rad/s]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": [
-       0.0,
-       0.0,
-       0.0
-      ]
-     },
-     "torque": {
-      "title": "Total Torque [N\u2022m]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": [
-       0.0,
-       0.0,
-       0.0
-      ]
-     },
-     "srpTorque": {
-      "title": "SRP Torque [N\u2022m]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": [
-       0.0,
-       0.0,
-       0.0
-      ]
-     },
-     "dragTorque": {
-      "title": "Drag Torque [N\u2022m]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": [
-       0.0,
-       0.0,
-       0.0
-      ]
-     },
-     "gravityGradientTorque": {
-      "title": "Gravity Gradient Torque [N\u2022m]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": [
-       0.0,
-       0.0,
-       0.0
-      ]
-     },
-     "positionSolution": {
-      "title": "Active Position Solution [m]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "positionSolutionError": {
-      "title": "Active Position Solution Error [m]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "positionCovariance": {
-      "title": "Active Position Solution Covariance",
-      "type": "array",
-      "items": {
-       "maxItems": 3,
-       "minItems": 3,
-       "type": "array",
-       "items": {
-        "type": "number"
-       }
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "velocitySolution": {
-      "title": "Active Velocity Solution [km/s]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "velocitySolutionError": {
-      "title": "Active Velocity Solution Error [km/s]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "velocityCovariance": {
-      "title": "Active Velocity Solution Error [km/s]",
-      "type": "array",
-      "items": {
-       "maxItems": 3,
-       "minItems": 3,
-       "type": "array",
-       "items": {
-        "type": "number"
-       }
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "attitudeSolution": {
-      "title": "Attitude Solution Quaternion",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "attitudeSolutionError": {
-      "title": "Attitude Error YPR [rad]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "angularVelocitySolution": {
-      "title": "Angular Velocity Solution [rad/s]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "angularVelocitySolutionError": {
-      "title": "Angular Velocity Error [rad/s]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "commandedAttitude": {
-      "title": "Commanded Attitude Quaternion",
-      "type": "array",
-      "items": {
-       "type": "number"
-      }
-     },
-     "commandedAngularRates": {
-      "title": "Commanded Angular Velocity [rad/s]",
-      "type": "array",
-      "items": {
-       "type": "number"
-      }
-     },
-     "lvlhAxes": {
-      "title": "LVLH Axes",
-      "type": "array",
-      "items": {
-       "maxItems": 3,
-       "minItems": 3,
-       "type": "array",
-       "items": {
-        "type": "number"
-       }
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "enuAxes": {
-      "title": "ENU Axes",
-      "type": "array",
-      "items": {
-       "maxItems": 3,
-       "minItems": 3,
-       "type": "array",
-       "items": {
-        "type": "number"
-       }
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "beta": {
-      "title": "Beta Angle",
-      "type": "number",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "orbitalElements": {
-      "title": "Orbital Elements",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/OrbitalElementsData"
-       }
-      ],
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "shadow": {
-      "title": "Eclipse State",
-      "type": "boolean",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
-     },
-     "activeCommInterfaces": {
-      "title": "Active Data Handling Interfaces",
-      "type": "array",
-      "items": {
-       "type": "array",
-       "items": {
-        "anyOf": [
-         {
-          "type": "boolean"
-         },
-         {
-          "type": "string"
-         },
-         {
-          "type": "integer"
-         }
-        ]
-       }
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>List of currently active interfaces on this Agent. Each entry contains a tuple of `transmitStatus`, `agentId`, `bitRate`, and `canLink`.",
-      "default": []
-     },
-     "selfId": {
-      "title": "Self ID",
-      "type": "string",
-      "description": "**This field is for internal use only**"
-     }
-    },
-    "additionalProperties": false,
-    "description": "Vehicle Template Root Attributes"
-   },
-   "VehicleTemplateUpdateInterface": {
-    "title": "VehicleTemplateUpdateInterface",
-    "required": [
-     "root",
-     "blocks",
-     "delete"
-    ],
-    "type": "object",
-    "properties": {
-     "root": {
-      "$ref": "#/components/schemas/VehicleTemplateRoot"
-     },
-     "blocks": {
-      "title": "Blocks",
-      "type": "array",
-      "items": {
-       "anyOf": [
-        {
-         "$ref": "#/components/schemas/Antenna"
-        },
-        {
-         "$ref": "#/components/schemas/ResistanceLoad"
-        },
-        {
-         "$ref": "#/components/schemas/PowerLoad"
-        },
-        {
-         "$ref": "#/components/schemas/DataInterface"
-        },
-        {
-         "$ref": "#/components/schemas/InternalDataInterface"
-        },
-        {
-         "$ref": "#/components/schemas/ReceiveInterface"
-        },
-        {
-         "$ref": "#/components/schemas/ThermalInterface"
-        },
-        {
-         "$ref": "#/components/schemas/PassiveTransmitInterface"
-        },
-        {
-         "$ref": "#/components/schemas/CooperativeTransmitInterface"
-        },
-        {
-         "$ref": "#/components/schemas/FixedSurface"
-        },
-        {
-         "$ref": "#/components/schemas/SunTrackingSurface"
-        },
-        {
-         "$ref": "#/components/schemas/VectorTrackingSurface"
-        },
-        {
-         "$ref": "#/components/schemas/DataMode"
-        },
-        {
-         "$ref": "#/components/schemas/PassivePointingMode"
-        },
-        {
-         "$ref": "#/components/schemas/LockPointingMode"
-        },
-        {
-         "$ref": "#/components/schemas/MaxAlignPointingMode"
-        },
-        {
-         "$ref": "#/components/schemas/OperationalMode"
-        },
-        {
-         "$ref": "#/components/schemas/DataStorage"
-        },
-        {
-         "$ref": "#/components/schemas/LaserCommModule"
-        },
-        {
-         "$ref": "#/components/schemas/DataType"
-        },
-        {
-         "$ref": "#/components/schemas/LoadState"
-        },
-        {
-         "$ref": "#/components/schemas/TempControllerState"
-        },
-        {
-         "$ref": "#/components/schemas/BatteryPack"
-        },
-        {
-         "$ref": "#/components/schemas/SphericalFuelTank"
-        },
-        {
-         "$ref": "#/components/schemas/SpherocylinderFuelTank"
-        },
-        {
-         "$ref": "#/components/schemas/ThermalInterfaceMaterial"
-        },
-        {
-         "$ref": "#/components/schemas/SurfaceMaterial"
-        },
-        {
-         "$ref": "#/components/schemas/ReactionWheel"
-        },
-        {
-         "$ref": "#/components/schemas/SolarPanel"
-        },
-        {
-         "$ref": "#/components/schemas/SolarCell"
-        },
-        {
-         "$ref": "#/components/schemas/BatteryCell"
-        },
-        {
-         "$ref": "#/components/schemas/Modem"
-        },
-        {
-         "$ref": "#/components/schemas/Subsystem"
-        },
-        {
-         "$ref": "#/components/schemas/TriadAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/PidAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/SlidingModeAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/EkfAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/MekfAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/AveragingAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/StaticThrustControlAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/GpsAlgorithm"
-        },
-        {
-         "$ref": "#/components/schemas/CompoundCondition"
-        },
-        {
-         "$ref": "#/components/schemas/TimeCondition"
-        },
-        {
-         "$ref": "#/components/schemas/SatelliteToSatelliteCondition"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroupToSatelliteCondition"
-        },
-        {
-         "$ref": "#/components/schemas/SameTargetMultiCondition"
-        },
-        {
-         "$ref": "#/components/schemas/SatelliteToScalarCondition"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroupToScalarCondition"
-        },
-        {
-         "$ref": "#/components/schemas/TargetToScalarCondition"
-        },
-        {
-         "$ref": "#/components/schemas/ComponentToScalarCondition"
-        },
-        {
-         "$ref": "#/components/schemas/SatelliteToTargetCondition"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroupToTargetCondition"
-        },
-        {
-         "$ref": "#/components/schemas/TargetToTargetCondition"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroupInFovCondition"
-        },
-        {
-         "$ref": "#/components/schemas/VectorInFovCondition"
-        },
-        {
-         "$ref": "#/components/schemas/TargetInFovCondition"
-        },
-        {
-         "$ref": "#/components/schemas/BodyInFovCondition"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroup"
-        },
-        {
-         "$ref": "#/components/schemas/Cooler"
-        },
-        {
-         "$ref": "#/components/schemas/Heater"
-        },
-        {
-         "$ref": "#/components/schemas/Thruster"
-        },
-        {
-         "$ref": "#/components/schemas/Magnetorquer"
-        },
-        {
-         "$ref": "#/components/schemas/FuelReservoir"
-        },
-        {
-         "$ref": "#/components/schemas/OpticalAttitudeSensor"
-        },
-        {
-         "$ref": "#/components/schemas/DirectionSensor"
-        },
-        {
-         "$ref": "#/components/schemas/PositionSensor"
-        },
-        {
-         "$ref": "#/components/schemas/VectorSensor"
-        },
-        {
-         "$ref": "#/components/schemas/AngularVelocitySensor"
-        },
-        {
-         "$ref": "#/components/schemas/PowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/SingleConvHybridPowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/QuasiRegDetPowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/FullyRegDetPowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/SingleConvMpptPowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/TwoConvMpptPowerProcessor"
-        },
-        {
-         "$ref": "#/components/schemas/BusRegulator"
-        },
-        {
-         "$ref": "#/components/schemas/BodyFrameVector"
-        },
-        {
-         "$ref": "#/components/schemas/LocalVector"
-        },
-        {
-         "$ref": "#/components/schemas/CelestialVector"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroupVector"
-        },
-        {
-         "$ref": "#/components/schemas/TargetVector"
-        },
-        {
-         "$ref": "#/components/schemas/DataBus"
-        },
-        {
-         "$ref": "#/components/schemas/GroundTarget"
-        },
-        {
-         "$ref": "#/components/schemas/SpaceTarget"
-        },
-        {
-         "$ref": "#/components/schemas/CelestialTarget"
-        },
-        {
-         "$ref": "#/components/schemas/Orbit"
-        },
-        {
-         "$ref": "#/components/schemas/Component"
-        },
-        {
-         "$ref": "#/components/schemas/CircularFieldOfView"
-        },
-        {
-         "$ref": "#/components/schemas/RectangularFieldOfView"
-        },
-        {
-         "$ref": "#/components/schemas/SolarArray"
-        },
-        {
-         "$ref": "#/components/schemas/Battery"
-        }
-       ]
-      }
-     },
-     "delete": {
-      "title": "Delete",
-      "type": "array",
-      "items": {
-       "type": "string"
-      }
-     }
-    }
    }
   }
  },
@@ -15602,19 +15602,19 @@
    "description": "\n### Queries\n\nData is queried via 6 URL query parameters:\n\n- `id`: The ID of the data set to query.  This ID is defined on a [Simulation Job](#tag/Jobs).\n- `start`: The start time of the window in MJD. If omitted, defaults to the minimum timestamp in the dataset.\n- `stop`: The stop time of the window in MJD. If omitted, defaults to the maximum timestamp in the dataset.\n- `binWidth`: (optional) The bin width to use to down-sample the data.  If omitted, data will be full resolution.\n- `axisOrder`: (optional) The shape of each series in the response. Options: `TIME_MAJOR` (default) and `TIME_MINOR`.\n- `streams`: (optional) The specific agents and engines for which to fetch data. If omitted, all streams are fetched.\n    This argument takes the form of a list of requests separated by commas.\n    A request can have either one or two elements. The first element is always the ID of the Agent (str).\n    The second element (optional) is the name of an engine (str). This must be one of the following: 'GNC', 'CDH', 'Power', 'Thermal'.\n    If the second element is not provided, all data from all engines of the given Agent are fetched. If a request has two elements, they are\n    separated by a period. Here is an example:\n\n    ...&streams=NT06aqHUT5djI1_JPAsck.CDH,NT06aqHUT5djI1_JPAsck.Power,NT0Ln1gS8elWEK4Y-l7m-\n\n    This will fetch the Power and CDH data for Agent(id='NT06aqHUT5djI1_JPAsck'), and all data for\n    Agent(id='NT0Ln1gS8elWEK4Y-l7m-').\n\nExample request: `GET: /data/<id>?start=<start>&stop=<stop>&binWidth=<binWidth>`\n\n#### Response\n\nData is returned from a query in the following format:\n\n```jsonc\n{\n    \"series\": {\n        <streamId>: [\n            [<timestamp1::MJD>, <timestamp2::MJD>, ...],\n            {\n                <agentId>: {\n                    <blockId>: {\n                        <stateVariableA>: [<valueA1>, <valueA2>, ...],\n                        <stateVariableB>: [<valueB1>, <valueB2>, ...],\n                        ...\n                    },\n                    <stateVariableC>: [<valueC1>, <valueC2>, ...]\n                },\n                ...\n            }\n        ],\n        ...\n    }\n}\n```\n\nNote that a \"Stream\" is a set of state variables that share the same timestamps.  Specifically, the values in a Stream\ncorrespond to a modsim Engine of a particular Agent.  The `series` object contains a key for each stream in the data set.\nThe value of each stream key is a 2-element array.  The first element is an array of timestamps - the X-axis for all variables\nin the stream.  The second element is an object containing the state variables that compose the stream.  The state variables\nare grouped under an Agent ID and then a Block ID (if applicable).  The value of each entry is an array of values that aligns\nwith the timestamp vector.\n\n#### Axis Order (`axisOrder`)\n\nAxis order defines the shape of each multi-dimensional series in the Data Service query response.  In the following example,\n`n` is the time dimension, `position` is a notional State Variable of shape `(3,)`, and `matrix` is a notional State Variable\nof shape `(3, 4)`.\n\n**`TIME_MAJOR`**\n- `position.shape == (n, 3)`\n- `matrix.shape == (n, 3, 4)`\n\n**`TIME_MINOR`**\n- `position.shape == (3, n)`\n- `matrix.shape == (3, 4, n)`\n"
   },
   {
-   "name": "Templates",
+   "name": "MetaModels",
    "description": "\n#### Introduction to Modeling in Sedaro\n\nSedaro uses **SedaroML** (Sedaro Modeling Language) to define models and systems of models. SedaroML defines system\nproperties and structure as normalized, interrelated, and hierarchical blocks of attributes. SedaroML is JSON-based and\nis designed to be easily human and machine readable/writeable. This includes model interpretation, traversal, etc. Each\nSedaroML model class defining the structure and properties of a system is called a `Metamodel`.\n\n`Metamodel` classes are instantiated to create instances of the system. `Metamodel` instances consist of a set of\n`Block`s and `attributes` (described below) and can be either **Agent Templates** or **Scenarios**.\n\n- Agent Templates: define the model for a system.\n- Scenarios: define the instantiation of a system and the configuration of the simulation.\n\nWhen a Scenario configures a simulation, it instantiates Agent Templates to create **Agents**.  The Agents are then\nconnected to each other to form a system of systems.  This system is then simulated according to the Scenario's configuration.\n\nTo help with organization and other functionality, each instantiated `Metamodel` is associated with a `Branch` that is apart\nof a `Repository`. This allows for versioning, branching, merging, and tracking of changes to the `Metamodel` and the\nsystem it defines. The `Metamodel` is stored in the `data` key of the `Branch` JSON object.\n\n#### Other key concepts\n\nThere are some specific concepts in SedaroML that are important to understand:\n  - **Attributes:** Individual properties of a `Block` (e.g., `mass`, `voltage`, etc.) captured as a key-value pair.\n\n  - **Root:** The `root` refers to the highest level key/value pairs of the JSON-object of SedaroML. The keys are\n    attributes, just like on `Block`s, but `root` is not a `Block` itself. All `Metamodel`s contain `blocks` and `index`\n    attributes in `root` which store and help with querying for all `Block`s in the `Metamodel`.\n\n  - **Blocks:** A `Block` is a set of attributes, including a `type` which defines the type of the `Block` (e.g.,\n    `ReactionWheel`, `Battery`, etc.). All `Block`s are located under the `blocks` attribute of the model.\n\n  - **Hierarchy:** The `Block`s in a SedaroML model have hierarchy such that a `Block` `type` can extend one or more\n    `Block` `type`s (e.g., a `ReactionWheel` is a specialized `Actuator` and an `Actuator` is a specialized\n    `Component`). The hierarchy of a model can be interpreted using the `index` and `_supers` meta attributes of a\n    `Metamodel`.  `index` provides a lookup to traverse from a `Block` `type` to its sub-`Block` `type`s, ultimately\n    down to the individual `Block` instances in the model. `_supers` provides a lookup to traverse from a `Block` `type`\n    to its super-`Block` `type`s.\n\n  - **Relationships:** The model `root` and its `Block`s can be related to one another using relationship attributes.\n    The `_relationships` meta attribute provides a lookup from `Block` `type` to that `type`'s relationships attributes.\n\n  - **Quantity Kinds:** In SedaroML, an attribute that has a value and a unit is called a \"Quantity\". Quantities may be\n    composed of other Quantities, called Compound Quantities. A category of Quantities that share the same unit system\n    is called a \"Quantity Kind\".  If a model attribute is an explicit Quantity, it will be included in the\n    `_quantityKinds` meta attribute lookup. Attributes that are Explicit Quantity Kinds may be defined in any of the\n    supported units for the Quantity Kind. For example, all angle attributes in SedaroML may be defined in either\n    degrees or radians. If the unit isn't provided, the default unit for the given Quantity Kind is assumed.\n\nSedaroML is used to define both Agent Templates and Scenario models, with Scenario models referencing Agent Template    Branches (and therefore their models) via the `templateRef` attribute of an `Agent` Block.\n\nExample of a mock `Metamodel` instance in a `Branch` `data` key, demonstrating some of the meta attributes:\n```json\n{\n    \"type\": \"Spacecraft\",\n    \"blocks\": {\n        \"N05o9ixRguGxORKXZ_123\": {\n        \"id\": \"N05o9ixRguGxORKXZ_123\",\n            \"type\": \"Battery\",\n            \"packs\": [\"N05oGhcT-9k9vSTAGn456\"]\n        },\n        \"N05oGhcT-9k9vSTAGn456\": {\n            \"id\": \"N05oGhcT-9k9vSTAGn456\",\n            \"type\": \"BatteryPack\",\n            \"battery\": \"N05o9ixRguGxORKXZ_123\"\n        }\n        \"N05o79yULy9NUw1zTk789\": {\n        \"id\": \"N05o79yULy9NUw1zTk789\",\n            \"type\": \"ReactionWheel\",\n            \"inertia\": 0.1\n        },\n    },\n    \"index\": {\n        \"Actuator\": [\"ReactionWheel\"],\n        \"Component\": [\"Battery\", \"BatteryPack\", \"Actuator\"],\n        \"Battery\": [\"N05o9ixRguGxORKXZ_123\"],\n        \"BatteryPack\": [\"N05oGhcT-9k9vSTAGn456\"],\n        \"ReactionWheel\": [\"N05o79yULy9NUw1zTk789\"]\n    },\n    \"_relationships\": {\n        \"Battery\": {\n            \"packs\": {\n                \"inverse\": \"battery\",\n                \"onDelete\": \"set-none\",\n                \"optional\": true,\n                \"target\": \"BatteryPack\",\n                \"type\": \"ManySide\"\n            },\n        },\n        \"BatteryPack\": {\n            \"battery\": {\n                \"inverse\": \"packs\",\n                \"onDelete\": \"set-none\",\n                \"optional\": false,\n                \"target\": \"Battery\",\n                \"type\": \"OneSide\"\n            },\n        },\n    },\n}\n```\n"
   },
   {
    "name": "Externals",
-   "description": "\n### Introduction\n\"Cosimulation\" refers to multiple simulators working in conjunction to simulate something. Cosimulation in Sedaro is\nachieved via the definition of `ExternalState` `Block`s within a Scenario model.  `ExternalState` `Block`s are related to\none or more `Agent` `Block`s in the Scenario model and they define the external cosimulation interfaces.  Interfaces can\nbe uni- or bi-directional and support two different modes: `Per-Round` and `Spontaneous`.\n\n### Cosimulation Modes\nIn `Per-Round` cosimulation, the external simulator is expected to produce and/or consume state at each \"round\" or\nsimulation Engine time-step. In `Spontaneous` cosimulation, the external simulator may produce and/or consume state at\nany time. This method of cosimulation is recommended for real-time simulations (`ClockConfig.realTime == true`) and\nis important for use-cases such as commanding a system or part of a system to a new state (i.e., human/software-in-the-loop).\n\n`Spontaneous` state is timestamped and interpreted such that it impacts the simulation during the round at or immediately\nfollowing the `timestamp`. Spontaneous state production is also unique in that it is not required to ever provide a\nvalue and can remain optionally unused during a simulation. In this case, the simulation will continue to consume the\ninitial value for the state until a new value is provided.\n\nEach cosimulation interface is independent meaning some may be `Per Round` while others are `Spontaneous`.  This also\nmeans that individual cosimulators can consume/produce state simulataneously over different interfaces.\n\n### Blocking vs Non-Blocking\n#### Per-Round\nIf simulation state depends on `produced` external state, the simulation will block (or wait) until this state is provided\nvia the following `PATCH` endpoint.  Once provided, the simulation will continue until it is blocked again. Anything that\nis not dependent on the external state will continue to run during the blocking period.\n\n#### Spontaneous\nSpontaneous external state will never block the simulation but will take effect upon arrival.\n\n#### Consume\nCalling `consume` with a `time` value that the simulation hasn't reached yet will block until the simulation catches up.\nThis is currently subject to a **10 minute timeout**. If the request fails after 10 minutes, it is recommended that it\nbe reattempted.\n\nSimilarly, calling `consume` with a `time` that too far lags the current simulation might result in an error as the\nvalue has been garbage collected from the simulation caches and is no longer available for retrieval. If this is the\ncase, please fetch the data from the Data Service (via the Results API) instead.\n\n### Numpy Array Serialization/Deserialization\nBecause all requests and responses of this API must be JSON serializable, numpy arrays are represented in the following\nway in both API requests and responses (as a representation of the value `np.array([x, y, z])`):\n\n```jsonc\n{\n    \"ndarray\": [x, y, z]\n}\n```\n\n### Configuring Cosimulation\nCosimulation interfaces are configured via the definition of `ExternalState` Blocks on the [Scenario model](#tag/Templates) before the simulation\nis started. The currently supported Blocks are `PerRoundExternalState` and `SpontaneousExternalState`.\n\nSee the [Templates](#tag/Templates) section for details on defining Blocks and their individual attributes.\n\nExample Blocks:\n\n```jsonc\n// Per Round External State Block\n{\n    \"id\": \"NZ2SGPWRnmdJhwUT4GD5k\",\n    \"type\": \"PerRoundExternalState\",\n    \"produced\": [{\"root\": \"velocity\"}], // Implicit QuantityKind\n    \"consumed\": [{\"prev.root.position.as\": \"Position.eci\"}], // Explicit QuantityKind\n    \"engineIndex\": 0, // 0: GNC, 1: C&DH, 2: Power, 3: Thermal\n    \"agents\": [\"NSghFfVT8ieam0ydeZGX-\"]\n}\n\n// Spontaneous External State Block\n{\n    \"id\": \"NZ2SHUkS95z1GtmMZ0CTk\",\n    \"type\": \"SpontaneousExternalState\",\n    \"produced\": [{\"root\": \"activeOpMode\"}],\n    \"consumed\": [{\"prev.root.position.as\": \"Position.eci\"}],\n    \"engineIndex\": 0, // 0: GNC, 1: C&DH, 2: Power, 3: Thermal\n    \"agents\": [\"NSghFfVT8ieam0ydeZGX-\"]\n}\n```\n\nOnce the simulation is running, the following endpoints are used to interact with any cosimulation interfaces.\n"
+   "description": "\n### Introduction\n\"Cosimulation\" refers to multiple simulators working in conjunction to simulate something. Cosimulation in Sedaro is\nachieved via the definition of `ExternalState` `Block`s within a Scenario model.  `ExternalState` `Block`s are related to\none or more `Agent` `Block`s in the Scenario model and they define the external cosimulation interfaces.  Interfaces can\nbe uni- or bi-directional and support two different modes: `Per-Round` and `Spontaneous`.\n\n### Cosimulation Modes\nIn `Per-Round` cosimulation, the external simulator is expected to produce and/or consume state at each \"round\" or\nsimulation Engine time-step. In `Spontaneous` cosimulation, the external simulator may produce and/or consume state at\nany time. This method of cosimulation is recommended for real-time simulations (`ClockConfig.realTime == true`) and\nis important for use-cases such as commanding a system or part of a system to a new state (i.e., human/software-in-the-loop).\n\n`Spontaneous` state is timestamped and interpreted such that it impacts the simulation during the round at or immediately\nfollowing the `timestamp`. Spontaneous state production is also unique in that it is not required to ever provide a\nvalue and can remain optionally unused during a simulation. In this case, the simulation will continue to consume the\ninitial value for the state until a new value is provided.\n\nEach cosimulation interface is independent meaning some may be `Per Round` while others are `Spontaneous`.  This also\nmeans that individual cosimulators can consume/produce state simulataneously over different interfaces.\n\n### Blocking vs Non-Blocking\n#### Per-Round\nIf simulation state depends on `produced` external state, the simulation will block (or wait) until this state is provided\nvia the following `PATCH` endpoint.  Once provided, the simulation will continue until it is blocked again. Anything that\nis not dependent on the external state will continue to run during the blocking period.\n\n#### Spontaneous\nSpontaneous external state will never block the simulation but will take effect upon arrival.\n\n#### Consume\nCalling `consume` with a `time` value that the simulation hasn't reached yet will block until the simulation catches up.\nThis is currently subject to a **10 minute timeout**. If the request fails after 10 minutes, it is recommended that it\nbe reattempted.\n\nSimilarly, calling `consume` with a `time` that too far lags the current simulation might result in an error as the\nvalue has been garbage collected from the simulation caches and is no longer available for retrieval. If this is the\ncase, please fetch the data from the Data Service (via the Results API) instead.\n\n### Numpy Array Serialization/Deserialization\nBecause all requests and responses of this API must be JSON serializable, numpy arrays are represented in the following\nway in both API requests and responses (as a representation of the value `np.array([x, y, z])`):\n\n```jsonc\n{\n    \"ndarray\": [x, y, z]\n}\n```\n\n### Configuring Cosimulation\nCosimulation interfaces are configured via the definition of `ExternalState` Blocks on the [Scenario model](#tag/MetaModels) before the simulation\nis started. The currently supported Blocks are `PerRoundExternalState` and `SpontaneousExternalState`.\n\nSee the [MetaModels](#tag/MetaModels) section for details on defining Blocks and their individual attributes.\n\nExample Blocks:\n\n```jsonc\n// Per Round External State Block\n{\n    \"id\": \"NZ2SGPWRnmdJhwUT4GD5k\",\n    \"type\": \"PerRoundExternalState\",\n    \"produced\": [{\"root\": \"velocity\"}], // Implicit QuantityKind\n    \"consumed\": [{\"prev.root.position.as\": \"Position.eci\"}], // Explicit QuantityKind\n    \"engineIndex\": 0, // 0: GNC, 1: C&DH, 2: Power, 3: Thermal\n    \"agents\": [\"NSghFfVT8ieam0ydeZGX-\"]\n}\n\n// Spontaneous External State Block\n{\n    \"id\": \"NZ2SHUkS95z1GtmMZ0CTk\",\n    \"type\": \"SpontaneousExternalState\",\n    \"produced\": [{\"root\": \"activeOpMode\"}],\n    \"consumed\": [{\"prev.root.position.as\": \"Position.eci\"}],\n    \"engineIndex\": 0, // 0: GNC, 1: C&DH, 2: Power, 3: Thermal\n    \"agents\": [\"NSghFfVT8ieam0ydeZGX-\"]\n}\n```\n\nOnce the simulation is running, the following endpoints are used to interact with any cosimulation interfaces.\n"
   }
  ],
  "x-tagGroups": [
   {
-   "name": "Templates",
+   "name": "MetaModels",
    "tags": [
-    "Templates"
+    "MetaModels"
    ]
   },
   {
