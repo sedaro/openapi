@@ -1793,16 +1793,16 @@
     "title": "AngularRate",
     "type": "object",
     "properties": {
-     "rpm": {
-      "title": "Rpm",
-      "type": "number"
-     },
      "rad/s": {
       "title": "Rad/S",
       "type": "number"
      },
      "deg/s": {
       "title": "Deg/S",
+      "type": "number"
+     },
+     "rpm": {
+      "title": "Rpm",
       "type": "number"
      }
     },
@@ -1814,15 +1814,6 @@
     "title": "AngularVelocity",
     "type": "object",
     "properties": {
-     "rpm": {
-      "title": "Rpm",
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array",
-      "items": {
-       "type": "number"
-      }
-     },
      "rad/s": {
       "title": "Rad/S",
       "maxItems": 3,
@@ -1834,6 +1825,15 @@
      },
      "deg/s": {
       "title": "Deg/S",
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
+     "rpm": {
+      "title": "Rpm",
       "maxItems": 3,
       "minItems": 3,
       "type": "array",
@@ -2295,13 +2295,6 @@
       "type": "string",
       "description": "Relationship to a single `FieldOfView` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
-     "externalInterfaces": {
-      "title": "IDs of Associated ExternalDataInterface Blocks",
-      "type": "array",
-      "items": {},
-      "description": "Relationship to one or more `ExternalDataInterface` blocks. Inverse key: `ExternalDataInterface.directedEnergyDevice`. On delete: `set-none` (remove ID of referenced block from this relationship field).",
-      "default": []
-     },
      "type": {
       "title": "Type",
       "enum": [
@@ -2752,6 +2745,31 @@
     "additionalProperties": false,
     "description": "Inherit from this class to type fields on a `Metamodel`, `Block` or `FieldSchema`",
     "privateProperties": {}
+   },
+   "BaseTargetParameters": {
+    "title": "BaseTargetParameters",
+    "enum": [
+     "SHADOW",
+     "BETA",
+     "MEAN_ANOM",
+     "TRUE_ANOM",
+     "LAT",
+     "LON",
+     "ALT",
+     "LO_SIGHT",
+     "RANGE",
+     "SOLAR_AZ",
+     "SOLAR_EL",
+     "SELF_AZ",
+     "SELF_EL",
+     "LOCAL_SIDEREAL_TIME"
+    ],
+    "description": "An enumeration."
+   },
+   "BaseTerrestrialVehicleParameters": {
+    "title": "BaseTerrestrialVehicleParameters",
+    "enum": [],
+    "description": "An enumeration."
    },
    "Battery": {
     "title": "Battery",
@@ -3972,6 +3990,21 @@
       "description": "Relationship to one or more `DynamicallyLoadedComponent` blocks. Inverse key: `DynamicallyLoadedComponent.busRegulator`. On delete: `set-none` (remove ID of referenced block from this relationship field).",
       "default": []
      },
+     "inputPower": {
+      "title": "Input Power [W]",
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "outputPowerMargin": {
+      "title": "Output Power Margin",
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
+     "outputCurrent": {
+      "title": "Output Current [A]",
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+     },
      "dissipations": {
       "title": "Power Dissipation Breakdown",
       "allOf": [
@@ -3982,7 +4015,7 @@
       "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
      },
      "outputPowers": {
-      "title": "Outputpowers",
+      "title": "Output Power Breakdown",
       "type": "object",
       "additionalProperties": {
        "type": "number"
@@ -4314,33 +4347,20 @@
         "$ref": "#/components/schemas/Quaternion"
        }
       ],
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": {
-       "body_ecef": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-       ]
-      }
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
      },
      "relativeAttitude": {
       "title": "FOV Relative Attitude Quaternion",
       "type": "array",
       "items": {},
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": [
-       0.0,
-       0.0,
-       0.0,
-       1.0
-      ]
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
      },
      "articulationAngles": {
       "title": "Articulation Angles",
       "type": "array",
       "items": {},
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": []
      },
      "visibleEarthArea": {
       "title": "Visibleeartharea",
@@ -4710,43 +4730,11 @@
     "description": "A ClockConfig Block",
     "privateProperties": {}
    },
-   "CloudFractionGroup": {
-    "title": "CloudFractionGroup",
-    "required": [
-     "name"
-    ],
+   "CloudConfig": {
+    "title": "CloudConfig",
     "type": "object",
     "properties": {
-     "id": {
-      "title": "Id",
-      "type": "string"
-     },
-     "disabled": {
-      "title": "Disabled",
-      "type": "boolean",
-      "default": false,
-      "original": "do not override this field"
-     },
-     "name": {
-      "title": "Name",
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
-     },
-     "dataset": {
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/GeoAreaDatetimeDataSetSource"
-       }
-      ],
-      "default": 4
-     },
-     "geoAreaDatetimeTargetGroup": {
-      "title": "ID of Associated TargetGroup Block",
-      "type": "string",
-      "description": "Relationship to a single `TargetGroup` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "normalvariateSigma": {
+     "normalVariateSigma": {
       "title": "Prediction Accuracy",
       "maximum": 1.0,
       "minimum": 0.0,
@@ -4755,13 +4743,9 @@
       "default": 0.1
      },
      "cloudLayerAltitude": {
-      "title": "Altitude(km) of the Cloud layer",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/PositiveDistance"
-       }
-      ],
-      "description": "Used to determined vector intercept locations for off nader view angles",
+      "title": "Altitude (km) of the Cloud layer",
+      "type": "number",
+      "description": "Used to determine vector intercept locations for off nadir view angles",
       "default": 9.0
      },
      "defaultCloudFractionValue": {
@@ -4771,182 +4755,14 @@
       "type": "number",
       "description": "Default value to return if the requested data at the location/time is missing in the dataset. Usually occurs at locations very close to the poles.",
       "default": 0.5
-     },
-     "cloudFractionGroupResults": {
-      "title": "IDs of Associated GroundTarget Blocks",
-      "type": "object",
-      "additionalProperties": {
-       "$ref": "#/components/schemas/CloudFractionRelData"
-      },
-      "description": "Relationship with data to one or more `GroundTarget` blocks. On delete: `set-none` (remove ID of referenced block from this relationship field).",
-      "default": {}
-     },
-     "type": {
-      "title": "Type",
-      "enum": [
-       "CloudFractionGroup"
-      ],
-      "type": "string",
-      "description": "The \"type\" (class name) of the Block"
      }
     },
     "additionalProperties": false,
-    "description": "A CloudFractionGroup Block",
+    "description": "Inherit from this class to type fields on a `Metamodel`, `Block` or `FieldSchema`",
     "privateProperties": {}
    },
-   "CloudFractionGroupToScalarCondition": {
-    "title": "CloudFractionGroupToScalarCondition",
-    "required": [
-     "name",
-     "relationship",
-     "tgParam",
-     "scalar"
-    ],
-    "type": "object",
-    "properties": {
-     "id": {
-      "title": "Id",
-      "type": "string"
-     },
-     "disabled": {
-      "title": "Disabled",
-      "type": "boolean",
-      "default": false,
-      "original": "do not override this field"
-     },
-     "name": {
-      "title": "Name",
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
-     },
-     "terminator": {
-      "title": "Termination Condition",
-      "type": "boolean",
-      "description": "If set to true, the simulation will be terminated when this condition evaluates to true.",
-      "default": false
-     },
-     "compliance": {
-      "title": "Compliance Status",
-      "type": "boolean",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this condition is compliant, false otherwise."
-     },
-     "relationship": {
-      "title": "Relationship",
-      "anyOf": [
-       {
-        "$ref": "#/components/schemas/ConditionRelationship"
-       },
-       {
-        "$ref": "#/components/schemas/RangeRelationship"
-       }
-      ],
-      "description": "The relationship to use when comparing the assigned values."
-     },
-     "targetCompliance": {
-      "title": "Target Compliance Status",
-      "type": "object",
-      "additionalProperties": {
-       "type": "boolean"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>A dictionary keyed by `Target` ID where each value is the compliance of the condition for the respective `Target`."
-     },
-     "countRelationship": {
-      "title": "Count Relationship",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/ConditionRelationship"
-       }
-      ],
-      "description": "Set if `groupRoller` == `COUNT` to define the way to compare number of compliant targets to the `countValue`."
-     },
-     "countValue": {
-      "title": "Count Value",
-      "type": "integer",
-      "description": "Set if `groupRoller` == `COUNT` as a number to which to compare the number of compliant targets."
-     },
-     "tgParam": {
-      "title": "Parameter selection.",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/CloudFractionParameters"
-       }
-      ]
-     },
-     "groupRoller": {
-      "title": "Group Roller Selection",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/GroupRollers"
-       }
-      ],
-      "description": "The method to use to combine the target values into a single compliance.",
-      "default": "ANY"
-     },
-     "cloudFractionGroup": {
-      "title": "ID of Associated CloudFractionGroup Block",
-      "type": "string",
-      "description": "Relationship to a single `CloudFractionGroup` block. On delete: `cascade` (delete this block when referenced block is deleted)."
-     },
-     "scalar": {
-      "title": "Constant value to compare to or pair of values to use as a range.",
-      "anyOf": [
-       {
-        "type": "number"
-       },
-       {
-        "type": "object",
-        "additionalProperties": {
-         "type": "number"
-        }
-       },
-       {
-        "maxItems": 2,
-        "minItems": 2,
-        "type": "array",
-        "items": {
-         "anyOf": [
-          {
-           "type": "number"
-          },
-          {
-           "type": "object",
-           "additionalProperties": {
-            "type": "number"
-           }
-          }
-         ]
-        }
-       }
-      ]
-     },
-     "type": {
-      "title": "Type",
-      "enum": [
-       "CloudFractionGroupToScalarCondition"
-      ],
-      "type": "string",
-      "description": "The \"type\" (class name) of the Block"
-     }
-    },
-    "additionalProperties": false,
-    "description": "A CloudFractionGroupToScalarCondition Block",
-    "privateProperties": {}
-   },
-   "CloudFractionParameters": {
-    "title": "CloudFractionParameters",
-    "enum": [
-     "IS_CLOUD_BLOCKED",
-     "ACTUAL_CLOUD_FRACTION",
-     "PREDICTED_CLOUD_FRACTION",
-     "CLOUD_LAYER_INTERSECTION_LAT",
-     "CLOUD_LAYER_INTERSECTION_LON",
-     "CLOUD_LAYER_INTERSECTION_ALT"
-    ],
-    "description": "An enumeration."
-   },
-   "CloudFractionRelData": {
-    "title": "CloudFractionRelData",
+   "CloudFractionData": {
+    "title": "CloudFractionData",
     "type": "object",
     "properties": {
      "isCloudBlocked": {
@@ -4971,35 +4787,35 @@
      },
      "cloudLayerIntersection_lat": {
       "title": "LOS Cloud Intersection Latitude",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/Angle"
-       }
-      ],
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Latitude where the LOS vector intersects the cloud layer."
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Latitude (deg) where the LOS vector intersects the cloud layer."
      },
      "cloudLayerIntersection_lon": {
       "title": "LOS Cloud Intersection Longitude",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/Angle"
-       }
-      ],
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Longitude where the LOS vector intersects the cloud layer."
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Longitude (deg) where the LOS vector intersects the cloud layer."
      },
      "cloudLayerIntersection_alt": {
-      "title": "LOS Cloud Intersection Altitude(km)",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/NonNegativeDistance"
-       }
-      ],
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Altitude(km) where the LOS vector intersects the cloud layer."
+      "title": "LOS Cloud Intersection Altitude",
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Altitude (km) where the LOS vector intersects the cloud layer."
      }
     },
     "additionalProperties": false,
-    "description": "Class to inherit from when defining schema for data in a \"data side\" relationship field.",
+    "description": "Inherit from this class to type fields on a `Metamodel`, `Block` or `FieldSchema`",
     "privateProperties": {}
+   },
+   "CloudFractionParameters": {
+    "title": "CloudFractionParameters",
+    "enum": [
+     "IS_CLOUD_BLOCKED",
+     "ACTUAL_CLOUD_FRACTION",
+     "PREDICTED_CLOUD_FRACTION",
+     "CLOUD_LAYER_INTERSECTION_LAT",
+     "CLOUD_LAYER_INTERSECTION_LON",
+     "CLOUD_LAYER_INTERSECTION_ALT"
+    ],
+    "description": "An enumeration."
    },
    "CombinationalLogic": {
     "title": "CombinationalLogic",
@@ -5029,14 +4845,16 @@
       "type": "array",
       "items": {},
       "description": "Relationship to one or more `Routine` blocks. Inverse key: `Routine.parentRoutines`. On delete: `set-none` (remove ID of referenced block from this relationship field).",
-      "default": []
+      "default": [],
+      "derived": true
      },
      "parentRoutines": {
       "title": "IDs of Associated Routine Blocks",
       "type": "array",
       "items": {},
       "description": "Relationship to one or more `Routine` blocks. Inverse key: `Routine.subroutines`. On delete: `set-none` (remove ID of referenced block from this relationship field).",
-      "default": []
+      "default": [],
+      "derived": true
      },
      "activeSubroutine": {
       "title": "ID of Associated Routine Block",
@@ -5929,8 +5747,8 @@
     "description": "A Cooler Block",
     "privateProperties": {}
    },
-   "CooperativeTransmitInterface": {
-    "title": "CooperativeTransmitInterface",
+   "CooperativeLineOfSightTransmitInterface": {
+    "title": "CooperativeLineOfSightTransmitInterface",
     "required": [
      "name",
      "onBitRate",
@@ -5999,59 +5817,59 @@
       "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
       "default": 0
      },
-     "targetInFov": {
-      "title": "One-Way Field of View Access",
-      "type": "boolean",
-      "description": "True if the target is in the Field of View and not eclipsed by the Earth or moon. Otherwise, false.",
-      "default": false
-     },
-     "linkLatency": {
-      "title": "Point to Point Link Latency [s]",
-      "type": "number",
-      "description": "The link latency is the light time it takes to communicate with the target. This time elapses between the signal being sent and received."
-     },
      "linkTarget": {
       "title": "ID of Associated Target Block",
       "type": "string",
       "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "modem": {
-      "title": "ID of Associated Modem Block",
-      "type": "string",
-      "description": "Relationship to a single `Modem` block. Inverse key: `Modem.externalInterfaces`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "directedEnergyDevice": {
-      "title": "ID of Associated DirectedEnergyDevice Block",
-      "type": "string",
-      "description": "Relationship to a single `DirectedEnergyDevice` block. Inverse key: `DirectedEnergyDevice.externalInterfaces`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
      "linkTargetGroup": {
       "title": "ID of Associated TargetGroup Block",
       "type": "string",
       "description": "Relationship to zero or one `TargetGroup` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
-     "canLink": {
-      "title": "Link Availability Status",
-      "type": "boolean",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this `ExternalDataInterface` can link to its `linkTarget`, false otherwise.",
-      "default": false
+     "modem": {
+      "title": "ID of Associated Modem Block",
+      "type": "string",
+      "description": "Relationship to a single `Modem` block. Inverse key: `Modem.externalInterfaces`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
      "activeLinkTarget": {
       "title": "ID of Associated Target Block",
       "type": "string",
       "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
+     "canLink": {
+      "title": "Link Availability Status",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this `ExternalDataInterface` can link to a target, false otherwise.",
+      "default": false
+     },
+     "linkLatency": {
+      "title": "Point to Point Link Latency [s]",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>The link latency is the light time it takes to communicate with the target. This time elapses between the signal being sent and received."
+     },
+     "targetInFov": {
+      "title": "One-Way Field of View Access",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True if the target is in the Field of View and not eclipsed by the Earth or moon. Otherwise, false.",
+      "default": false
+     },
+     "directedEnergyDevice": {
+      "title": "ID of Associated DirectedEnergyDevice Block",
+      "type": "string",
+      "description": "Relationship to a single `DirectedEnergyDevice` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
      "type": {
       "title": "Type",
       "enum": [
-       "CooperativeTransmitInterface"
+       "CooperativeLineOfSightTransmitInterface"
       ],
       "type": "string",
       "description": "The \"type\" (class name) of the Block"
      }
     },
     "additionalProperties": false,
-    "description": "A CooperativeTransmitInterface Block",
+    "description": "Generic data interface for transmit between two entities requiring a direct line of sight. This interface\nassumes communication is possible if both parties are active and are mutually in the field of view of their\ncommunication devices.\n    ",
     "privateProperties": {}
    },
    "CopyValueTo": {
@@ -6831,20 +6649,20 @@
     "title": "Distance",
     "type": "object",
     "properties": {
-     "cm": {
-      "title": "Cm",
-      "type": "number"
-     },
-     "m": {
-      "title": "M",
+     "km": {
+      "title": "Km",
       "type": "number"
      },
      "mm": {
       "title": "Mm",
       "type": "number"
      },
-     "km": {
-      "title": "Km",
+     "cm": {
+      "title": "Cm",
+      "type": "number"
+     },
+     "m": {
+      "title": "M",
       "type": "number"
      }
     },
@@ -6898,20 +6716,20 @@
     "title": "Duration",
     "type": "object",
     "properties": {
-     "day": {
-      "title": "Day",
-      "type": "number"
-     },
-     "s": {
-      "title": "S",
-      "type": "number"
-     },
      "min": {
       "title": "Min",
       "type": "number"
      },
+     "day": {
+      "title": "Day",
+      "type": "number"
+     },
      "hour": {
       "title": "Hour",
+      "type": "number"
+     },
+     "s": {
+      "title": "S",
       "type": "number"
      }
     },
@@ -7737,14 +7555,16 @@
       "type": "array",
       "items": {},
       "description": "Relationship to one or more `Routine` blocks. Inverse key: `Routine.parentRoutines`. On delete: `set-none` (remove ID of referenced block from this relationship field).",
-      "default": []
+      "default": [],
+      "derived": true
      },
      "parentRoutines": {
       "title": "IDs of Associated Routine Blocks",
       "type": "array",
       "items": {},
       "description": "Relationship to one or more `Routine` blocks. Inverse key: `Routine.subroutines`. On delete: `set-none` (remove ID of referenced block from this relationship field).",
-      "default": []
+      "default": [],
+      "derived": true
      },
      "activeSubroutine": {
       "title": "ID of Associated Routine Block",
@@ -7855,14 +7675,16 @@
       "type": "array",
       "items": {},
       "description": "Relationship to one or more `Routine` blocks. Inverse key: `Routine.parentRoutines`. On delete: `set-none` (remove ID of referenced block from this relationship field).",
-      "default": []
+      "default": [],
+      "derived": true
      },
      "parentRoutines": {
       "title": "IDs of Associated Routine Blocks",
       "type": "array",
       "items": {},
       "description": "Relationship to one or more `Routine` blocks. Inverse key: `Routine.subroutines`. On delete: `set-none` (remove ID of referenced block from this relationship field).",
-      "default": []
+      "default": [],
+      "derived": true
      },
      "activeSubroutine": {
       "title": "ID of Associated Routine Block",
@@ -8230,6 +8052,15 @@
     "title": "FrameVector",
     "type": "object",
     "properties": {
+     "ecef": {
+      "title": "Ecef",
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
      "body": {
       "title": "Body",
       "maxItems": 3,
@@ -8241,15 +8072,6 @@
      },
      "eci": {
       "title": "Eci",
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array",
-      "items": {
-       "type": "number"
-      }
-     },
-     "ecef": {
-      "title": "Ecef",
       "maxItems": 3,
       "minItems": 3,
       "type": "array",
@@ -9072,66 +8894,6 @@
     "description": "A GenericOdAlgorithm Block",
     "privateProperties": {}
    },
-   "GeoAreaDateTimeGroup": {
-    "title": "GeoAreaDateTimeGroup",
-    "required": [
-     "name"
-    ],
-    "type": "object",
-    "properties": {
-     "id": {
-      "title": "Id",
-      "type": "string"
-     },
-     "disabled": {
-      "title": "Disabled",
-      "type": "boolean",
-      "default": false,
-      "original": "do not override this field"
-     },
-     "name": {
-      "title": "Name",
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
-     },
-     "dataset": {
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/GeoAreaDatetimeDataSetSource"
-       }
-      ],
-      "default": 4
-     },
-     "geoAreaDatetimeTargetGroup": {
-      "title": "ID of Associated TargetGroup Block",
-      "type": "string",
-      "description": "Relationship to a single `TargetGroup` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "type": {
-      "title": "Type",
-      "enum": [
-       "GeoAreaDateTimeGroup"
-      ],
-      "type": "string",
-      "description": "The \"type\" (class name) of the Block"
-     }
-    },
-    "additionalProperties": false,
-    "description": "A GeoAreaDateTimeGroup Block",
-    "privateProperties": {}
-   },
-   "GeoAreaDatetimeDataSetSource": {
-    "title": "GeoAreaDatetimeDataSetSource",
-    "enum": [
-     1,
-     2,
-     3,
-     4
-    ],
-    "type": "integer",
-    "description": "An enumeration."
-   },
    "GeostationaryReferenceOrbit": {
     "title": "GeostationaryReferenceOrbit",
     "required": [
@@ -9364,6 +9126,120 @@
     "description": "A GpsAlgorithm Block",
     "privateProperties": {}
    },
+   "GroundReceiveInterface": {
+    "title": "GroundReceiveInterface",
+    "required": [
+     "name",
+     "onBitRate",
+     "alwaysActive"
+    ],
+    "type": "object",
+    "properties": {
+     "id": {
+      "title": "Id",
+      "type": "string"
+     },
+     "disabled": {
+      "title": "Disabled",
+      "type": "boolean",
+      "default": false,
+      "original": "do not override this field"
+     },
+     "isActive": {
+      "title": "Activity Status",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this `Mode` is active, false otherwise.",
+      "default": false
+     },
+     "routines": {
+      "title": "IDs of Associated Routine Blocks",
+      "type": "array",
+      "items": {},
+      "description": "Relationship to one or more `Routine` blocks. On delete: `set-none` (remove ID of referenced block from this relationship field).",
+      "default": []
+     },
+     "name": {
+      "title": "Name",
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string"
+     },
+     "onBitRate": {
+      "title": "Maximum Bit Rate [bps]",
+      "exclusiveMinimum": 0.0,
+      "type": "number"
+     },
+     "alwaysActive": {
+      "title": "Always Active Toggle",
+      "type": "boolean",
+      "description": "Toggles the interface to be always active. If false, interface active status will be dictated by theassociated `Routine`s (via `routine`)."
+     },
+     "dataType": {
+      "title": "ID of Associated DataType Block",
+      "type": "string",
+      "description": "Relationship to a single `DataType` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "source": {
+      "title": "ID of Associated Component Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Component` blocks. Inverse key: `Component.dataSinks`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "sink": {
+      "title": "ID of Associated Modem Block",
+      "type": "string",
+      "description": "Relationship to a single `Modem` block. Inverse key: `Modem.dataSources`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "bitRate": {
+      "title": "Bit Rate [bps]",
+      "minimum": 0.0,
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": 0
+     },
+     "linkTarget": {
+      "title": "ID of Associated GroundTarget Block",
+      "type": "string",
+      "description": "Relationship to zero or one `GroundTarget` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "linkTargetGroup": {
+      "title": "ID of Associated TargetGroup Block",
+      "type": "string",
+      "description": "Relationship to zero or one `TargetGroup` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "modem": {
+      "title": "ID of Associated Modem Block",
+      "type": "string",
+      "description": "Relationship to a single `Modem` block. Inverse key: `Modem.externalInterfaces`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "activeLinkTarget": {
+      "title": "ID of Associated Target Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "canLink": {
+      "title": "Link Availability Status",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this `ExternalDataInterface` can link to a target, false otherwise.",
+      "default": false
+     },
+     "linkLatency": {
+      "title": "Point to Point Link Latency [s]",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>The link latency is the light time it takes to communicate with the target. This time elapses between the signal being sent and received."
+     },
+     "type": {
+      "title": "Type",
+      "enum": [
+       "GroundReceiveInterface"
+      ],
+      "type": "string",
+      "description": "The \"type\" (class name) of the Block"
+     }
+    },
+    "additionalProperties": false,
+    "description": "Generic data interface for communication between two entities on Earth. This interface always assumes\ncommunication is possible if both parties are active, without requiring a direct line of sight.\n\nTo receive data, the transmitter must have a corresponding active transmit interface with a matching\ndata type.\n    ",
+    "privateProperties": {}
+   },
    "GroundTarget": {
     "title": "GroundTarget",
     "required": [
@@ -9498,6 +9374,15 @@
       ],
       "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
      },
+     "cloudConfig": {
+      "title": "Cloud Configuration",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/CloudConfig"
+       }
+      ],
+      "description": "Configuration for cloud obstruction calculations."
+     },
      "solarAz": {
       "title": "Solar Azimuth",
       "allOf": [
@@ -9516,6 +9401,24 @@
       ],
       "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
      },
+     "cloudData": {
+      "title": "Cloud Fraction Data",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/CloudFractionData"
+       }
+      ],
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Dynamic cloud coverage status."
+     },
+     "rainData": {
+      "title": "Rain Data",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/RainData"
+       }
+      ],
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Dynamic precipitation status of the target."
+     },
      "type": {
       "title": "Type",
       "enum": [
@@ -9527,6 +9430,120 @@
     },
     "additionalProperties": false,
     "description": "A GroundTarget Block",
+    "privateProperties": {}
+   },
+   "GroundTransmitInterface": {
+    "title": "GroundTransmitInterface",
+    "required": [
+     "name",
+     "onBitRate",
+     "alwaysActive"
+    ],
+    "type": "object",
+    "properties": {
+     "id": {
+      "title": "Id",
+      "type": "string"
+     },
+     "disabled": {
+      "title": "Disabled",
+      "type": "boolean",
+      "default": false,
+      "original": "do not override this field"
+     },
+     "isActive": {
+      "title": "Activity Status",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this `Mode` is active, false otherwise.",
+      "default": false
+     },
+     "routines": {
+      "title": "IDs of Associated Routine Blocks",
+      "type": "array",
+      "items": {},
+      "description": "Relationship to one or more `Routine` blocks. On delete: `set-none` (remove ID of referenced block from this relationship field).",
+      "default": []
+     },
+     "name": {
+      "title": "Name",
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string"
+     },
+     "onBitRate": {
+      "title": "Maximum Bit Rate [bps]",
+      "exclusiveMinimum": 0.0,
+      "type": "number"
+     },
+     "alwaysActive": {
+      "title": "Always Active Toggle",
+      "type": "boolean",
+      "description": "Toggles the interface to be always active. If false, interface active status will be dictated by theassociated `Routine`s (via `routine`)."
+     },
+     "dataType": {
+      "title": "ID of Associated DataType Block",
+      "type": "string",
+      "description": "Relationship to a single `DataType` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "source": {
+      "title": "ID of Associated Modem Block",
+      "type": "string",
+      "description": "Relationship to a single `Modem` block. Inverse key: `Modem.dataSinks`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "sink": {
+      "title": "ID of Associated Component Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Component` blocks. Inverse key: `Component.dataSources`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "bitRate": {
+      "title": "Bit Rate [bps]",
+      "minimum": 0.0,
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": 0
+     },
+     "linkTarget": {
+      "title": "ID of Associated GroundTarget Block",
+      "type": "string",
+      "description": "Relationship to zero or one `GroundTarget` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "linkTargetGroup": {
+      "title": "ID of Associated TargetGroup Block",
+      "type": "string",
+      "description": "Relationship to zero or one `TargetGroup` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "modem": {
+      "title": "ID of Associated Modem Block",
+      "type": "string",
+      "description": "Relationship to a single `Modem` block. Inverse key: `Modem.externalInterfaces`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "activeLinkTarget": {
+      "title": "ID of Associated Target Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "canLink": {
+      "title": "Link Availability Status",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this `ExternalDataInterface` can link to a target, false otherwise.",
+      "default": false
+     },
+     "linkLatency": {
+      "title": "Point to Point Link Latency [s]",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>The link latency is the light time it takes to communicate with the target. This time elapses between the signal being sent and received."
+     },
+     "type": {
+      "title": "Type",
+      "enum": [
+       "GroundTransmitInterface"
+      ],
+      "type": "string",
+      "description": "The \"type\" (class name) of the Block"
+     }
+    },
+    "additionalProperties": false,
+    "description": "Generic data interface for communication between two entities on Earth. This interface always assumes\ncommunication is possible if both parties are active, without requiring a direct line of sight.\n\nTo transmit data, the receiver must have a corresponding active receive interface with a matching\ndata type.\n    ",
     "privateProperties": {}
    },
    "GroupMappingRelData": {
@@ -10076,7 +10093,7 @@
      }
     },
     "additionalProperties": false,
-    "description": "A InternalDataInterface Block",
+    "description": "Generic data interface for communication between two entities on the same agent. Data flows when the data interface\nis active and there is sufficient storage or exit bandwidth at the destination component to receive the data.\n    ",
     "privateProperties": {}
    },
    "IssReferenceOrbit": {
@@ -10306,13 +10323,6 @@
       "type": "string",
       "description": "Relationship to a single `FieldOfView` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
-     "externalInterfaces": {
-      "title": "IDs of Associated ExternalDataInterface Blocks",
-      "type": "array",
-      "items": {},
-      "description": "Relationship to one or more `ExternalDataInterface` blocks. Inverse key: `ExternalDataInterface.directedEnergyDevice`. On delete: `set-none` (remove ID of referenced block from this relationship field).",
-      "default": []
-     },
      "type": {
       "title": "Type",
       "enum": [
@@ -10343,6 +10353,131 @@
     },
     "additionalProperties": false,
     "description": "Inherit from this class to type fields on a `Metamodel`, `Block` or `FieldSchema`",
+    "privateProperties": {}
+   },
+   "LineOfSightReceiveInterface": {
+    "title": "LineOfSightReceiveInterface",
+    "required": [
+     "name",
+     "onBitRate",
+     "alwaysActive"
+    ],
+    "type": "object",
+    "properties": {
+     "id": {
+      "title": "Id",
+      "type": "string"
+     },
+     "disabled": {
+      "title": "Disabled",
+      "type": "boolean",
+      "default": false,
+      "original": "do not override this field"
+     },
+     "isActive": {
+      "title": "Activity Status",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this `Mode` is active, false otherwise.",
+      "default": false
+     },
+     "routines": {
+      "title": "IDs of Associated Routine Blocks",
+      "type": "array",
+      "items": {},
+      "description": "Relationship to one or more `Routine` blocks. On delete: `set-none` (remove ID of referenced block from this relationship field).",
+      "default": []
+     },
+     "name": {
+      "title": "Name",
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string"
+     },
+     "onBitRate": {
+      "title": "Maximum Bit Rate [bps]",
+      "exclusiveMinimum": 0.0,
+      "type": "number"
+     },
+     "alwaysActive": {
+      "title": "Always Active Toggle",
+      "type": "boolean",
+      "description": "Toggles the interface to be always active. If false, interface active status will be dictated by theassociated `Routine`s (via `routine`)."
+     },
+     "dataType": {
+      "title": "ID of Associated DataType Block",
+      "type": "string",
+      "description": "Relationship to a single `DataType` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "source": {
+      "title": "ID of Associated Component Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Component` blocks. Inverse key: `Component.dataSinks`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "sink": {
+      "title": "ID of Associated Modem Block",
+      "type": "string",
+      "description": "Relationship to a single `Modem` block. Inverse key: `Modem.dataSources`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "bitRate": {
+      "title": "Bit Rate [bps]",
+      "minimum": 0.0,
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": 0
+     },
+     "linkTarget": {
+      "title": "ID of Associated Target Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "linkTargetGroup": {
+      "title": "ID of Associated TargetGroup Block",
+      "type": "string",
+      "description": "Relationship to zero or one `TargetGroup` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "modem": {
+      "title": "ID of Associated Modem Block",
+      "type": "string",
+      "description": "Relationship to a single `Modem` block. Inverse key: `Modem.externalInterfaces`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "activeLinkTarget": {
+      "title": "ID of Associated Target Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "canLink": {
+      "title": "Link Availability Status",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this `ExternalDataInterface` can link to a target, false otherwise.",
+      "default": false
+     },
+     "linkLatency": {
+      "title": "Point to Point Link Latency [s]",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>The link latency is the light time it takes to communicate with the target. This time elapses between the signal being sent and received."
+     },
+     "targetInFov": {
+      "title": "One-Way Field of View Access",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True if the target is in the Field of View and not eclipsed by the Earth or moon. Otherwise, false.",
+      "default": false
+     },
+     "directedEnergyDevice": {
+      "title": "ID of Associated DirectedEnergyDevice Block",
+      "type": "string",
+      "description": "Relationship to a single `DirectedEnergyDevice` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "type": {
+      "title": "Type",
+      "enum": [
+       "LineOfSightReceiveInterface"
+      ],
+      "type": "string",
+      "description": "The \"type\" (class name) of the Block"
+     }
+    },
+    "additionalProperties": false,
+    "description": "Generic data interface for receive between two entities requiring a direct line of sight. This interface\nassumes communication is possible if it is active and has the target in the field of view of its communication\ndevice. Data flow across this interface is controlled by the corresponding transmitter.\n    ",
     "privateProperties": {}
    },
    "LineSpec": {
@@ -10871,7 +11006,7 @@
       "title": "Priority",
       "minimum": 0.0,
       "type": "integer",
-      "description": "Higher values have higher priority. Default op modes have priorty == `0`."
+      "description": "Higher values have higher priority. Default op modes have priority == `0`."
      },
      "minOccurrenceDuration": {
       "title": "Min Occurrence Duration [min]",
@@ -12951,10 +13086,6 @@
     "title": "NonNegativeAngularRate",
     "type": "object",
     "properties": {
-     "rpm": {
-      "title": "Rpm",
-      "type": "number"
-     },
      "rad/s": {
       "title": "Rad/S",
       "minimum": 0.0,
@@ -12962,6 +13093,10 @@
      },
      "deg/s": {
       "title": "Deg/S",
+      "type": "number"
+     },
+     "rpm": {
+      "title": "Rpm",
       "type": "number"
      }
     },
@@ -12973,21 +13108,21 @@
     "title": "NonNegativeDistance",
     "type": "object",
     "properties": {
-     "cm": {
-      "title": "Cm",
-      "type": "number"
-     },
-     "m": {
-      "title": "M",
+     "km": {
+      "title": "Km",
+      "minimum": 0.0,
       "type": "number"
      },
      "mm": {
       "title": "Mm",
       "type": "number"
      },
-     "km": {
-      "title": "Km",
-      "minimum": 0.0,
+     "cm": {
+      "title": "Cm",
+      "type": "number"
+     },
+     "m": {
+      "title": "M",
       "type": "number"
      }
     },
@@ -12999,21 +13134,21 @@
     "title": "NonNegativeDuration",
     "type": "object",
     "properties": {
+     "min": {
+      "title": "Min",
+      "type": "number"
+     },
      "day": {
       "title": "Day",
       "minimum": 0.0,
       "type": "number"
      },
-     "s": {
-      "title": "S",
-      "type": "number"
-     },
-     "min": {
-      "title": "Min",
-      "type": "number"
-     },
      "hour": {
       "title": "Hour",
+      "type": "number"
+     },
+     "s": {
+      "title": "S",
       "type": "number"
      }
     },
@@ -13025,21 +13160,21 @@
     "title": "NonNegativeSpeed",
     "type": "object",
     "properties": {
-     "km/s": {
-      "title": "Km/S",
-      "minimum": 0.0,
+     "m/s": {
+      "title": "M/S",
       "type": "number"
      },
      "cm/s": {
       "title": "Cm/S",
       "type": "number"
      },
-     "mm/s": {
-      "title": "Mm/S",
+     "km/s": {
+      "title": "Km/S",
+      "minimum": 0.0,
       "type": "number"
      },
-     "m/s": {
-      "title": "M/S",
+     "mm/s": {
+      "title": "Mm/S",
       "type": "number"
      }
     },
@@ -13644,6 +13779,131 @@
     "description": "Inherit from this class to type fields on a `Metamodel`, `Block` or `FieldSchema`",
     "privateProperties": {}
    },
+   "PassiveLineOfSightTransmitInterface": {
+    "title": "PassiveLineOfSightTransmitInterface",
+    "required": [
+     "name",
+     "onBitRate",
+     "alwaysActive"
+    ],
+    "type": "object",
+    "properties": {
+     "id": {
+      "title": "Id",
+      "type": "string"
+     },
+     "disabled": {
+      "title": "Disabled",
+      "type": "boolean",
+      "default": false,
+      "original": "do not override this field"
+     },
+     "isActive": {
+      "title": "Activity Status",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this `Mode` is active, false otherwise.",
+      "default": false
+     },
+     "routines": {
+      "title": "IDs of Associated Routine Blocks",
+      "type": "array",
+      "items": {},
+      "description": "Relationship to one or more `Routine` blocks. On delete: `set-none` (remove ID of referenced block from this relationship field).",
+      "default": []
+     },
+     "name": {
+      "title": "Name",
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string"
+     },
+     "onBitRate": {
+      "title": "Maximum Bit Rate [bps]",
+      "exclusiveMinimum": 0.0,
+      "type": "number"
+     },
+     "alwaysActive": {
+      "title": "Always Active Toggle",
+      "type": "boolean",
+      "description": "Toggles the interface to be always active. If false, interface active status will be dictated by theassociated `Routine`s (via `routine`)."
+     },
+     "dataType": {
+      "title": "ID of Associated DataType Block",
+      "type": "string",
+      "description": "Relationship to a single `DataType` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "source": {
+      "title": "ID of Associated Modem Block",
+      "type": "string",
+      "description": "Relationship to a single `Modem` block. Inverse key: `Modem.dataSinks`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "sink": {
+      "title": "ID of Associated Component Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Component` blocks. Inverse key: `Component.dataSources`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "bitRate": {
+      "title": "Bit Rate [bps]",
+      "minimum": 0.0,
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": 0
+     },
+     "linkTarget": {
+      "title": "ID of Associated Target Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "linkTargetGroup": {
+      "title": "ID of Associated TargetGroup Block",
+      "type": "string",
+      "description": "Relationship to zero or one `TargetGroup` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "modem": {
+      "title": "ID of Associated Modem Block",
+      "type": "string",
+      "description": "Relationship to a single `Modem` block. Inverse key: `Modem.externalInterfaces`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "activeLinkTarget": {
+      "title": "ID of Associated Target Block",
+      "type": "string",
+      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "canLink": {
+      "title": "Link Availability Status",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this `ExternalDataInterface` can link to a target, false otherwise.",
+      "default": false
+     },
+     "linkLatency": {
+      "title": "Point to Point Link Latency [s]",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>The link latency is the light time it takes to communicate with the target. This time elapses between the signal being sent and received."
+     },
+     "targetInFov": {
+      "title": "One-Way Field of View Access",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True if the target is in the Field of View and not eclipsed by the Earth or moon. Otherwise, false.",
+      "default": false
+     },
+     "directedEnergyDevice": {
+      "title": "ID of Associated DirectedEnergyDevice Block",
+      "type": "string",
+      "description": "Relationship to a single `DirectedEnergyDevice` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "type": {
+      "title": "Type",
+      "enum": [
+       "PassiveLineOfSightTransmitInterface"
+      ],
+      "type": "string",
+      "description": "The \"type\" (class name) of the Block"
+     }
+    },
+    "additionalProperties": false,
+    "description": "Generic data interface for transmit between two entities requiring a direct line of sight. This interface\nassumes communication is possible if it is active and has the target in the field of view of its communication\ndevice. If the target is not ready to receive, the data will be lost.\n    ",
+    "privateProperties": {}
+   },
    "PassivePointingMode": {
     "title": "PassivePointingMode",
     "required": [
@@ -13757,131 +14017,6 @@
     },
     "additionalProperties": false,
     "description": "A PassivePointingMode Block",
-    "privateProperties": {}
-   },
-   "PassiveTransmitInterface": {
-    "title": "PassiveTransmitInterface",
-    "required": [
-     "name",
-     "onBitRate",
-     "alwaysActive"
-    ],
-    "type": "object",
-    "properties": {
-     "id": {
-      "title": "Id",
-      "type": "string"
-     },
-     "disabled": {
-      "title": "Disabled",
-      "type": "boolean",
-      "default": false,
-      "original": "do not override this field"
-     },
-     "isActive": {
-      "title": "Activity Status",
-      "type": "boolean",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this `Mode` is active, false otherwise.",
-      "default": false
-     },
-     "routines": {
-      "title": "IDs of Associated Routine Blocks",
-      "type": "array",
-      "items": {},
-      "description": "Relationship to one or more `Routine` blocks. On delete: `set-none` (remove ID of referenced block from this relationship field).",
-      "default": []
-     },
-     "name": {
-      "title": "Name",
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
-     },
-     "onBitRate": {
-      "title": "Maximum Bit Rate [bps]",
-      "exclusiveMinimum": 0.0,
-      "type": "number"
-     },
-     "alwaysActive": {
-      "title": "Always Active Toggle",
-      "type": "boolean",
-      "description": "Toggles the interface to be always active. If false, interface active status will be dictated by theassociated `Routine`s (via `routine`)."
-     },
-     "dataType": {
-      "title": "ID of Associated DataType Block",
-      "type": "string",
-      "description": "Relationship to a single `DataType` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "source": {
-      "title": "ID of Associated Modem Block",
-      "type": "string",
-      "description": "Relationship to a single `Modem` block. Inverse key: `Modem.dataSinks`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "sink": {
-      "title": "ID of Associated Component Block",
-      "type": "string",
-      "description": "Relationship to zero or one `Component` blocks. Inverse key: `Component.dataSources`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "bitRate": {
-      "title": "Bit Rate [bps]",
-      "minimum": 0.0,
-      "type": "number",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": 0
-     },
-     "targetInFov": {
-      "title": "One-Way Field of View Access",
-      "type": "boolean",
-      "description": "True if the target is in the Field of View and not eclipsed by the Earth or moon. Otherwise, false.",
-      "default": false
-     },
-     "linkLatency": {
-      "title": "Point to Point Link Latency [s]",
-      "type": "number",
-      "description": "The link latency is the light time it takes to communicate with the target. This time elapses between the signal being sent and received."
-     },
-     "linkTarget": {
-      "title": "ID of Associated Target Block",
-      "type": "string",
-      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "modem": {
-      "title": "ID of Associated Modem Block",
-      "type": "string",
-      "description": "Relationship to a single `Modem` block. Inverse key: `Modem.externalInterfaces`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "directedEnergyDevice": {
-      "title": "ID of Associated DirectedEnergyDevice Block",
-      "type": "string",
-      "description": "Relationship to a single `DirectedEnergyDevice` block. Inverse key: `DirectedEnergyDevice.externalInterfaces`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "linkTargetGroup": {
-      "title": "ID of Associated TargetGroup Block",
-      "type": "string",
-      "description": "Relationship to zero or one `TargetGroup` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "canLink": {
-      "title": "Link Availability Status",
-      "type": "boolean",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this `ExternalDataInterface` can link to its `linkTarget`, false otherwise.",
-      "default": false
-     },
-     "activeLinkTarget": {
-      "title": "ID of Associated Target Block",
-      "type": "string",
-      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "type": {
-      "title": "Type",
-      "enum": [
-       "PassiveTransmitInterface"
-      ],
-      "type": "string",
-      "description": "The \"type\" (class name) of the Block"
-     }
-    },
-    "additionalProperties": false,
-    "description": "A PassiveTransmitInterface Block",
     "privateProperties": {}
    },
    "PerRoundExternalState": {
@@ -15067,6 +15202,24 @@
     "title": "Position",
     "type": "object",
     "properties": {
+     "llaDeg": {
+      "title": "Lladeg",
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
+     "gcLlaDeg": {
+      "title": "Gclladeg",
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
      "eci": {
       "title": "Eci",
       "maxItems": 3,
@@ -15085,24 +15238,6 @@
        "type": "number"
       }
      },
-     "gcLlaDeg": {
-      "title": "Gclladeg",
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array",
-      "items": {
-       "type": "number"
-      }
-     },
-     "gcLla": {
-      "title": "Gclla",
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array",
-      "items": {
-       "type": "number"
-      }
-     },
      "lla": {
       "title": "Lla",
       "maxItems": 3,
@@ -15112,8 +15247,8 @@
        "type": "number"
       }
      },
-     "llaDeg": {
-      "title": "Lladeg",
+     "gcLla": {
+      "title": "Gclla",
       "maxItems": 3,
       "minItems": 3,
       "type": "array",
@@ -15406,10 +15541,6 @@
     "title": "PositiveAngularRate",
     "type": "object",
     "properties": {
-     "rpm": {
-      "title": "Rpm",
-      "type": "number"
-     },
      "rad/s": {
       "title": "Rad/S",
       "exclusiveMinimum": 0.0,
@@ -15417,6 +15548,10 @@
      },
      "deg/s": {
       "title": "Deg/S",
+      "type": "number"
+     },
+     "rpm": {
+      "title": "Rpm",
       "type": "number"
      }
     },
@@ -15428,21 +15563,21 @@
     "title": "PositiveDistance",
     "type": "object",
     "properties": {
-     "cm": {
-      "title": "Cm",
-      "type": "number"
-     },
-     "m": {
-      "title": "M",
+     "km": {
+      "title": "Km",
+      "exclusiveMinimum": 0.0,
       "type": "number"
      },
      "mm": {
       "title": "Mm",
       "type": "number"
      },
-     "km": {
-      "title": "Km",
-      "exclusiveMinimum": 0.0,
+     "cm": {
+      "title": "Cm",
+      "type": "number"
+     },
+     "m": {
+      "title": "M",
       "type": "number"
      }
     },
@@ -15454,21 +15589,21 @@
     "title": "PositiveDuration",
     "type": "object",
     "properties": {
+     "min": {
+      "title": "Min",
+      "type": "number"
+     },
      "day": {
       "title": "Day",
       "exclusiveMinimum": 0.0,
       "type": "number"
      },
-     "s": {
-      "title": "S",
-      "type": "number"
-     },
-     "min": {
-      "title": "Min",
-      "type": "number"
-     },
      "hour": {
       "title": "Hour",
+      "type": "number"
+     },
+     "s": {
+      "title": "S",
       "type": "number"
      }
     },
@@ -16341,17 +16476,8 @@
     "title": "Quaternion",
     "type": "object",
     "properties": {
-     "ecef_body": {
-      "title": "Ecef Body",
-      "maxItems": 4,
-      "minItems": 4,
-      "type": "array",
-      "items": {
-       "type": "number"
-      }
-     },
-     "eci_body": {
-      "title": "Eci Body",
+     "body_ecef": {
+      "title": "Body Ecef",
       "maxItems": 4,
       "minItems": 4,
       "type": "array",
@@ -16368,8 +16494,17 @@
        "type": "number"
       }
      },
-     "body_ecef": {
-      "title": "Body Ecef",
+     "eci_body": {
+      "title": "Eci Body",
+      "maxItems": 4,
+      "minItems": 4,
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
+     "ecef_body": {
+      "title": "Ecef Body",
       "maxItems": 4,
       "minItems": 4,
       "type": "array",
@@ -16381,6 +16516,35 @@
     "additionalProperties": false,
     "description": "Inherit from this class to type fields on a `Metamodel`, `Block` or `FieldSchema`",
     "privateProperties": {}
+   },
+   "RainData": {
+    "title": "RainData",
+    "type": "object",
+    "properties": {
+     "rainProbability": {
+      "title": "Rain Probability",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Climatological probability of precipitation at a given location and time."
+     },
+     "isRaining": {
+      "title": "Is Raining",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Boolean flag indicating if it is precipitating at the given location and time."
+     }
+    },
+    "additionalProperties": false,
+    "description": "Inherit from this class to type fields on a `Metamodel`, `Block` or `FieldSchema`",
+    "privateProperties": {}
+   },
+   "RainParameters": {
+    "title": "RainParameters",
+    "enum": [
+     "IS_RAINING",
+     "RAIN_PROBABILITY"
+    ],
+    "description": "An enumeration."
    },
    "Randrange": {
     "title": "Randrange",
@@ -16798,131 +16962,6 @@
     "description": "A ReactionWheel Block",
     "privateProperties": {}
    },
-   "ReceiveInterface": {
-    "title": "ReceiveInterface",
-    "required": [
-     "name",
-     "onBitRate",
-     "alwaysActive"
-    ],
-    "type": "object",
-    "properties": {
-     "id": {
-      "title": "Id",
-      "type": "string"
-     },
-     "disabled": {
-      "title": "Disabled",
-      "type": "boolean",
-      "default": false,
-      "original": "do not override this field"
-     },
-     "isActive": {
-      "title": "Activity Status",
-      "type": "boolean",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this `Mode` is active, false otherwise.",
-      "default": false
-     },
-     "routines": {
-      "title": "IDs of Associated Routine Blocks",
-      "type": "array",
-      "items": {},
-      "description": "Relationship to one or more `Routine` blocks. On delete: `set-none` (remove ID of referenced block from this relationship field).",
-      "default": []
-     },
-     "name": {
-      "title": "Name",
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
-     },
-     "onBitRate": {
-      "title": "Maximum Bit Rate [bps]",
-      "exclusiveMinimum": 0.0,
-      "type": "number"
-     },
-     "alwaysActive": {
-      "title": "Always Active Toggle",
-      "type": "boolean",
-      "description": "Toggles the interface to be always active. If false, interface active status will be dictated by theassociated `Routine`s (via `routine`)."
-     },
-     "dataType": {
-      "title": "ID of Associated DataType Block",
-      "type": "string",
-      "description": "Relationship to a single `DataType` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "source": {
-      "title": "ID of Associated Component Block",
-      "type": "string",
-      "description": "Relationship to zero or one `Component` blocks. Inverse key: `Component.dataSinks`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "sink": {
-      "title": "ID of Associated Modem Block",
-      "type": "string",
-      "description": "Relationship to a single `Modem` block. Inverse key: `Modem.dataSources`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "bitRate": {
-      "title": "Bit Rate [bps]",
-      "minimum": 0.0,
-      "type": "number",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": 0
-     },
-     "targetInFov": {
-      "title": "One-Way Field of View Access",
-      "type": "boolean",
-      "description": "True if the target is in the Field of View and not eclipsed by the Earth or moon. Otherwise, false.",
-      "default": false
-     },
-     "linkLatency": {
-      "title": "Point to Point Link Latency [s]",
-      "type": "number",
-      "description": "The link latency is the light time it takes to communicate with the target. This time elapses between the signal being sent and received."
-     },
-     "linkTarget": {
-      "title": "ID of Associated Target Block",
-      "type": "string",
-      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "modem": {
-      "title": "ID of Associated Modem Block",
-      "type": "string",
-      "description": "Relationship to a single `Modem` block. Inverse key: `Modem.externalInterfaces`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "directedEnergyDevice": {
-      "title": "ID of Associated DirectedEnergyDevice Block",
-      "type": "string",
-      "description": "Relationship to a single `DirectedEnergyDevice` block. Inverse key: `DirectedEnergyDevice.externalInterfaces`. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "linkTargetGroup": {
-      "title": "ID of Associated TargetGroup Block",
-      "type": "string",
-      "description": "Relationship to zero or one `TargetGroup` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "canLink": {
-      "title": "Link Availability Status",
-      "type": "boolean",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this `ExternalDataInterface` can link to its `linkTarget`, false otherwise.",
-      "default": false
-     },
-     "activeLinkTarget": {
-      "title": "ID of Associated Target Block",
-      "type": "string",
-      "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "type": {
-      "title": "Type",
-      "enum": [
-       "ReceiveInterface"
-      ],
-      "type": "string",
-      "description": "The \"type\" (class name) of the Block"
-     }
-    },
-    "additionalProperties": false,
-    "description": "A ReceiveInterface Block",
-    "privateProperties": {}
-   },
    "RecipeRelData": {
     "title": "RecipeRelData",
     "required": [
@@ -16972,33 +17011,20 @@
         "$ref": "#/components/schemas/Quaternion"
        }
       ],
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": {
-       "body_ecef": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-       ]
-      }
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
      },
      "relativeAttitude": {
       "title": "FOV Relative Attitude Quaternion",
       "type": "array",
       "items": {},
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
-      "default": [
-       0.0,
-       0.0,
-       0.0,
-       1.0
-      ]
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
      },
      "articulationAngles": {
       "title": "Articulation Angles",
       "type": "array",
       "items": {},
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model."
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.",
+      "default": []
      },
      "visibleEarthArea": {
       "title": "Visibleeartharea",
@@ -17115,14 +17141,16 @@
       "type": "array",
       "items": {},
       "description": "Relationship to one or more `Routine` blocks. Inverse key: `Routine.parentRoutines`. On delete: `set-none` (remove ID of referenced block from this relationship field).",
-      "default": []
+      "default": [],
+      "derived": true
      },
      "parentRoutines": {
       "title": "IDs of Associated Routine Blocks",
       "type": "array",
       "items": {},
       "description": "Relationship to one or more `Routine` blocks. Inverse key: `Routine.subroutines`. On delete: `set-none` (remove ID of referenced block from this relationship field).",
-      "default": []
+      "default": [],
+      "derived": true
      },
      "activeSubroutine": {
       "title": "ID of Associated Routine Block",
@@ -17512,14 +17540,16 @@
       "type": "array",
       "items": {},
       "description": "Relationship to one or more `Routine` blocks. Inverse key: `Routine.parentRoutines`. On delete: `set-none` (remove ID of referenced block from this relationship field).",
-      "default": []
+      "default": [],
+      "derived": true
      },
      "parentRoutines": {
       "title": "IDs of Associated Routine Blocks",
       "type": "array",
       "items": {},
       "description": "Relationship to one or more `Routine` blocks. Inverse key: `Routine.subroutines`. On delete: `set-none` (remove ID of referenced block from this relationship field).",
-      "default": []
+      "default": [],
+      "derived": true
      },
      "activeSubroutine": {
       "title": "ID of Associated Routine Block",
@@ -17944,9 +17974,15 @@
      },
      "targetParam": {
       "title": "Target Parameter Selection",
-      "allOf": [
+      "anyOf": [
        {
-        "$ref": "#/components/schemas/TargetParameters"
+        "$ref": "#/components/schemas/BaseTargetParameters"
+       },
+       {
+        "$ref": "#/components/schemas/CloudFractionParameters"
+       },
+       {
+        "$ref": "#/components/schemas/RainParameters"
        }
       ]
      },
@@ -18320,10 +18356,10 @@
       "type": "string",
       "description": "Relationship to zero or one `ClockConfig` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
      },
-     "_supers": {
-      "title": " Supers",
+     "_relationships": {
+      "title": " Relationships",
       "type": "object",
-      "description": "Object mapping `Block` class names to a list of names of their direct super classes."
+      "description": "Object mapping `Block` class names and `root` to the names of relationship fields. The field\n    names then map to an object of descriptive information about the field."
      },
      "_quantityKinds": {
       "title": " Quantitykinds",
@@ -18336,10 +18372,10 @@
       "items": {},
       "description": "Names of all valid `Block`s for this `Metamodel` class"
      },
-     "_relationships": {
-      "title": " Relationships",
+     "_supers": {
+      "title": " Supers",
       "type": "object",
-      "description": "Object mapping `Block` class names and `root` to the names of relationship fields. The field\n    names then map to an object of descriptive information about the field."
+      "description": "Object mapping `Block` class names to a list of names of their direct super classes."
      },
      "type": {
       "title": "Type",
@@ -18475,262 +18511,6 @@
       }
      }
     }
-   },
-   "SelfToScalarCondition": {
-    "title": "SelfToScalarCondition",
-    "required": [
-     "name",
-     "relationship",
-     "scalar",
-     "param"
-    ],
-    "type": "object",
-    "properties": {
-     "id": {
-      "title": "Id",
-      "type": "string"
-     },
-     "disabled": {
-      "title": "Disabled",
-      "type": "boolean",
-      "default": false,
-      "original": "do not override this field"
-     },
-     "name": {
-      "title": "Name",
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
-     },
-     "terminator": {
-      "title": "Termination Condition",
-      "type": "boolean",
-      "description": "If set to true, the simulation will be terminated when this condition evaluates to true.",
-      "default": false
-     },
-     "compliance": {
-      "title": "Compliance Status",
-      "type": "boolean",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this condition is compliant, false otherwise."
-     },
-     "relationship": {
-      "title": "Relationship",
-      "anyOf": [
-       {
-        "$ref": "#/components/schemas/ConditionRelationship"
-       },
-       {
-        "$ref": "#/components/schemas/RangeRelationship"
-       }
-      ],
-      "description": "The relationship to use when comparing the assigned values."
-     },
-     "scalar": {
-      "title": "Constant value to compare to or pair of values to use as a range.",
-      "anyOf": [
-       {
-        "type": "number"
-       },
-       {
-        "type": "object",
-        "additionalProperties": {
-         "type": "number"
-        }
-       },
-       {
-        "maxItems": 2,
-        "minItems": 2,
-        "type": "array",
-        "items": {
-         "anyOf": [
-          {
-           "type": "number"
-          },
-          {
-           "type": "object",
-           "additionalProperties": {
-            "type": "number"
-           }
-          }
-         ]
-        }
-       }
-      ]
-     },
-     "param": {
-      "title": "Parameter Selection",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/AgentParameters"
-       }
-      ],
-      "description": "Choose a satellite parameter to compare to the scalar value. The default units indicated in the description will be used."
-     },
-     "type": {
-      "title": "Type",
-      "enum": [
-       "SelfToScalarCondition"
-      ],
-      "type": "string",
-      "description": "The \"type\" (class name) of the Block"
-     }
-    },
-    "additionalProperties": false,
-    "description": "A SelfToScalarCondition Block",
-    "privateProperties": {}
-   },
-   "SelfToSelfCondition": {
-    "title": "SelfToSelfCondition",
-    "required": [
-     "name",
-     "relationship"
-    ],
-    "type": "object",
-    "properties": {
-     "id": {
-      "title": "Id",
-      "type": "string"
-     },
-     "disabled": {
-      "title": "Disabled",
-      "type": "boolean",
-      "default": false,
-      "original": "do not override this field"
-     },
-     "name": {
-      "title": "Name",
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
-     },
-     "terminator": {
-      "title": "Termination Condition",
-      "type": "boolean",
-      "description": "If set to true, the simulation will be terminated when this condition evaluates to true.",
-      "default": false
-     },
-     "compliance": {
-      "title": "Compliance Status",
-      "type": "boolean",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this condition is compliant, false otherwise."
-     },
-     "relationship": {
-      "title": "Relationship",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/ConditionRelationship"
-       }
-      ],
-      "description": "The relationship to use when comparing the assigned values."
-     },
-     "paramA": {
-      "title": "Parameter A Selection",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/AgentParameters"
-       }
-      ]
-     },
-     "paramB": {
-      "title": "Parameter B Selection",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/AgentParameters"
-       }
-      ]
-     },
-     "type": {
-      "title": "Type",
-      "enum": [
-       "SelfToSelfCondition"
-      ],
-      "type": "string",
-      "description": "The \"type\" (class name) of the Block"
-     }
-    },
-    "additionalProperties": false,
-    "description": "A SelfToSelfCondition Block",
-    "privateProperties": {}
-   },
-   "SelfToTargetCondition": {
-    "title": "SelfToTargetCondition",
-    "required": [
-     "name",
-     "relationship",
-     "selfParam",
-     "targetParam"
-    ],
-    "type": "object",
-    "properties": {
-     "id": {
-      "title": "Id",
-      "type": "string"
-     },
-     "disabled": {
-      "title": "Disabled",
-      "type": "boolean",
-      "default": false,
-      "original": "do not override this field"
-     },
-     "name": {
-      "title": "Name",
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
-     },
-     "terminator": {
-      "title": "Termination Condition",
-      "type": "boolean",
-      "description": "If set to true, the simulation will be terminated when this condition evaluates to true.",
-      "default": false
-     },
-     "compliance": {
-      "title": "Compliance Status",
-      "type": "boolean",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this condition is compliant, false otherwise."
-     },
-     "relationship": {
-      "title": "Relationship",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/ConditionRelationship"
-       }
-      ],
-      "description": "The relationship to use when comparing the assigned values."
-     },
-     "selfParam": {
-      "title": "Self Parameter Selection",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/AgentParameters"
-       }
-      ]
-     },
-     "targetA": {
-      "title": "ID of Associated Target Block",
-      "type": "string",
-      "description": "Relationship to a single `Target` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
-     },
-     "targetParam": {
-      "title": "Target Parameter Selection",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/TargetParameters"
-       }
-      ]
-     },
-     "type": {
-      "title": "Type",
-      "enum": [
-       "SelfToTargetCondition"
-      ],
-      "type": "string",
-      "description": "The \"type\" (class name) of the Block"
-     }
-    },
-    "additionalProperties": false,
-    "description": "A SelfToTargetCondition Block",
-    "privateProperties": {}
    },
    "Sensor": {
     "title": "Sensor",
@@ -20616,406 +20396,397 @@
       "additionalProperties": {
        "anyOf": [
         {
-         "$ref": "#/definitions/ActivePointingMode"
+         "$ref": "#/components/schemas/ActivePointingMode"
         },
         {
-         "$ref": "#/definitions/AngularVelocitySensor"
+         "$ref": "#/components/schemas/AngularVelocitySensor"
         },
         {
-         "$ref": "#/definitions/Antenna"
+         "$ref": "#/components/schemas/Antenna"
         },
         {
-         "$ref": "#/definitions/AreaTarget"
+         "$ref": "#/components/schemas/AreaTarget"
         },
         {
-         "$ref": "#/definitions/AveragingAlgorithm"
+         "$ref": "#/components/schemas/AveragingAlgorithm"
         },
         {
-         "$ref": "#/definitions/Battery"
+         "$ref": "#/components/schemas/Battery"
         },
         {
-         "$ref": "#/definitions/BatteryCell"
+         "$ref": "#/components/schemas/BatteryCell"
         },
         {
-         "$ref": "#/definitions/BatteryPack"
+         "$ref": "#/components/schemas/BatteryPack"
         },
         {
-         "$ref": "#/definitions/BodyFrameVector"
+         "$ref": "#/components/schemas/BodyFrameVector"
         },
         {
-         "$ref": "#/definitions/BodyInFovCondition"
+         "$ref": "#/components/schemas/BodyInFovCondition"
         },
         {
-         "$ref": "#/definitions/BusRegulator"
+         "$ref": "#/components/schemas/BusRegulator"
         },
         {
-         "$ref": "#/definitions/CelestialTarget"
+         "$ref": "#/components/schemas/CelestialTarget"
         },
         {
-         "$ref": "#/definitions/CelestialVector"
+         "$ref": "#/components/schemas/CelestialVector"
         },
         {
-         "$ref": "#/definitions/CircularFieldOfView"
+         "$ref": "#/components/schemas/CircularFieldOfView"
         },
         {
-         "$ref": "#/definitions/CloudFractionGroup"
+         "$ref": "#/components/schemas/CombinationalLogic"
         },
         {
-         "$ref": "#/definitions/CloudFractionGroupToScalarCondition"
+         "$ref": "#/components/schemas/Component"
         },
         {
-         "$ref": "#/definitions/CombinationalLogic"
+         "$ref": "#/components/schemas/ComponentToScalarCondition"
         },
         {
-         "$ref": "#/definitions/Component"
+         "$ref": "#/components/schemas/CompoundCondition"
         },
         {
-         "$ref": "#/definitions/ComponentToScalarCondition"
+         "$ref": "#/components/schemas/Cooler"
         },
         {
-         "$ref": "#/definitions/CompoundCondition"
+         "$ref": "#/components/schemas/CooperativeLineOfSightTransmitInterface"
         },
         {
-         "$ref": "#/definitions/Cooler"
+         "$ref": "#/components/schemas/DataBus"
         },
         {
-         "$ref": "#/definitions/CooperativeTransmitInterface"
+         "$ref": "#/components/schemas/DataInterface"
         },
         {
-         "$ref": "#/definitions/DataBus"
+         "$ref": "#/components/schemas/DataMode"
         },
         {
-         "$ref": "#/definitions/DataInterface"
+         "$ref": "#/components/schemas/DataStorage"
         },
         {
-         "$ref": "#/definitions/DataMode"
+         "$ref": "#/components/schemas/DataType"
         },
         {
-         "$ref": "#/definitions/DataStorage"
+         "$ref": "#/components/schemas/DirectMeasurementAttitudeInitializer"
         },
         {
-         "$ref": "#/definitions/DataType"
+         "$ref": "#/components/schemas/DirectionSensor"
         },
         {
-         "$ref": "#/definitions/DirectMeasurementAttitudeInitializer"
+         "$ref": "#/components/schemas/DynamicallyLoadedComponent"
         },
         {
-         "$ref": "#/definitions/DirectionSensor"
+         "$ref": "#/components/schemas/EkfAlgorithm"
         },
         {
-         "$ref": "#/definitions/DynamicallyLoadedComponent"
+         "$ref": "#/components/schemas/ElapsedTimeCondition"
         },
         {
-         "$ref": "#/definitions/EkfAlgorithm"
+         "$ref": "#/components/schemas/FieldOfViewArticulationMode"
         },
         {
-         "$ref": "#/definitions/ElapsedTimeCondition"
+         "$ref": "#/components/schemas/FiniteDifferenceOrbitInitializer"
         },
         {
-         "$ref": "#/definitions/FieldOfViewArticulationMode"
+         "$ref": "#/components/schemas/FiniteStateMachine"
         },
         {
-         "$ref": "#/definitions/FiniteDifferenceOrbitInitializer"
+         "$ref": "#/components/schemas/FixedSchedule"
         },
         {
-         "$ref": "#/definitions/FiniteStateMachine"
+         "$ref": "#/components/schemas/FixedSurface"
         },
         {
-         "$ref": "#/definitions/FixedSchedule"
+         "$ref": "#/components/schemas/FuelReservoir"
         },
         {
-         "$ref": "#/definitions/FixedSurface"
+         "$ref": "#/components/schemas/FullyRegDetPowerProcessor"
         },
         {
-         "$ref": "#/definitions/FuelReservoir"
+         "$ref": "#/components/schemas/GenericAdAlgorithm"
         },
         {
-         "$ref": "#/definitions/FullyRegDetPowerProcessor"
+         "$ref": "#/components/schemas/GenericOdAlgorithm"
         },
         {
-         "$ref": "#/definitions/GenericAdAlgorithm"
+         "$ref": "#/components/schemas/GpsAlgorithm"
         },
         {
-         "$ref": "#/definitions/GenericOdAlgorithm"
+         "$ref": "#/components/schemas/GroundTarget"
         },
         {
-         "$ref": "#/definitions/GeoAreaDateTimeGroup"
+         "$ref": "#/components/schemas/Heater"
         },
         {
-         "$ref": "#/definitions/GpsAlgorithm"
+         "$ref": "#/components/schemas/IdealOrbitalAttitudeDynamics"
         },
         {
-         "$ref": "#/definitions/GroundTarget"
+         "$ref": "#/components/schemas/ImpulsiveDeltaVAlgorithm"
         },
         {
-         "$ref": "#/definitions/Heater"
+         "$ref": "#/components/schemas/InternalDataInterface"
         },
         {
-         "$ref": "#/definitions/IdealOrbitalAttitudeDynamics"
+         "$ref": "#/components/schemas/LaserCommModule"
         },
         {
-         "$ref": "#/definitions/ImpulsiveDeltaVAlgorithm"
+         "$ref": "#/components/schemas/LineOfSightReceiveInterface"
         },
         {
-         "$ref": "#/definitions/InternalDataInterface"
+         "$ref": "#/components/schemas/LoadState"
         },
         {
-         "$ref": "#/definitions/LaserCommModule"
+         "$ref": "#/components/schemas/LocalVector"
         },
         {
-         "$ref": "#/definitions/LoadState"
+         "$ref": "#/components/schemas/LockSpinPointingMode"
         },
         {
-         "$ref": "#/definitions/LocalVector"
+         "$ref": "#/components/schemas/LogicalConfiguration"
         },
         {
-         "$ref": "#/definitions/LockSpinPointingMode"
+         "$ref": "#/components/schemas/MagneticDetumblingAlgorithm"
         },
         {
-         "$ref": "#/definitions/LogicalConfiguration"
+         "$ref": "#/components/schemas/MagneticHysteresisRod"
         },
         {
-         "$ref": "#/definitions/MagneticDetumblingAlgorithm"
+         "$ref": "#/components/schemas/Magnetorquer"
         },
         {
-         "$ref": "#/definitions/MagneticHysteresisRod"
+         "$ref": "#/components/schemas/MaxAlignPointingMode"
         },
         {
-         "$ref": "#/definitions/Magnetorquer"
+         "$ref": "#/components/schemas/MekfAlgorithm"
         },
         {
-         "$ref": "#/definitions/MaxAlignPointingMode"
+         "$ref": "#/components/schemas/MemsAngularVelocitySensor"
         },
         {
-         "$ref": "#/definitions/MekfAlgorithm"
+         "$ref": "#/components/schemas/Modem"
         },
         {
-         "$ref": "#/definitions/MemsAngularVelocitySensor"
+         "$ref": "#/components/schemas/OpticalAttitudeSensor"
         },
         {
-         "$ref": "#/definitions/Modem"
+         "$ref": "#/components/schemas/OrbitalAttitudeDynamics"
         },
         {
-         "$ref": "#/definitions/OpticalAttitudeSensor"
+         "$ref": "#/components/schemas/PassiveLineOfSightTransmitInterface"
         },
         {
-         "$ref": "#/definitions/OrbitalAttitudeDynamics"
+         "$ref": "#/components/schemas/PassivePointingMode"
         },
         {
-         "$ref": "#/definitions/PassivePointingMode"
+         "$ref": "#/components/schemas/PermanentDipoleMagnet"
         },
         {
-         "$ref": "#/definitions/PassiveTransmitInterface"
+         "$ref": "#/components/schemas/PhotovoltaicPowerProcessor"
         },
         {
-         "$ref": "#/definitions/PermanentDipoleMagnet"
+         "$ref": "#/components/schemas/PidAlgorithm"
         },
         {
-         "$ref": "#/definitions/PhotovoltaicPowerProcessor"
+         "$ref": "#/components/schemas/PositionSensor"
         },
         {
-         "$ref": "#/definitions/PidAlgorithm"
+         "$ref": "#/components/schemas/PowerLoad"
         },
         {
-         "$ref": "#/definitions/PositionSensor"
+         "$ref": "#/components/schemas/PowerProcessor"
         },
         {
-         "$ref": "#/definitions/PowerLoad"
+         "$ref": "#/components/schemas/PropagatedOrbitKinematics"
         },
         {
-         "$ref": "#/definitions/PowerProcessor"
+         "$ref": "#/components/schemas/QuasiRegDetPowerProcessor"
         },
         {
-         "$ref": "#/definitions/PropagatedOrbitKinematics"
+         "$ref": "#/components/schemas/ReactionWheel"
         },
         {
-         "$ref": "#/definitions/QuasiRegDetPowerProcessor"
+         "$ref": "#/components/schemas/RectangularFieldOfView"
         },
         {
-         "$ref": "#/definitions/ReactionWheel"
+         "$ref": "#/components/schemas/RelativeSchedule"
         },
         {
-         "$ref": "#/definitions/ReceiveInterface"
+         "$ref": "#/components/schemas/ResistanceLoad"
         },
         {
-         "$ref": "#/definitions/RectangularFieldOfView"
+         "$ref": "#/components/schemas/Routine"
         },
         {
-         "$ref": "#/definitions/RelativeSchedule"
+         "$ref": "#/components/schemas/SameTargetMultiCondition"
         },
         {
-         "$ref": "#/definitions/ResistanceLoad"
+         "$ref": "#/components/schemas/SatelliteToSatelliteCondition"
         },
         {
-         "$ref": "#/definitions/Routine"
+         "$ref": "#/components/schemas/SatelliteToScalarCondition"
         },
         {
-         "$ref": "#/definitions/SameTargetMultiCondition"
+         "$ref": "#/components/schemas/SatelliteToTargetCondition"
         },
         {
-         "$ref": "#/definitions/SatelliteToSatelliteCondition"
+         "$ref": "#/components/schemas/ScanFieldOfViewArticulationMode"
         },
         {
-         "$ref": "#/definitions/SatelliteToScalarCondition"
+         "$ref": "#/components/schemas/Sensor"
         },
         {
-         "$ref": "#/definitions/SatelliteToTargetCondition"
+         "$ref": "#/components/schemas/SensorFailureMode"
         },
         {
-         "$ref": "#/definitions/ScanFieldOfViewArticulationMode"
+         "$ref": "#/components/schemas/SingleConvHybridPowerProcessor"
         },
         {
-         "$ref": "#/definitions/Sensor"
+         "$ref": "#/components/schemas/SingleConvMpptPowerProcessor"
         },
         {
-         "$ref": "#/definitions/SensorFailureMode"
+         "$ref": "#/components/schemas/SlidingModeAlgorithm"
         },
         {
-         "$ref": "#/definitions/SingleConvHybridPowerProcessor"
+         "$ref": "#/components/schemas/SolarArray"
         },
         {
-         "$ref": "#/definitions/SingleConvMpptPowerProcessor"
+         "$ref": "#/components/schemas/SolarCell"
         },
         {
-         "$ref": "#/definitions/SlidingModeAlgorithm"
+         "$ref": "#/components/schemas/SolarPanel"
         },
         {
-         "$ref": "#/definitions/SolarArray"
+         "$ref": "#/components/schemas/SpaceTarget"
         },
         {
-         "$ref": "#/definitions/SolarCell"
+         "$ref": "#/components/schemas/SphericalFuelTank"
         },
         {
-         "$ref": "#/definitions/SolarPanel"
+         "$ref": "#/components/schemas/SpherocylinderFuelTank"
         },
         {
-         "$ref": "#/definitions/SpaceTarget"
+         "$ref": "#/components/schemas/SpkEphemeris"
         },
         {
-         "$ref": "#/definitions/SphericalFuelTank"
+         "$ref": "#/components/schemas/StateTransition"
         },
         {
-         "$ref": "#/definitions/SpherocylinderFuelTank"
+         "$ref": "#/components/schemas/StaticAttitudeInitializer"
         },
         {
-         "$ref": "#/definitions/SpkEphemeris"
+         "$ref": "#/components/schemas/StaticFieldOfViewArticulationMode"
         },
         {
-         "$ref": "#/definitions/StateTransition"
+         "$ref": "#/components/schemas/StaticThrustControlAlgorithm"
         },
         {
-         "$ref": "#/definitions/StaticAttitudeInitializer"
+         "$ref": "#/components/schemas/StkEphemeris"
         },
         {
-         "$ref": "#/definitions/StaticFieldOfViewArticulationMode"
+         "$ref": "#/components/schemas/Subsystem"
         },
         {
-         "$ref": "#/definitions/StaticThrustControlAlgorithm"
+         "$ref": "#/components/schemas/SunTrackingSurface"
         },
         {
-         "$ref": "#/definitions/StkEphemeris"
+         "$ref": "#/components/schemas/SurfaceMaterial"
         },
         {
-         "$ref": "#/definitions/Subsystem"
+         "$ref": "#/components/schemas/TargetAttitudeSensor"
         },
         {
-         "$ref": "#/definitions/SunTrackingSurface"
+         "$ref": "#/components/schemas/TargetGroup"
         },
         {
-         "$ref": "#/definitions/SurfaceMaterial"
+         "$ref": "#/components/schemas/TargetGroupInFovCondition"
         },
         {
-         "$ref": "#/definitions/TargetAttitudeSensor"
+         "$ref": "#/components/schemas/TargetGroupToSatelliteCondition"
         },
         {
-         "$ref": "#/definitions/TargetGroup"
+         "$ref": "#/components/schemas/TargetGroupToScalarCondition"
         },
         {
-         "$ref": "#/definitions/TargetGroupInFovCondition"
+         "$ref": "#/components/schemas/TargetGroupToTargetCondition"
         },
         {
-         "$ref": "#/definitions/TargetGroupToSatelliteCondition"
+         "$ref": "#/components/schemas/TargetGroupVector"
         },
         {
-         "$ref": "#/definitions/TargetGroupToScalarCondition"
+         "$ref": "#/components/schemas/TargetInFovCondition"
         },
         {
-         "$ref": "#/definitions/TargetGroupToTargetCondition"
+         "$ref": "#/components/schemas/TargetPositionSensor"
         },
         {
-         "$ref": "#/definitions/TargetGroupVector"
+         "$ref": "#/components/schemas/TargetRangeRateSensor"
         },
         {
-         "$ref": "#/definitions/TargetInFovCondition"
+         "$ref": "#/components/schemas/TargetRangeSensor"
         },
         {
-         "$ref": "#/definitions/TargetPositionSensor"
+         "$ref": "#/components/schemas/TargetToScalarCondition"
         },
         {
-         "$ref": "#/definitions/TargetRangeRateSensor"
+         "$ref": "#/components/schemas/TargetToTargetCondition"
         },
         {
-         "$ref": "#/definitions/TargetRangeSensor"
+         "$ref": "#/components/schemas/TargetVector"
         },
         {
-         "$ref": "#/definitions/TargetToScalarCondition"
+         "$ref": "#/components/schemas/TempControllerState"
         },
         {
-         "$ref": "#/definitions/TargetToTargetCondition"
+         "$ref": "#/components/schemas/ThermalDesignLayout"
         },
         {
-         "$ref": "#/definitions/TargetVector"
+         "$ref": "#/components/schemas/ThermalInterface"
         },
         {
-         "$ref": "#/definitions/TempControllerState"
+         "$ref": "#/components/schemas/ThermalInterfaceMaterial"
         },
         {
-         "$ref": "#/definitions/ThermalDesignLayout"
+         "$ref": "#/components/schemas/Thruster"
         },
         {
-         "$ref": "#/definitions/ThermalInterface"
+         "$ref": "#/components/schemas/TimeCondition"
         },
         {
-         "$ref": "#/definitions/ThermalInterfaceMaterial"
+         "$ref": "#/components/schemas/TrackingFieldOfViewArticulationMode"
         },
         {
-         "$ref": "#/definitions/Thruster"
+         "$ref": "#/components/schemas/TriadAlgorithm"
         },
         {
-         "$ref": "#/definitions/TimeCondition"
+         "$ref": "#/components/schemas/TriadAttitudeInitializer"
         },
         {
-         "$ref": "#/definitions/TrackingFieldOfViewArticulationMode"
+         "$ref": "#/components/schemas/TwoConvMpptPowerProcessor"
         },
         {
-         "$ref": "#/definitions/TriadAlgorithm"
+         "$ref": "#/components/schemas/UnresponsiveMagnetorquerFailureMode"
         },
         {
-         "$ref": "#/definitions/TriadAttitudeInitializer"
+         "$ref": "#/components/schemas/UnresponsiveReactionWheelFailureMode"
         },
         {
-         "$ref": "#/definitions/TwoConvMpptPowerProcessor"
+         "$ref": "#/components/schemas/UnresponsiveSensorFailureMode"
         },
         {
-         "$ref": "#/definitions/UnresponsiveMagnetorquerFailureMode"
+         "$ref": "#/components/schemas/UnresponsiveThrusterFailureMode"
         },
         {
-         "$ref": "#/definitions/UnresponsiveReactionWheelFailureMode"
+         "$ref": "#/components/schemas/VectorInFovCondition"
         },
         {
-         "$ref": "#/definitions/UnresponsiveSensorFailureMode"
+         "$ref": "#/components/schemas/VectorSensor"
         },
         {
-         "$ref": "#/definitions/UnresponsiveThrusterFailureMode"
-        },
-        {
-         "$ref": "#/definitions/VectorInFovCondition"
-        },
-        {
-         "$ref": "#/definitions/VectorSensor"
-        },
-        {
-         "$ref": "#/definitions/VectorTrackingSurface"
+         "$ref": "#/components/schemas/VectorTrackingSurface"
         }
        ]
       },
@@ -21682,12 +21453,6 @@
          "$ref": "#/definitions/CircularFieldOfView"
         },
         {
-         "$ref": "#/definitions/CloudFractionGroup"
-        },
-        {
-         "$ref": "#/definitions/CloudFractionGroupToScalarCondition"
-        },
-        {
          "$ref": "#/definitions/CombinationalLogic"
         },
         {
@@ -21703,7 +21468,7 @@
          "$ref": "#/definitions/Cooler"
         },
         {
-         "$ref": "#/definitions/CooperativeTransmitInterface"
+         "$ref": "#/definitions/CooperativeLineOfSightTransmitInterface"
         },
         {
          "$ref": "#/definitions/DataBus"
@@ -21763,9 +21528,6 @@
          "$ref": "#/definitions/GenericOdAlgorithm"
         },
         {
-         "$ref": "#/definitions/GeoAreaDateTimeGroup"
-        },
-        {
          "$ref": "#/definitions/GpsAlgorithm"
         },
         {
@@ -21785,6 +21547,9 @@
         },
         {
          "$ref": "#/definitions/LaserCommModule"
+        },
+        {
+         "$ref": "#/definitions/LineOfSightReceiveInterface"
         },
         {
          "$ref": "#/definitions/LoadState"
@@ -21826,10 +21591,10 @@
          "$ref": "#/definitions/OrbitalAttitudeDynamics"
         },
         {
-         "$ref": "#/definitions/PassivePointingMode"
+         "$ref": "#/definitions/PassiveLineOfSightTransmitInterface"
         },
         {
-         "$ref": "#/definitions/PassiveTransmitInterface"
+         "$ref": "#/definitions/PassivePointingMode"
         },
         {
          "$ref": "#/definitions/PermanentDipoleMagnet"
@@ -21857,9 +21622,6 @@
         },
         {
          "$ref": "#/definitions/ReactionWheel"
-        },
-        {
-         "$ref": "#/definitions/ReceiveInterface"
         },
         {
          "$ref": "#/definitions/RectangularFieldOfView"
@@ -22634,10 +22396,10 @@
       "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>List of currently active interfaces on this Agent. Each entry contains a tuple of `transmitStatus`, `agentId`, `bitRate`, and `canLink`.",
       "default": []
      },
-     "_supers": {
-      "title": " Supers",
+     "_relationships": {
+      "title": " Relationships",
       "type": "object",
-      "description": "Object mapping `Block` class names to a list of names of their direct super classes."
+      "description": "Object mapping `Block` class names and `root` to the names of relationship fields. The field\n    names then map to an object of descriptive information about the field."
      },
      "_quantityKinds": {
       "title": " Quantitykinds",
@@ -22650,10 +22412,10 @@
       "items": {},
       "description": "Names of all valid `Block`s for this `Metamodel` class"
      },
-     "_relationships": {
-      "title": " Relationships",
+     "_supers": {
+      "title": " Supers",
       "type": "object",
-      "description": "Object mapping `Block` class names and `root` to the names of relationship fields. The field\n    names then map to an object of descriptive information about the field."
+      "description": "Object mapping `Block` class names to a list of names of their direct super classes."
      },
      "type": {
       "title": "Type",
@@ -23308,16 +23070,16 @@
          "$ref": "#/components/schemas/InternalDataInterface"
         },
         {
-         "$ref": "#/components/schemas/ReceiveInterface"
+         "$ref": "#/components/schemas/LineOfSightReceiveInterface"
         },
         {
          "$ref": "#/components/schemas/ThermalInterface"
         },
         {
-         "$ref": "#/components/schemas/PassiveTransmitInterface"
+         "$ref": "#/components/schemas/PassiveLineOfSightTransmitInterface"
         },
         {
-         "$ref": "#/components/schemas/CooperativeTransmitInterface"
+         "$ref": "#/components/schemas/CooperativeLineOfSightTransmitInterface"
         },
         {
          "$ref": "#/components/schemas/FixedSurface"
@@ -23491,9 +23253,6 @@
          "$ref": "#/components/schemas/SatelliteToScalarCondition"
         },
         {
-         "$ref": "#/components/schemas/CloudFractionGroupToScalarCondition"
-        },
-        {
          "$ref": "#/components/schemas/TargetGroupToScalarCondition"
         },
         {
@@ -23525,12 +23284,6 @@
         },
         {
          "$ref": "#/components/schemas/StateTransition"
-        },
-        {
-         "$ref": "#/components/schemas/GeoAreaDateTimeGroup"
-        },
-        {
-         "$ref": "#/components/schemas/CloudFractionGroup"
         },
         {
          "$ref": "#/components/schemas/TargetGroup"
@@ -23761,20 +23514,20 @@
     "title": "Speed",
     "type": "object",
     "properties": {
-     "km/s": {
-      "title": "Km/S",
+     "m/s": {
+      "title": "M/S",
       "type": "number"
      },
      "cm/s": {
       "title": "Cm/S",
       "type": "number"
      },
-     "mm/s": {
-      "title": "Mm/S",
+     "km/s": {
+      "title": "Km/S",
       "type": "number"
      },
-     "m/s": {
-      "title": "M/S",
+     "mm/s": {
+      "title": "Mm/S",
       "type": "number"
      }
     },
@@ -25877,6 +25630,15 @@
       "description": "Relationship to one or more `TargetGroupCondition` blocks. On delete: `set-none` (remove ID of referenced block from this relationship field).",
       "default": []
      },
+     "cloudConfig": {
+      "title": "Cloud Configuration",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/CloudConfig"
+       }
+      ],
+      "description": "Configuration for cloud obstruction calculations."
+     },
      "targetAssociations": {
       "title": "IDs of Associated Target Blocks",
       "type": "object",
@@ -25890,6 +25652,22 @@
       "title": "ID of Associated Target Block",
       "type": "string",
       "description": "Relationship to zero or one `Target` blocks. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "cloudData": {
+      "title": "Cloud Fraction Data",
+      "type": "array",
+      "items": {
+       "$ref": "#/components/schemas/CloudFractionData"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Dynamic cloud coverage status."
+     },
+     "rainData": {
+      "title": "Rain Data",
+      "type": "array",
+      "items": {
+       "$ref": "#/components/schemas/RainData"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Dynamic precipitation status of the target."
      },
      "type": {
       "title": "Type",
@@ -26054,9 +25832,15 @@
      },
      "tgParam": {
       "title": "Parameter selection.",
-      "allOf": [
+      "anyOf": [
        {
-        "$ref": "#/components/schemas/TargetParameters"
+        "$ref": "#/components/schemas/BaseTargetParameters"
+       },
+       {
+        "$ref": "#/components/schemas/CloudFractionParameters"
+       },
+       {
+        "$ref": "#/components/schemas/RainParameters"
        }
       ]
      },
@@ -26172,9 +25956,15 @@
      },
      "tgParam": {
       "title": "Parameter selection.",
-      "allOf": [
+      "anyOf": [
        {
-        "$ref": "#/components/schemas/TargetParameters"
+        "$ref": "#/components/schemas/BaseTargetParameters"
+       },
+       {
+        "$ref": "#/components/schemas/CloudFractionParameters"
+       },
+       {
+        "$ref": "#/components/schemas/RainParameters"
        }
       ]
      },
@@ -26236,118 +26026,6 @@
     },
     "additionalProperties": false,
     "description": "A TargetGroupToScalarCondition Block",
-    "privateProperties": {}
-   },
-   "TargetGroupToSelfCondition": {
-    "title": "TargetGroupToSelfCondition",
-    "required": [
-     "name",
-     "relationship",
-     "tgParam",
-     "selfParam"
-    ],
-    "type": "object",
-    "properties": {
-     "id": {
-      "title": "Id",
-      "type": "string"
-     },
-     "disabled": {
-      "title": "Disabled",
-      "type": "boolean",
-      "default": false,
-      "original": "do not override this field"
-     },
-     "name": {
-      "title": "Name",
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
-     },
-     "terminator": {
-      "title": "Termination Condition",
-      "type": "boolean",
-      "description": "If set to true, the simulation will be terminated when this condition evaluates to true.",
-      "default": false
-     },
-     "compliance": {
-      "title": "Compliance Status",
-      "type": "boolean",
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this condition is compliant, false otherwise."
-     },
-     "relationship": {
-      "title": "Relationship",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/ConditionRelationship"
-       }
-      ],
-      "description": "The relationship to use when comparing the assigned values."
-     },
-     "targetCompliance": {
-      "title": "Target Compliance Status",
-      "type": "object",
-      "additionalProperties": {
-       "type": "boolean"
-      },
-      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>A dictionary keyed by `Target` ID where each value is the compliance of the condition for the respective `Target`."
-     },
-     "countRelationship": {
-      "title": "Count Relationship",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/ConditionRelationship"
-       }
-      ],
-      "description": "Set if `groupRoller` == `COUNT` to define the way to compare number of compliant targets to the `countValue`."
-     },
-     "countValue": {
-      "title": "Count Value",
-      "type": "integer",
-      "description": "Set if `groupRoller` == `COUNT` as a number to which to compare the number of compliant targets."
-     },
-     "tgParam": {
-      "title": "Parameter selection.",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/TargetParameters"
-       }
-      ]
-     },
-     "groupRoller": {
-      "title": "Group Roller Selection",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/GroupRollers"
-       }
-      ],
-      "description": "The method to use to combine the target values into a single compliance.",
-      "default": "ANY"
-     },
-     "targetGroup": {
-      "title": "ID of Associated TargetGroup Block",
-      "type": "string",
-      "description": "Relationship to a single `TargetGroup` block. On delete: `cascade` (delete this block when referenced block is deleted)."
-     },
-     "selfParam": {
-      "title": "Self Parameter Selection",
-      "allOf": [
-       {
-        "$ref": "#/components/schemas/AgentParameters"
-       }
-      ]
-     },
-     "type": {
-      "title": "Type",
-      "enum": [
-       "TargetGroupToSelfCondition"
-      ],
-      "type": "string",
-      "description": "The \"type\" (class name) of the Block"
-     }
-    },
-    "additionalProperties": false,
-    "description": "A TargetGroupToSelfCondition Block",
     "privateProperties": {}
    },
    "TargetGroupToTargetCondition": {
@@ -26420,9 +26098,15 @@
      },
      "tgParam": {
       "title": "Parameter selection.",
-      "allOf": [
+      "anyOf": [
        {
-        "$ref": "#/components/schemas/TargetParameters"
+        "$ref": "#/components/schemas/BaseTargetParameters"
+       },
+       {
+        "$ref": "#/components/schemas/CloudFractionParameters"
+       },
+       {
+        "$ref": "#/components/schemas/RainParameters"
        }
       ]
      },
@@ -26448,9 +26132,15 @@
      },
      "targetParam": {
       "title": "Target Parameter Selection",
-      "allOf": [
+      "anyOf": [
        {
-        "$ref": "#/components/schemas/TargetParameters"
+        "$ref": "#/components/schemas/BaseTargetParameters"
+       },
+       {
+        "$ref": "#/components/schemas/CloudFractionParameters"
+       },
+       {
+        "$ref": "#/components/schemas/RainParameters"
        }
       ]
      },
@@ -26465,6 +26155,129 @@
     },
     "additionalProperties": false,
     "description": "A TargetGroupToTargetCondition Block",
+    "privateProperties": {}
+   },
+   "TargetGroupToTerrestrialVehicleCondition": {
+    "title": "TargetGroupToTerrestrialVehicleCondition",
+    "required": [
+     "name",
+     "relationship",
+     "tgParam"
+    ],
+    "type": "object",
+    "properties": {
+     "id": {
+      "title": "Id",
+      "type": "string"
+     },
+     "disabled": {
+      "title": "Disabled",
+      "type": "boolean",
+      "default": false,
+      "original": "do not override this field"
+     },
+     "name": {
+      "title": "Name",
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string"
+     },
+     "terminator": {
+      "title": "Termination Condition",
+      "type": "boolean",
+      "description": "If set to true, the simulation will be terminated when this condition evaluates to true.",
+      "default": false
+     },
+     "compliance": {
+      "title": "Compliance Status",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this condition is compliant, false otherwise."
+     },
+     "relationship": {
+      "title": "Relationship",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/ConditionRelationship"
+       }
+      ],
+      "description": "The relationship to use when comparing the assigned values."
+     },
+     "targetCompliance": {
+      "title": "Target Compliance Status",
+      "type": "object",
+      "additionalProperties": {
+       "type": "boolean"
+      },
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>A dictionary keyed by `Target` ID where each value is the compliance of the condition for the respective `Target`."
+     },
+     "countRelationship": {
+      "title": "Count Relationship",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/ConditionRelationship"
+       }
+      ],
+      "description": "Set if `groupRoller` == `COUNT` to define the way to compare number of compliant targets to the `countValue`."
+     },
+     "countValue": {
+      "title": "Count Value",
+      "type": "integer",
+      "description": "Set if `groupRoller` == `COUNT` as a number to which to compare the number of compliant targets."
+     },
+     "tgParam": {
+      "title": "Parameter selection.",
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/BaseTargetParameters"
+       },
+       {
+        "$ref": "#/components/schemas/CloudFractionParameters"
+       },
+       {
+        "$ref": "#/components/schemas/RainParameters"
+       }
+      ]
+     },
+     "groupRoller": {
+      "title": "Group Roller Selection",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/GroupRollers"
+       }
+      ],
+      "description": "The method to use to combine the target values into a single compliance.",
+      "default": "ANY"
+     },
+     "targetGroup": {
+      "title": "ID of Associated TargetGroup Block",
+      "type": "string",
+      "description": "Relationship to a single `TargetGroup` block. On delete: `cascade` (delete this block when referenced block is deleted)."
+     },
+     "selfParam": {
+      "title": "Terrestrial Vehicle Parameter Selection",
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/BaseTerrestrialVehicleParameters"
+       },
+       {
+        "$ref": "#/components/schemas/RainParameters"
+       },
+       {
+        "$ref": "#/components/schemas/AgentParameters"
+       }
+      ]
+     },
+     "type": {
+      "title": "Type",
+      "enum": [
+       "TargetGroupToTerrestrialVehicleCondition"
+      ],
+      "type": "string",
+      "description": "The \"type\" (class name) of the Block"
+     }
+    },
+    "additionalProperties": false,
+    "description": "A TargetGroupToTerrestrialVehicleCondition Block",
     "privateProperties": {}
    },
    "TargetGroupVector": {
@@ -26619,26 +26432,6 @@
     "additionalProperties": false,
     "description": "Class to inherit from when defining schema for data in a \"data side\" relationship field.",
     "privateProperties": {}
-   },
-   "TargetParameters": {
-    "title": "TargetParameters",
-    "enum": [
-     "SHADOW",
-     "BETA",
-     "MEAN_ANOM",
-     "TRUE_ANOM",
-     "LAT",
-     "LON",
-     "ALT",
-     "LO_SIGHT",
-     "RANGE",
-     "SOLAR_AZ",
-     "SOLAR_EL",
-     "SELF_AZ",
-     "SELF_EL",
-     "LOCAL_SIDEREAL_TIME"
-    ],
-    "description": "An enumeration."
    },
    "TargetPositionSensor": {
     "title": "TargetPositionSensor",
@@ -27505,9 +27298,15 @@
      },
      "targetParam": {
       "title": "Parameter Selection",
-      "allOf": [
+      "anyOf": [
        {
-        "$ref": "#/components/schemas/TargetParameters"
+        "$ref": "#/components/schemas/BaseTargetParameters"
+       },
+       {
+        "$ref": "#/components/schemas/CloudFractionParameters"
+       },
+       {
+        "$ref": "#/components/schemas/RainParameters"
        }
       ],
       "description": "Choose a target parameter to compare to the scalar value. The default units indicated in the description will be used."
@@ -27588,17 +27387,29 @@
      },
      "targetAParam": {
       "title": "Target Parameter A Selection",
-      "allOf": [
+      "anyOf": [
        {
-        "$ref": "#/components/schemas/TargetParameters"
+        "$ref": "#/components/schemas/BaseTargetParameters"
+       },
+       {
+        "$ref": "#/components/schemas/CloudFractionParameters"
+       },
+       {
+        "$ref": "#/components/schemas/RainParameters"
        }
       ]
      },
      "targetBParam": {
       "title": "Target Parameter B Selection",
-      "allOf": [
+      "anyOf": [
        {
-        "$ref": "#/components/schemas/TargetParameters"
+        "$ref": "#/components/schemas/BaseTargetParameters"
+       },
+       {
+        "$ref": "#/components/schemas/CloudFractionParameters"
+       },
+       {
+        "$ref": "#/components/schemas/RainParameters"
        }
       ]
      },
@@ -27759,12 +27570,12 @@
       "minimum": 0.0,
       "type": "number"
      },
-     "degC": {
-      "title": "Degc",
-      "type": "number"
-     },
      "degF": {
       "title": "Degf",
+      "type": "number"
+     },
+     "degC": {
+      "title": "Degc",
       "type": "number"
      }
     },
@@ -27946,7 +27757,7 @@
          "$ref": "#/definitions/CompoundCondition"
         },
         {
-         "$ref": "#/definitions/CooperativeTransmitInterface"
+         "$ref": "#/definitions/CooperativeLineOfSightTransmitInterface"
         },
         {
          "$ref": "#/definitions/DataBus"
@@ -27979,16 +27790,22 @@
          "$ref": "#/definitions/FixedSchedule"
         },
         {
-         "$ref": "#/definitions/GeoAreaDateTimeGroup"
+         "$ref": "#/definitions/GroundReceiveInterface"
         },
         {
          "$ref": "#/definitions/GroundTarget"
+        },
+        {
+         "$ref": "#/definitions/GroundTransmitInterface"
         },
         {
          "$ref": "#/definitions/InternalDataInterface"
         },
         {
          "$ref": "#/definitions/LaserCommModule"
+        },
+        {
+         "$ref": "#/definitions/LineOfSightReceiveInterface"
         },
         {
          "$ref": "#/definitions/LoadState"
@@ -28003,7 +27820,7 @@
          "$ref": "#/definitions/Modem"
         },
         {
-         "$ref": "#/definitions/PassiveTransmitInterface"
+         "$ref": "#/definitions/PassiveLineOfSightTransmitInterface"
         },
         {
          "$ref": "#/definitions/PermanentDipoleMagnet"
@@ -28013,9 +27830,6 @@
         },
         {
          "$ref": "#/definitions/PowerProcessor"
-        },
-        {
-         "$ref": "#/definitions/ReceiveInterface"
         },
         {
          "$ref": "#/definitions/RectangularFieldOfView"
@@ -28034,15 +27848,6 @@
         },
         {
          "$ref": "#/definitions/ScanFieldOfViewArticulationMode"
-        },
-        {
-         "$ref": "#/definitions/SelfToScalarCondition"
-        },
-        {
-         "$ref": "#/definitions/SelfToSelfCondition"
-        },
-        {
-         "$ref": "#/definitions/SelfToTargetCondition"
         },
         {
          "$ref": "#/definitions/Sensor"
@@ -28072,10 +27877,10 @@
          "$ref": "#/definitions/TargetGroupToScalarCondition"
         },
         {
-         "$ref": "#/definitions/TargetGroupToSelfCondition"
+         "$ref": "#/definitions/TargetGroupToTargetCondition"
         },
         {
-         "$ref": "#/definitions/TargetGroupToTargetCondition"
+         "$ref": "#/definitions/TargetGroupToTerrestrialVehicleCondition"
         },
         {
          "$ref": "#/definitions/TargetGroupVector"
@@ -28094,6 +27899,15 @@
         },
         {
          "$ref": "#/definitions/TerrestrialAttitudeDynamics"
+        },
+        {
+         "$ref": "#/definitions/TerrestrialVehicleToScalarCondition"
+        },
+        {
+         "$ref": "#/definitions/TerrestrialVehicleToTargetCondition"
+        },
+        {
+         "$ref": "#/definitions/TerrestrialVehicleToTerrestrialVehicleCondition"
         },
         {
          "$ref": "#/definitions/TimeCondition"
@@ -28294,6 +28108,18 @@
         "min": 0.1
        }
       }
+     },
+     "rainProbability": {
+      "title": "Rain Probability",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Climatological probability of rain at a given location and time."
+     },
+     "isRaining": {
+      "title": "Is Raining",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Boolean flag indicating if it is raining at the given location and time."
      },
      "type": {
       "title": "Type",
@@ -28368,7 +28194,7 @@
          "$ref": "#/definitions/CompoundCondition"
         },
         {
-         "$ref": "#/definitions/CooperativeTransmitInterface"
+         "$ref": "#/definitions/CooperativeLineOfSightTransmitInterface"
         },
         {
          "$ref": "#/definitions/DataBus"
@@ -28401,16 +28227,22 @@
          "$ref": "#/definitions/FixedSchedule"
         },
         {
-         "$ref": "#/definitions/GeoAreaDateTimeGroup"
+         "$ref": "#/definitions/GroundReceiveInterface"
         },
         {
          "$ref": "#/definitions/GroundTarget"
+        },
+        {
+         "$ref": "#/definitions/GroundTransmitInterface"
         },
         {
          "$ref": "#/definitions/InternalDataInterface"
         },
         {
          "$ref": "#/definitions/LaserCommModule"
+        },
+        {
+         "$ref": "#/definitions/LineOfSightReceiveInterface"
         },
         {
          "$ref": "#/definitions/LoadState"
@@ -28425,7 +28257,7 @@
          "$ref": "#/definitions/Modem"
         },
         {
-         "$ref": "#/definitions/PassiveTransmitInterface"
+         "$ref": "#/definitions/PassiveLineOfSightTransmitInterface"
         },
         {
          "$ref": "#/definitions/PermanentDipoleMagnet"
@@ -28435,9 +28267,6 @@
         },
         {
          "$ref": "#/definitions/PowerProcessor"
-        },
-        {
-         "$ref": "#/definitions/ReceiveInterface"
         },
         {
          "$ref": "#/definitions/RectangularFieldOfView"
@@ -28456,15 +28285,6 @@
         },
         {
          "$ref": "#/definitions/ScanFieldOfViewArticulationMode"
-        },
-        {
-         "$ref": "#/definitions/SelfToScalarCondition"
-        },
-        {
-         "$ref": "#/definitions/SelfToSelfCondition"
-        },
-        {
-         "$ref": "#/definitions/SelfToTargetCondition"
         },
         {
          "$ref": "#/definitions/Sensor"
@@ -28494,10 +28314,10 @@
          "$ref": "#/definitions/TargetGroupToScalarCondition"
         },
         {
-         "$ref": "#/definitions/TargetGroupToSelfCondition"
+         "$ref": "#/definitions/TargetGroupToTargetCondition"
         },
         {
-         "$ref": "#/definitions/TargetGroupToTargetCondition"
+         "$ref": "#/definitions/TargetGroupToTerrestrialVehicleCondition"
         },
         {
          "$ref": "#/definitions/TargetGroupVector"
@@ -28516,6 +28336,15 @@
         },
         {
          "$ref": "#/definitions/TerrestrialAttitudeDynamics"
+        },
+        {
+         "$ref": "#/definitions/TerrestrialVehicleToScalarCondition"
+        },
+        {
+         "$ref": "#/definitions/TerrestrialVehicleToTargetCondition"
+        },
+        {
+         "$ref": "#/definitions/TerrestrialVehicleToTerrestrialVehicleCondition"
         },
         {
          "$ref": "#/definitions/TimeCondition"
@@ -28717,10 +28546,22 @@
        }
       }
      },
-     "_supers": {
-      "title": " Supers",
+     "rainProbability": {
+      "title": "Rain Probability",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Climatological probability of rain at a given location and time."
+     },
+     "isRaining": {
+      "title": "Is Raining",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Boolean flag indicating if it is raining at the given location and time."
+     },
+     "_relationships": {
+      "title": " Relationships",
       "type": "object",
-      "description": "Object mapping `Block` class names to a list of names of their direct super classes."
+      "description": "Object mapping `Block` class names and `root` to the names of relationship fields. The field\n    names then map to an object of descriptive information about the field."
      },
      "_quantityKinds": {
       "title": " Quantitykinds",
@@ -28733,10 +28574,10 @@
       "items": {},
       "description": "Names of all valid `Block`s for this `Metamodel` class"
      },
-     "_relationships": {
-      "title": " Relationships",
+     "_supers": {
+      "title": " Supers",
       "type": "object",
-      "description": "Object mapping `Block` class names and `root` to the names of relationship fields. The field\n    names then map to an object of descriptive information about the field."
+      "description": "Object mapping `Block` class names to a list of names of their direct super classes."
      },
      "type": {
       "title": "Type",
@@ -28926,6 +28767,18 @@
        }
       }
      },
+     "rainProbability": {
+      "title": "Rain Probability",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "type": "number",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Climatological probability of rain at a given location and time."
+     },
+     "isRaining": {
+      "title": "Is Raining",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>Boolean flag indicating if it is raining at the given location and time."
+     },
      "type": {
       "title": "Type",
       "enum": [
@@ -28972,6 +28825,290 @@
     "description": "Set the minimum and maximum time steps for each enabled simulation module.",
     "privateProperties": {}
    },
+   "TerrestrialVehicleToScalarCondition": {
+    "title": "TerrestrialVehicleToScalarCondition",
+    "required": [
+     "name",
+     "relationship",
+     "scalar",
+     "param"
+    ],
+    "type": "object",
+    "properties": {
+     "id": {
+      "title": "Id",
+      "type": "string"
+     },
+     "disabled": {
+      "title": "Disabled",
+      "type": "boolean",
+      "default": false,
+      "original": "do not override this field"
+     },
+     "name": {
+      "title": "Name",
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string"
+     },
+     "terminator": {
+      "title": "Termination Condition",
+      "type": "boolean",
+      "description": "If set to true, the simulation will be terminated when this condition evaluates to true.",
+      "default": false
+     },
+     "compliance": {
+      "title": "Compliance Status",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this condition is compliant, false otherwise."
+     },
+     "relationship": {
+      "title": "Relationship",
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/ConditionRelationship"
+       },
+       {
+        "$ref": "#/components/schemas/RangeRelationship"
+       }
+      ],
+      "description": "The relationship to use when comparing the assigned values."
+     },
+     "scalar": {
+      "title": "Constant value to compare to or pair of values to use as a range.",
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "object",
+        "additionalProperties": {
+         "type": "number"
+        }
+       },
+       {
+        "maxItems": 2,
+        "minItems": 2,
+        "type": "array",
+        "items": {
+         "anyOf": [
+          {
+           "type": "number"
+          },
+          {
+           "type": "object",
+           "additionalProperties": {
+            "type": "number"
+           }
+          }
+         ]
+        }
+       }
+      ]
+     },
+     "param": {
+      "title": "Parameter A Selection",
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/BaseTerrestrialVehicleParameters"
+       },
+       {
+        "$ref": "#/components/schemas/RainParameters"
+       },
+       {
+        "$ref": "#/components/schemas/AgentParameters"
+       }
+      ]
+     },
+     "type": {
+      "title": "Type",
+      "enum": [
+       "TerrestrialVehicleToScalarCondition"
+      ],
+      "type": "string",
+      "description": "The \"type\" (class name) of the Block"
+     }
+    },
+    "additionalProperties": false,
+    "description": "A TerrestrialVehicleToScalarCondition Block",
+    "privateProperties": {}
+   },
+   "TerrestrialVehicleToTargetCondition": {
+    "title": "TerrestrialVehicleToTargetCondition",
+    "required": [
+     "name",
+     "relationship",
+     "targetParam"
+    ],
+    "type": "object",
+    "properties": {
+     "id": {
+      "title": "Id",
+      "type": "string"
+     },
+     "disabled": {
+      "title": "Disabled",
+      "type": "boolean",
+      "default": false,
+      "original": "do not override this field"
+     },
+     "name": {
+      "title": "Name",
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string"
+     },
+     "terminator": {
+      "title": "Termination Condition",
+      "type": "boolean",
+      "description": "If set to true, the simulation will be terminated when this condition evaluates to true.",
+      "default": false
+     },
+     "compliance": {
+      "title": "Compliance Status",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this condition is compliant, false otherwise."
+     },
+     "relationship": {
+      "title": "Relationship",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/ConditionRelationship"
+       }
+      ],
+      "description": "The relationship to use when comparing the assigned values."
+     },
+     "selfParam": {
+      "title": "Terrestrial Vehicle Parameter Selection",
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/BaseTerrestrialVehicleParameters"
+       },
+       {
+        "$ref": "#/components/schemas/RainParameters"
+       },
+       {
+        "$ref": "#/components/schemas/AgentParameters"
+       }
+      ]
+     },
+     "targetA": {
+      "title": "ID of Associated Target Block",
+      "type": "string",
+      "description": "Relationship to a single `Target` block. On delete: `set-none` (set relationship field to `None` when referenced block is deleted)."
+     },
+     "targetParam": {
+      "title": "Target Parameter Selection",
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/BaseTargetParameters"
+       },
+       {
+        "$ref": "#/components/schemas/CloudFractionParameters"
+       },
+       {
+        "$ref": "#/components/schemas/RainParameters"
+       }
+      ]
+     },
+     "type": {
+      "title": "Type",
+      "enum": [
+       "TerrestrialVehicleToTargetCondition"
+      ],
+      "type": "string",
+      "description": "The \"type\" (class name) of the Block"
+     }
+    },
+    "additionalProperties": false,
+    "description": "A TerrestrialVehicleToTargetCondition Block",
+    "privateProperties": {}
+   },
+   "TerrestrialVehicleToTerrestrialVehicleCondition": {
+    "title": "TerrestrialVehicleToTerrestrialVehicleCondition",
+    "required": [
+     "name",
+     "relationship"
+    ],
+    "type": "object",
+    "properties": {
+     "id": {
+      "title": "Id",
+      "type": "string"
+     },
+     "disabled": {
+      "title": "Disabled",
+      "type": "boolean",
+      "default": false,
+      "original": "do not override this field"
+     },
+     "name": {
+      "title": "Name",
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string"
+     },
+     "terminator": {
+      "title": "Termination Condition",
+      "type": "boolean",
+      "description": "If set to true, the simulation will be terminated when this condition evaluates to true.",
+      "default": false
+     },
+     "compliance": {
+      "title": "Compliance Status",
+      "type": "boolean",
+      "description": "**Time-Variable Attribute:** Set this field to overwrite the initial state of the model.<br/>True when this condition is compliant, false otherwise."
+     },
+     "relationship": {
+      "title": "Relationship",
+      "allOf": [
+       {
+        "$ref": "#/components/schemas/ConditionRelationship"
+       }
+      ],
+      "description": "The relationship to use when comparing the assigned values."
+     },
+     "paramA": {
+      "title": "Parameter A Selection",
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/BaseTerrestrialVehicleParameters"
+       },
+       {
+        "$ref": "#/components/schemas/RainParameters"
+       },
+       {
+        "$ref": "#/components/schemas/AgentParameters"
+       }
+      ]
+     },
+     "paramB": {
+      "title": "Parameter B Selection",
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/BaseTerrestrialVehicleParameters"
+       },
+       {
+        "$ref": "#/components/schemas/RainParameters"
+       },
+       {
+        "$ref": "#/components/schemas/AgentParameters"
+       }
+      ]
+     },
+     "type": {
+      "title": "Type",
+      "enum": [
+       "TerrestrialVehicleToTerrestrialVehicleCondition"
+      ],
+      "type": "string",
+      "description": "The \"type\" (class name) of the Block"
+     }
+    },
+    "additionalProperties": false,
+    "description": "A TerrestrialVehicleToTerrestrialVehicleCondition Block",
+    "privateProperties": {}
+   },
    "TerrestrialVehicleUpdateInterface": {
     "title": "TerrestrialVehicleUpdateInterface",
     "required": [
@@ -29014,13 +29151,19 @@
          "$ref": "#/components/schemas/InternalDataInterface"
         },
         {
-         "$ref": "#/components/schemas/ReceiveInterface"
+         "$ref": "#/components/schemas/GroundReceiveInterface"
         },
         {
-         "$ref": "#/components/schemas/PassiveTransmitInterface"
+         "$ref": "#/components/schemas/LineOfSightReceiveInterface"
         },
         {
-         "$ref": "#/components/schemas/CooperativeTransmitInterface"
+         "$ref": "#/components/schemas/GroundTransmitInterface"
+        },
+        {
+         "$ref": "#/components/schemas/PassiveLineOfSightTransmitInterface"
+        },
+        {
+         "$ref": "#/components/schemas/CooperativeLineOfSightTransmitInterface"
         },
         {
          "$ref": "#/components/schemas/DataMode"
@@ -29086,22 +29229,22 @@
          "$ref": "#/components/schemas/CompoundCondition"
         },
         {
+         "$ref": "#/components/schemas/TerrestrialVehicleToTerrestrialVehicleCondition"
+        },
+        {
+         "$ref": "#/components/schemas/TargetGroupToTerrestrialVehicleCondition"
+        },
+        {
          "$ref": "#/components/schemas/TimeCondition"
         },
         {
          "$ref": "#/components/schemas/ElapsedTimeCondition"
         },
         {
-         "$ref": "#/components/schemas/SelfToSelfCondition"
-        },
-        {
-         "$ref": "#/components/schemas/TargetGroupToSelfCondition"
-        },
-        {
          "$ref": "#/components/schemas/SameTargetMultiCondition"
         },
         {
-         "$ref": "#/components/schemas/SelfToScalarCondition"
+         "$ref": "#/components/schemas/TerrestrialVehicleToScalarCondition"
         },
         {
          "$ref": "#/components/schemas/TargetGroupToScalarCondition"
@@ -29113,7 +29256,7 @@
          "$ref": "#/components/schemas/ComponentToScalarCondition"
         },
         {
-         "$ref": "#/components/schemas/SelfToTargetCondition"
+         "$ref": "#/components/schemas/TerrestrialVehicleToTargetCondition"
         },
         {
          "$ref": "#/components/schemas/TargetGroupToTargetCondition"
@@ -29135,9 +29278,6 @@
         },
         {
          "$ref": "#/components/schemas/StateTransition"
-        },
-        {
-         "$ref": "#/components/schemas/GeoAreaDateTimeGroup"
         },
         {
          "$ref": "#/components/schemas/TargetGroup"
@@ -32103,7 +32243,7 @@
   },
   {
    "name": "Data",
-   "description": "\n### Queries\n\nAs of October 2023, Sedaro's data service has been overhauled. Different parameters are now required for requests. If your simulation\nwas run before this time, you will continue to use the old interface (see below). \n\nThe data service now returns data in pages, instead of all at once. Data for a sim, within the given query parameters, is progressively\nadded to a page until it is full. At that point, the page is sent to the client and the server begins assembling the next page. This continues\nuntil all data for the query has been fetched and paginated.\n\nDownsampling has also been reworked. Instead of specifying an arbitrary number of bins, or an arbitrary bin width, data is now available\nfor egress at fixed resolutions, following the powers of 2. Therefore, data can be downloaded at full resolution, at 1/2 resolution, at\n1/4 resolution, and so on. This is achieved by including, respectively, every frame, every second frame, every fourth frame, and so forth.\nThis way, unlike in the previous downsampling scheme, more data points will be presented where the data is dense, and fewer data points\nwill be presented where the data is sparse.\n\nThe desired downsample level, or 'rank', are specified by the `sampleRate` parameter. The value of `sampleRate` corresponds to the\ndenominator of the corresponding downsample level. For instance, to request data at 1/8 resolution, set a `sampleRate` resolution of 8.\nTo request data at full resolution, set `sampleRate` to 1.\n\nHere is an example, looking at the first 40 frames of a data series. '#' indicates a frame included in the series of a given rank.\n'_' indicates a frame *not* included in that rank.\n\n1   # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n2   # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _\n4   # _ _ _ # _ _ _ # _ _ _ # _ _ _ # _ _ _ # _ _ _ # _ _ _ # _ _ _ # _ _ _ # _ _ _\n8   # _ _ _ _ _ _ _ # _ _ _ _ _ _ _ # _ _ _ _ _ _ _ # _ _ _ _ _ _ _ # _ _ _ _ _ _ _ \n16  # _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ # _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ # _ _ _ _ _ _ _\n32  # _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ # _ _ _ _ _ _ _\n\nA separate query is made for each page. Each returned page contains a 'continuation token' in its body. Inside the response content,\nthis continuation token can be found at response['meta']['continuationToken']. Pass this value as the `continuationToken` for the\nnext page you request. Continue doing so until an empty token is returned. At that point, there is no more data to return, and\nfurther page requests should not be made.\n\nIn all requests, either a sampleRate or a continuation token must be provided. It is not necessary to specify a sampleRate when a request\nincludes a continuation token.\n\nNew interface:\n- `id`: The ID of the data set to query.  This ID is defined on a [Simulation Job](#tag/Jobs).\n- `start`: The start time of the window in MJD. If omitted, defaults to the minimum timestamp in the dataset.\n- `stop`: The stop time of the window in MJD. If omitted, defaults to the maximum timestamp in the dataset.\n- `streams`: (optional) The specific agents and engines for which to fetch data. If omitted, all streams are fetched.\n    This argument takes the form of a list of requests separated by commas.\n    A request can have either one or two elements. The first element is always the ID of the Agent (str).\n    The second element (optional) is the name of an engine (str). This must be one of the following: 'GNC', 'CDH', 'Power', 'Thermal'.\n    If the second element is not provided, all data from all engines of the given Agent are fetched. If a request has two elements, they are\n    separated by a period. Here is an example:\n\n    ...&streams=NT06aqHUT5djI1_JPAsck.CDH,NT06aqHUT5djI1_JPAsck.Power,NT0Ln1gS8elWEK4Y-l7m-\n\n    This will fetch the Power and CDH data for Agent(id='NT06aqHUT5djI1_JPAsck'), and all data for\n    Agent(id='NT0Ln1gS8elWEK4Y-l7m-').\n- `shape` (optional): Specifies whether the data should be nested or flat. Options: `FLAT` (default) and `NESTED`. Examples:\n    Flat: {'a.b': [1, 2, 3], 'a.c': [4, 5, 6]}\n    Nested: {'a': {'b': [1, 2, 3], 'c': [4, 5, 6]}}\n- `axisOrder`: (optional) The shape of each series in the response. Options: `TIME_MINOR` (default) and `TIME_MAJOR`. NOTE: unlike the old\n    Data Service in which the default was `TIME_MAJOR`, the default in the new Data Service is `TIME_MINOR`. Examples:\n    Data at time 1: [1, 2]\n    Data at time 2: [3, 4]\n    Data at time 3: [5, 6]\n    TIME_MINOR: [[1, 3, 5], [2, 4, 6]]\n    TIME_MAJOR: [[1, 2], [3, 4], [5, 6]]\n- `binWidth`: (optional, temporarily disabled) The bin width to use to down-sample the data.  If omitted, data will be full resolution.\n- `sampleRate`: (optional) The downsampling rank to use. `1` for full resolution, `2` for half resolution, `4` for 1/4 resolution,\n    and so on. Must be an integer power of 2. Required if no `continuationToken` is provided.\n- 'continuationToken' (optional) Required if no `sampleRate` is provided. Retrieved from the previously fetched page, as described above.\n- 'encoding' (optional) The encoding in which to receive data. Currently accepted values are `json` and `msgpack`. Default: json.\n\n    Note: Timestamps of individual data points are left-inclusive and right-exclusive. For example, if `start` is 2 and `stop` is 5,\n    and there are timestamps at 1, 3, and 5, all three data points will be included, not just the data points at 1 and 3. This is\n    because the data point at timestamp 1 is valid for the time range [1, 3) and part of this time range is included in the query.\n\n\nFor simulation runs performed before the release and deployment of Data Service v3 in December 2023, continue to use the following interface:\n\n- `id`: The ID of the data set to query.  This ID is defined on a [Simulation Job](#tag/Jobs).\n- `start`: The start time of the window in MJD. If omitted, defaults to the minimum timestamp in the dataset.\n- `stop`: The stop time of the window in MJD. If omitted, defaults to the maximum timestamp in the dataset.\n- `binWidth`: (optional) The bin width to use to down-sample the data.  If omitted, data will be full resolution.\n- `axisOrder`: (optional) The shape of each series in the response. Options: `TIME_MAJOR` (default) and `TIME_MINOR`.\n- `streams`: (optional) The specific agents and engines for which to fetch data. If omitted, all streams are fetched.\n    This argument, if provided, follows the same syntax specified above for the `streams` parameter in the new interface.\n\n    Example request: `GET: /data/<id>?start=<start>&stop=<stop>&binWidth=<binWidth>`\n\n#### Response\n\nData is returned from a query in the following format:\n\n```jsonc\n{\n    \"series\": {\n        <streamId>: [\n            [<timestamp1::MJD>, <timestamp2::MJD>, ...],\n            {\n                <agentId>: {\n                    <blockId>: {\n                        <stateVariableA>: [<valueA1>, <valueA2>, ...],\n                        <stateVariableB>: [<valueB1>, <valueB2>, ...],\n                        ...\n                    },\n                    <stateVariableC>: [<valueC1>, <valueC2>, ...]\n                },\n                ...\n            }\n        ],\n        ...\n    }\n}\n```\n\nNote that a \"Stream\" is a set of state variables that share the same timestamps.  Specifically, the values in a Stream\ncorrespond to a modsim Engine of a particular Agent.  The `series` object contains a key for each stream in the data set.\nThe value of each stream key is a 2-element array.  The first element is an array of timestamps - the X-axis for all variables\nin the stream.  The second element is an object containing the state variables that compose the stream.  The state variables\nare grouped under an Agent ID and then a Block ID (if applicable).  The value of each entry is an array of values that aligns\nwith the timestamp vector.\n\n#### Axis Order (`axisOrder`)\n\nAxis order defines the shape of each multi-dimensional series in the Data Service query response.  In the following example,\n`n` is the time dimension, `position` is a notional State Variable of shape `(3,)`, and `matrix` is a notional State Variable\nof shape `(3, 4)`.\n\n**`TIME_MAJOR`**\n- `position.shape == (n, 3)`\n- `matrix.shape == (n, 3, 4)`\n\n**`TIME_MINOR`**\n- `position.shape == (3, n)`\n- `matrix.shape == (3, 4, n)`\n\n### Ephemerides\n\nThe Data Service also includes an endpoint for bulk fetching of ephemerides. The following parameters are exposed:\n`start` (required): the start of the time range within which to fetch ephemerides, in MJD.\n`stop` (required): the end of the time range within which to fetch ephemerides, in MJD.\n`resolution`: the spacing at which to fetch ephemerides. For instance, if `resolution` is 0.1, then data will be fetched\nat start time, start + 0.1, start + 0.2, etc, up until the stop time is reached.\n`bodies`: the celestial bodies for which to fetch ephemerides. Supported bodies are SUN, MERCURY, VENUS, EARTH, MOON,\nMARS, JUPITER, SATURN, URANUS, NEPTUNE, and PLUTO. If this parameter is not provided, all supported bodies are included.\n`axisOrder`: TIME_MAJOR or TIME_MINOR, as above. Defaults to TIME_MINOR if not specified.\n\nLike the data API, the ephemerides API uses paging to handle large ephemerides requests. If your request is for more than\n100,000 data points, it will be broken up into pages of 100,000 data points at a time. In this case, a continuation token\nwill be provided along with the page data. To get the next page, instead of using the parameters above, simply pass back\nthe value of response['continuationToken'] as the argument to the `continuationToken` parameter, and repeat until the value\nthe value of `response.meta.continuationToken` as the argument to the `continuationToken` parameter, and repeat until the value\nof `response.meta.continuationToken` is a null object.\n\n#### Response\n\nData is returned from a query in the following format:\n```jsonc\n{\n    \"meta\": {\"continuationToken\" : null | <token (str)>},\n    \"series\": [\n        [<timestamp1::MJD>, <timestamp2::MJD>, ...],\n        {\n            <celestialBodyID>: [<values>],\n            <celestialBodyID>: [<values>],\n            ...\n        }\n    ]\n}\n```\n\n"
+   "description": "\n### Queries\n\nAs of December 2023, Sedaro's data service has been overhauled. Different parameters are now required for requests. If your simulation\nwas run before this time, you will continue to use the old interface (see below). \n\nThe data service now returns data in pages, instead of all at once. Data for a sim, within the given query parameters, is progressively\nadded to a page until it is full. At that point, the page is sent to the client and the server begins assembling the next page. This continues\nuntil all data for the query has been fetched and paginated.\n\nDownsampling has also been reworked. Instead of specifying an arbitrary number of bins, or an arbitrary bin width, data is now available\nfor egress at fixed resolutions, following the powers of 2. Therefore, data can be downloaded at full resolution, at 1/2 resolution, at\n1/4 resolution, and so on. This is achieved by including, respectively, every frame, every second frame, every fourth frame, and so forth.\nThis way, unlike in the previous downsampling scheme, more data points will be presented where the data is dense, and fewer data points\nwill be presented where the data is sparse.\n\nThe desired downsample level, or 'rank', are specified by the `sampleRate` parameter. The value of `sampleRate` corresponds to the\ndenominator of the corresponding downsample level. For instance, to request data at 1/8 resolution, set a `sampleRate` resolution of 8.\nTo request data at full resolution, set `sampleRate` to 1.\n\nHere is an example, looking at the first 40 frames of a data series. '#' indicates a frame included in the series of a given rank.\n'_' indicates a frame *not* included in that rank.\n\n```text\n1   # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n2   # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _ # _\n4   # _ _ _ # _ _ _ # _ _ _ # _ _ _ # _ _ _ # _ _ _ # _ _ _ # _ _ _ # _ _ _ # _ _ _\n8   # _ _ _ _ _ _ _ # _ _ _ _ _ _ _ # _ _ _ _ _ _ _ # _ _ _ _ _ _ _ # _ _ _ _ _ _ _ \n16  # _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ # _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ # _ _ _ _ _ _ _\n32  # _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ # _ _ _ _ _ _ _\n```\n\nA separate query is made for each page. Each returned page contains a 'continuation token' in its body. Inside the response content,\nthis continuation token can be found at response['meta']['continuationToken']. Pass this value as the `continuationToken` for the\nnext page you request. Continue doing so until an empty token is returned. At that point, there is no more data to return, and\nfurther page requests should not be made.\n\nIn all requests, either a sampleRate or a continuation token must be provided. It is not necessary to specify a sampleRate when a request\nincludes a continuation token.\n\nNew interface:\n- `id`: The ID of the data set to query.  This ID is defined on a [Simulation Job](#tag/Jobs).\n- `start`: The start time of the window in MJD. If omitted, defaults to the minimum timestamp in the dataset.\n- `stop`: The stop time of the window in MJD. If omitted, defaults to the maximum timestamp in the dataset.\n- `streams`: (optional) The specific agents and engines for which to fetch data. If omitted, all streams are fetched.\n    This argument takes the form of a list of requests separated by commas.\n    A request can have either one or two elements. The first element is always the ID of the Agent (str).\n    The second element (optional) is the name of an engine (str). This must be one of the following: 'GNC', 'CDH', 'Power', 'Thermal'.\n    If the second element is not provided, all data from all engines of the given Agent are fetched. If a request has two elements, they are\n    separated by a period. Here is an example:\n\n    ...&streams=NT06aqHUT5djI1_JPAsck.CDH,NT06aqHUT5djI1_JPAsck.Power,NT0Ln1gS8elWEK4Y-l7m-\n\n    This will fetch the Power and CDH data for Agent(id='NT06aqHUT5djI1_JPAsck'), and all data for\n    Agent(id='NT0Ln1gS8elWEK4Y-l7m-').\n- `shape` (optional): Specifies whether the data should be nested or flat. Options: `FLAT` (default) and `NESTED`. Examples:\n    Flat: {'a.b': [1, 2, 3], 'a.c': [4, 5, 6]}\n    Nested: {'a': {'b': [1, 2, 3], 'c': [4, 5, 6]}}\n- `axisOrder`: (optional) The shape of each series in the response. Options: `TIME_MINOR` (default) and `TIME_MAJOR`. NOTE: unlike the old\n    Data Service in which the default was `TIME_MAJOR`, the default in the new Data Service is `TIME_MINOR`. Examples:\n    Data at time 1: [1, 2]\n    Data at time 2: [3, 4]\n    Data at time 3: [5, 6]\n    TIME_MINOR: [[1, 3, 5], [2, 4, 6]]\n    TIME_MAJOR: [[1, 2], [3, 4], [5, 6]]\n- `binWidth`: (optional, temporarily disabled) The bin width to use to down-sample the data.  If omitted, data will be full resolution.\n- `sampleRate`: (optional) The downsampling rank to use. `1` for full resolution, `2` for half resolution, `4` for 1/4 resolution,\n    and so on. Must be an integer power of 2. Required if no `continuationToken` is provided.\n- 'continuationToken' (optional) Required if no `sampleRate` is provided. Retrieved from the previously fetched page, as described above.\n- 'encoding' (optional) The encoding in which to receive data. Currently accepted values are `json` and `msgpack`. Default: json.\n\n    Note: Timestamps of individual data points are left-inclusive and right-exclusive. For example, if `start` is 2 and `stop` is 5,\n    and there are timestamps at 1, 3, and 5, all three data points will be included, not just the data points at 1 and 3. This is\n    because the data point at timestamp 1 is valid for the time range [1, 3) and part of this time range is included in the query.\n\n\nFor simulation runs performed before the release and deployment of Data Service v3 in December 2023, continue to use the following interface:\n\n- `id`: The ID of the data set to query.  This ID is defined on a [Simulation Job](#tag/Jobs).\n- `start`: The start time of the window in MJD. If omitted, defaults to the minimum timestamp in the dataset.\n- `stop`: The stop time of the window in MJD. If omitted, defaults to the maximum timestamp in the dataset.\n- `binWidth`: (optional) The bin width to use to down-sample the data.  If omitted, data will be full resolution.\n- `axisOrder`: (optional) The shape of each series in the response. Options: `TIME_MAJOR` (default) and `TIME_MINOR`.\n- `streams`: (optional) The specific agents and engines for which to fetch data. If omitted, all streams are fetched.\n    This argument, if provided, follows the same syntax specified above for the `streams` parameter in the new interface.\n\n    Example request: `GET: /data/<id>?start=<start>&stop=<stop>&binWidth=<binWidth>`\n\n#### Response\n\nData is returned from a query in the following format:\n\n```jsonc\n{\n    \"series\": {\n        <streamId>: [\n            [<timestamp1::MJD>, <timestamp2::MJD>, ...],\n            {\n                <agentId>: {\n                    <blockId>: {\n                        <stateVariableA>: [<valueA1>, <valueA2>, ...],\n                        <stateVariableB>: [<valueB1>, <valueB2>, ...],\n                        ...\n                    },\n                    <stateVariableC>: [<valueC1>, <valueC2>, ...]\n                },\n                ...\n            }\n        ],\n        ...\n    }\n}\n```\n\nNote that a \"Stream\" is a set of state variables that share the same timestamps.  Specifically, the values in a Stream\ncorrespond to a modsim Engine of a particular Agent.  The `series` object contains a key for each stream in the data set.\nThe value of each stream key is a 2-element array.  The first element is an array of timestamps - the X-axis for all variables\nin the stream.  The second element is an object containing the state variables that compose the stream.  The state variables\nare grouped under an Agent ID and then a Block ID (if applicable).  The value of each entry is an array of values that aligns\nwith the timestamp vector.\n\n#### Axis Order (`axisOrder`)\n\nAxis order defines the shape of each multi-dimensional series in the Data Service query response.  In the following example,\n`n` is the time dimension, `position` is a notional State Variable of shape `(3,)`, and `matrix` is a notional State Variable\nof shape `(3, 4)`.\n\n**`TIME_MAJOR`**\n- `position.shape == (n, 3)`\n- `matrix.shape == (n, 3, 4)`\n\n**`TIME_MINOR`**\n- `position.shape == (3, n)`\n- `matrix.shape == (3, 4, n)`\n\n### Ephemerides\n\nThe Data Service also includes an endpoint for bulk fetching of ephemerides. The following parameters are exposed:\n`start` (required): the start of the time range within which to fetch ephemerides, in MJD.\n`stop` (required): the end of the time range within which to fetch ephemerides, in MJD.\n`resolution`: the spacing at which to fetch ephemerides. For instance, if `resolution` is 0.1, then data will be fetched\nat start time, start + 0.1, start + 0.2, etc, up until the stop time is reached.\n`bodies`: the celestial bodies for which to fetch ephemerides. Supported bodies are SUN, MERCURY, VENUS, EARTH, MOON,\nMARS, JUPITER, SATURN, URANUS, NEPTUNE, and PLUTO. If this parameter is not provided, all supported bodies are included.\n`axisOrder`: TIME_MAJOR or TIME_MINOR, as above. Defaults to TIME_MINOR if not specified.\n\nLike the data API, the ephemerides API uses paging to handle large ephemerides requests. If your request is for more than\n100,000 data points, it will be broken up into pages of 100,000 data points at a time. In this case, a continuation token\nwill be provided along with the page data. To get the next page, instead of using the parameters above, simply pass back\nthe value of response['continuationToken'] as the argument to the `continuationToken` parameter, and repeat until the value\nthe value of `response.meta.continuationToken` as the argument to the `continuationToken` parameter, and repeat until the value\nof `response.meta.continuationToken` is a null object.\n\n#### Response\n\nData is returned from a query in the following format:\n```jsonc\n{\n    \"meta\": {\"continuationToken\" : null | <token (str)>},\n    \"series\": [\n        [<timestamp1::MJD>, <timestamp2::MJD>, ...],\n        {\n            <celestialBodyID>: [<values>],\n            <celestialBodyID>: [<values>],\n            ...\n        }\n    ]\n}\n```\n\n"
   },
   {
    "name": "MetaModels",
